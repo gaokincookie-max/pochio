@@ -1,137 +1,52 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
-  <meta name="theme-color" content="#0f1116" />
-  <title>ぽちょ 物理試作</title>
-  <style>
-    :root { color-scheme: dark; font-family: ui-rounded,"Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif; }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html,body { margin:0; width:100%; height:100%; overflow:hidden; background:#0f1116; }
-    body { touch-action:none; overscroll-behavior:none; }
-    #app { position:fixed; inset:0; display:grid; place-items:center; background:#0b0d12; }
-    #gameShell { position:relative; width:min(100vw, 520px); height:100dvh; max-height:980px; overflow:hidden; background:#0f1116; box-shadow:0 0 40px rgba(0,0,0,.4); }
-    #game { position:absolute; inset:0; }
-    canvas { display:block; width:100%; height:100%; touch-action:none; }
-    .hud { position:absolute; z-index:4; left:12px; top:max(10px,env(safe-area-inset-top)); pointer-events:none; user-select:none; text-shadow:0 2px 10px rgba(0,0,0,.65); }
-    .hud h1 { font-size:16px; margin:0 0 3px; letter-spacing:.04em; }
-    .hud p { margin:0; font-size:11px; opacity:.67; line-height:1.45; }
-    .buttons { position:absolute; z-index:5; right:10px; top:max(10px,env(safe-area-inset-top)); display:flex; gap:6px; }
-    button { border:1px solid rgba(255,255,255,.14); background:rgba(25,28,36,.82); color:#fff; border-radius:999px; padding:8px 11px; font-size:12px; cursor:pointer; backdrop-filter:blur(8px); }
-    #status { position:absolute; z-index:4; left:50%; bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px)); transform:translateX(-50%); pointer-events:none; color:rgba(255,255,255,.9); font-size:12px; padding:7px 11px; border-radius:999px; background:rgba(10,12,18,.48); backdrop-filter:blur(6px); white-space:nowrap; }
-    @media (min-width:700px) { #gameShell { border-left:1px solid rgba(255,255,255,.08); border-right:1px solid rgba(255,255,255,.08); } }
-  </style>
-</head>
-<body>
-<div id="app">
-  <div id="gameShell">
-    <div id="game"></div>
-    <div class="hud"><h1>ぽちょ / 物理試作</h1><p>下の射出ゾーンで振る → 離して上へ投げる</p></div>
-    <div class="buttons"><button id="respawn">次</button><button id="reset">全消去</button></div>
-    <div id="status">ぽちょを掴んでください</div>
-  </div>
-</div>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<meta name="theme-color" content="#0f1116" />
+<title>ぽちょ 物理試作</title>
+<style>
+:root{color-scheme:dark;font-family:ui-rounded,"Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0f1116}body{touch-action:none;overscroll-behavior:none}
+#app{position:fixed;inset:0;display:grid;place-items:center;background:#0b0d12}#gameShell{position:relative;width:min(100vw,520px);height:100dvh;max-height:980px;overflow:hidden;background:#0f1116;box-shadow:0 0 40px rgba(0,0,0,.4)}#game{position:absolute;inset:0}canvas{display:block;width:100%;height:100%;touch-action:none}
+.hud{position:absolute;z-index:4;left:12px;top:max(10px,env(safe-area-inset-top));pointer-events:none;user-select:none;text-shadow:0 2px 10px rgba(0,0,0,.65)}.hud h1{font-size:16px;margin:0 0 3px}.hud p{margin:0;font-size:11px;opacity:.67}.buttons{position:absolute;z-index:5;right:10px;top:max(10px,env(safe-area-inset-top));display:flex;gap:6px}button{border:1px solid rgba(255,255,255,.14);background:rgba(25,28,36,.82);color:#fff;border-radius:999px;padding:8px 11px;font-size:12px;cursor:pointer}#status{position:absolute;z-index:4;left:50%;bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px));transform:translateX(-50%);pointer-events:none;color:#fff;font-size:12px;padding:7px 11px;border-radius:999px;background:rgba(10,12,18,.48);white-space:nowrap}
+</style>
+</head><body><div id="app"><div id="gameShell"><div id="game"></div><div class="hud"><h1>ぽちょ / 物理試作</h1><p>下で振る → 投げる　重力なし / 同色3つでぽちょ！</p></div><div class="buttons"><button id="respawn">次</button><button id="reset">全消去</button></div><div id="status">ぽちょを掴んでください</div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
 <script>
-(() => {
-'use strict';
-const {Engine,Render,Runner,Bodies,Body,Composite,Constraint,Mouse,MouseConstraint,Events} = Matter;
-const shell=document.getElementById('gameShell'), game=document.getElementById('game'), status=document.getElementById('status');
-const respawnBtn=document.getElementById('respawn'), resetBtn=document.getElementById('reset');
-const engine=Engine.create({positionIterations:10,velocityIterations:8,constraintIterations:6,enableSleeping:false});
-engine.gravity.x=0; engine.gravity.y=0;
-let W=1,H=1,zoneTop=1,currentCluster=null; const clusters=new Set();
-const COLORS=['#ff6b7a','#5da9ff','#ffd45c','#71e09b','#c98cff','#ff9f59'];
-const FACES=['happy','flat','grumpy'];
-const MAX_SPEED=18.0;          // 最大移動速度。暴走防止
-const MAX_ANGULAR_SPEED=0.32;  // 最大回転速度
-const UP_FORCE=0.00095;        // 前版より弱い上向き重力
-const THROW_SCALE=0.76;        // 投擲速度をやや重く
-const CAT_WORLD=0x0001, CAT_WAITING=0x0002;
-let walls=[],launchGate=null;
-
-function measure(){ const r=shell.getBoundingClientRect(); W=Math.max(280,r.width); H=Math.max(520,r.height); zoneTop=H*0.74; }
-measure();
-const render=Render.create({element:game,engine,options:{width:W,height:H,wireframes:false,background:'#0f1116',pixelRatio:Math.min(devicePixelRatio||1,2),showAngleIndicator:false,showVelocity:false}});
-Render.run(render); Runner.run(Runner.create(),engine);
-
-function rebuildWalls(){
-  if(walls.length) Composite.remove(engine.world,walls); if(launchGate) Composite.remove(engine.world,launchGate);
-  const opt={isStatic:true,restitution:.68,friction:.015,render:{visible:false},collisionFilter:{category:CAT_WORLD,mask:CAT_WORLD|CAT_WAITING}};
-  walls=[Bodies.rectangle(-30,H/2,60,H+120,opt),Bodies.rectangle(W+30,H/2,60,H+120,opt),Bodies.rectangle(W/2,-30,W+120,60,opt),Bodies.rectangle(W/2,H+30,W+120,60,opt)];
-  launchGate=Bodies.rectangle(W/2,zoneTop-8,W,16,{isStatic:true,restitution:.35,friction:.01,render:{visible:false},collisionFilter:{category:CAT_WAITING,mask:CAT_WAITING}});
-  Composite.add(engine.world,[...walls,launchGate]);
-}
-rebuildWalls();
-
-const rand=(a,b)=>a+Math.random()*(b-a), choice=a=>a[(Math.random()*a.length)|0];
-function makePocho(x,y,r){
-  const body=Bodies.circle(x,y,r,{restitution:.74,friction:.018,frictionStatic:.02,frictionAir:.006,density:.00165,slop:.03,collisionFilter:{category:CAT_WAITING,mask:CAT_WORLD|CAT_WAITING},render:{fillStyle:choice(COLORS),strokeStyle:'rgba(255,255,255,.22)',lineWidth:2}});
-  body.pocho={radius:r,face:choice(FACES),launched:false,cluster:null}; return body;
-}
-function spawnCluster(){
-  if(currentCluster&&!currentCluster.launched) removeCluster(currentCluster);
-  const cx=W*.5, cy=zoneTop+(H-zoneTop)*.55;
-  const maxR=Math.min(40,W*.085), minR=Math.max(22,maxR*.68);
-  const r1=rand(minR,maxR),r2=rand(minR,maxR),r3=rand(minR,maxR);
-  const b1=makePocho(cx-(r1+r2)*.48,cy+rand(-6,6),r1), b2=makePocho(cx+(r1+r2)*.48,cy+rand(-6,6),r2), b3=makePocho(cx+rand(-8,8),cy-(r2+r3)*.8,r3);
-  const bodies=[b1,b2,b3], soft=.065,damp=.095;
-  const links=[
-    Constraint.create({bodyA:b1,bodyB:b2,length:r1+r2-5,stiffness:soft,damping:damp,render:{visible:false}}),
-    Constraint.create({bodyA:b2,bodyB:b3,length:r2+r3-5,stiffness:soft,damping:damp,render:{visible:false}}),
-    Constraint.create({bodyA:b3,bodyB:b1,length:r3+r1-5,stiffness:soft,damping:damp,render:{visible:false}})
-  ];
-  const cluster={bodies,links,launched:false,jointsCut:false}; bodies.forEach(b=>b.pocho.cluster=cluster);
-  Composite.add(engine.world,[...bodies,...links]); clusters.add(cluster); currentCluster=cluster; status.textContent='ぽちょを掴んでください';
-}
-function cutJoints(c){ if(!c||c.jointsCut)return; c.jointsCut=true; c.links.forEach(x=>Composite.remove(engine.world,x)); status.textContent='ぽちょ、解放'; }
-function removeCluster(c){ if(!c)return; c.links.forEach(x=>Composite.remove(engine.world,x)); c.bodies.forEach(b=>Composite.remove(engine.world,b)); clusters.delete(c); if(currentCluster===c)currentCluster=null; }
-function clearAll(){ [...clusters].forEach(removeCluster); spawnCluster(); }
-
-const mouse=Mouse.create(render.canvas); mouse.pixelRatio=render.options.pixelRatio;
-const mc=MouseConstraint.create(engine,{mouse,constraint:{stiffness:.038,damping:.18,render:{visible:false}}}); Composite.add(engine.world,mc); render.mouse=mouse;
-let dragBody=null,dragCluster=null,samples=[];
-const canGrab=b=>b&&b.pocho&&b.pocho.cluster&&!b.pocho.cluster.launched;
-Events.on(mc,'startdrag',e=>{ if(!canGrab(e.body)){mc.constraint.bodyB=null;mc.body=null;return;} dragBody=e.body;dragCluster=e.body.pocho.cluster;samples=[{x:mouse.position.x,y:mouse.position.y,t:performance.now()}];status.textContent='射出ゾーン内で振って、離す'; });
-Events.on(mc,'mousemove',()=>{ if(!dragBody)return; const now=performance.now(); samples.push({x:mouse.position.x,y:mouse.position.y,t:now}); while(samples.length>9||(samples.length>2&&now-samples[0].t>125))samples.shift(); });
-function throwVelocity(){ if(samples.length<2)return{x:0,y:0}; const b=samples[samples.length-1];let a=samples[0];for(let i=samples.length-2;i>=0;i--){if(b.t-samples[i].t>=50){a=samples[i];break;}} const dt=Math.max(16,b.t-a.t),f=16.666/dt*THROW_SCALE;return{x:(b.x-a.x)*f,y:(b.y-a.y)*f}; }
-function cap(v,max){ const m=Math.hypot(v.x,v.y); if(m<=max||m===0)return v; const s=max/m;return{x:v.x*s,y:v.y*s}; }
-Events.on(mc,'enddrag',e=>{
-  if(!dragBody||!dragCluster||e.body!==dragBody)return;
-  const v=cap(throwVelocity(),MAX_SPEED); const grabbedIndex=dragCluster.bodies.indexOf(dragBody); dragCluster.launched=true;
-  dragCluster.bodies.forEach((b,i)=>{ b.collisionFilter.category=CAT_WORLD;b.collisionFilter.mask=CAT_WORLD;b.pocho.launched=true; const share=i===grabbedIndex?1:.72; Body.setVelocity(b,cap({x:b.velocity.x*.45+v.x*share,y:b.velocity.y*.45+v.y*share},MAX_SPEED)); });
-  status.textContent='上重力 ON'; dragBody=null;dragCluster=null;samples=[]; setTimeout(()=>{if(!currentCluster||currentCluster.launched)spawnCluster();},650);
-});
-
-Events.on(engine,'beforeUpdate',()=>{
-  if(dragBody&&dragCluster){
-    const margin=Math.max(10,dragBody.pocho.radius*.4); mouse.position.x=Math.max(margin,Math.min(W-margin,mouse.position.x)); mouse.position.y=Math.max(zoneTop+margin,Math.min(H-margin,mouse.position.y));
-  }
-  for(const c of clusters){
-    if(c.launched){
-      for(const b of c.bodies){ Body.applyForce(b,b.position,{x:0,y:-b.mass*UP_FORCE}); const vv=cap(b.velocity,MAX_SPEED); if(vv.x!==b.velocity.x||vv.y!==b.velocity.y)Body.setVelocity(b,vv); if(Math.abs(b.angularVelocity)>MAX_ANGULAR_SPEED)Body.setAngularVelocity(b,Math.sign(b.angularVelocity)*MAX_ANGULAR_SPEED); }
-      if(!c.jointsCut&&c.bodies.some(b=>b.position.y<zoneTop-b.pocho.radius*.2))cutJoints(c);
-    }
-  }
-});
-
-Events.on(render,'afterRender',()=>{
-  const ctx=render.context; ctx.save();
-  ctx.strokeStyle='rgba(235,240,255,.20)';ctx.lineWidth=2;ctx.strokeRect(1,1,W-2,H-2);
-  const g=ctx.createLinearGradient(0,zoneTop,0,H);g.addColorStop(0,'rgba(122,136,255,.03)');g.addColorStop(1,'rgba(122,136,255,.13)');ctx.fillStyle=g;ctx.fillRect(0,zoneTop,W,H-zoneTop);
-  ctx.strokeStyle='rgba(180,190,255,.32)';ctx.setLineDash([7,8]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,zoneTop+.5);ctx.lineTo(W,zoneTop+.5);ctx.stroke();ctx.setLineDash([]);ctx.font='11px system-ui,sans-serif';ctx.fillStyle='rgba(220,225,255,.48)';ctx.fillText('射出ゾーン',12,zoneTop+18);
-  for(const c of clusters){ if(!c.jointsCut){ctx.lineWidth=8;ctx.lineCap='round';ctx.strokeStyle='rgba(238,241,255,.16)';for(const l of c.links){if(!l.bodyA||!l.bodyB)continue;ctx.beginPath();ctx.moveTo(l.bodyA.position.x,l.bodyA.position.y);ctx.lineTo(l.bodyB.position.x,l.bodyB.position.y);ctx.stroke();}} for(const b of c.bodies)drawFace(ctx,b); }
-  if(dragBody){ctx.beginPath();ctx.arc(mouse.position.x,mouse.position.y,6,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.75)';ctx.fill();}
-  ctx.restore();
-});
-function drawFace(ctx,b){const r=b.pocho.radius,x=b.position.x,y=b.position.y;ctx.save();ctx.translate(x,y);ctx.rotate(b.angle);ctx.strokeStyle=ctx.fillStyle='rgba(20,24,32,.72)';ctx.lineWidth=Math.max(2,r*.055);ctx.lineCap='round';const ey=-r*.12,ex=r*.28,er=Math.max(1.8,r*.055);ctx.beginPath();ctx.arc(-ex,ey,er,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(ex,ey,er,0,Math.PI*2);ctx.fill();ctx.beginPath();if(b.pocho.face==='happy')ctx.arc(0,r*.02,r*.27,.15*Math.PI,.85*Math.PI);else if(b.pocho.face==='grumpy')ctx.arc(0,r*.34,r*.24,1.18*Math.PI,1.82*Math.PI);else{ctx.moveTo(-r*.18,r*.18);ctx.lineTo(r*.18,r*.18);}ctx.stroke();ctx.restore();}
-
-respawnBtn.addEventListener('click',spawnCluster);resetBtn.addEventListener('click',clearAll);
-function resize(){ measure(); render.options.width=W;render.options.height=H;render.canvas.width=W*render.options.pixelRatio;render.canvas.height=H*render.options.pixelRatio;render.canvas.style.width=W+'px';render.canvas.style.height=H+'px';render.bounds.max.x=W;render.bounds.max.y=H;rebuildWalls(); }
-window.addEventListener('resize',resize,{passive:true});
-spawnCluster();
+(()=>{'use strict';
+const {Engine,Render,Runner,Bodies,Body,Composite,Constraint,Mouse,MouseConstraint,Events}=Matter;
+const shell=document.getElementById('gameShell'),game=document.getElementById('game'),status=document.getElementById('status');
+const respawnBtn=document.getElementById('respawn'),resetBtn=document.getElementById('reset');
+const engine=Engine.create({positionIterations:10,velocityIterations:8,constraintIterations:6,enableSleeping:false});engine.gravity.x=0;engine.gravity.y=0;
+let W=1,H=1,zoneTop=1,currentCluster=null;const clusters=new Set(),stickyLinks=new Set(),popFx=[];
+const COLORS=['#ff6b7a','#5da9ff','#ffd45c','#71e09b','#c98cff','#ff9f59'],FACES=['happy','flat','grumpy'];
+const MAX_SPEED=18,MAX_ANGULAR_SPEED=.32,THROW_SCALE=.76,CAT_WORLD=1,CAT_WAITING=2;let walls=[],launchGate=null;
+function measure(){const r=shell.getBoundingClientRect();W=Math.max(280,r.width);H=Math.max(520,r.height);zoneTop=H*.63}measure();
+const render=Render.create({element:game,engine,options:{width:W,height:H,wireframes:false,background:'#0f1116',pixelRatio:Math.min(devicePixelRatio||1,2)}});Render.run(render);Runner.run(Runner.create(),engine);
+function rebuildWalls(){if(walls.length)Composite.remove(engine.world,walls);if(launchGate)Composite.remove(engine.world,launchGate);const opt={isStatic:true,restitution:.68,friction:.015,render:{visible:false},collisionFilter:{category:CAT_WORLD,mask:CAT_WORLD|CAT_WAITING}};walls=[Bodies.rectangle(-30,H/2,60,H+120,opt),Bodies.rectangle(W+30,H/2,60,H+120,opt),Bodies.rectangle(W/2,-30,W+120,60,opt),Bodies.rectangle(W/2,H+30,W+120,60,opt)];launchGate=Bodies.rectangle(W/2,zoneTop-8,W,16,{isStatic:true,restitution:.35,friction:.01,render:{visible:false},collisionFilter:{category:CAT_WAITING,mask:CAT_WAITING}});Composite.add(engine.world,[...walls,launchGate])}rebuildWalls();
+const rand=(a,b)=>a+Math.random()*(b-a),choice=a=>a[(Math.random()*a.length)|0];
+function makePocho(x,y,r){const ci=(Math.random()*COLORS.length)|0;const body=Bodies.circle(x,y,r,{restitution:.74,friction:.018,frictionStatic:.02,frictionAir:.004,density:.00165,slop:.03,collisionFilter:{category:CAT_WAITING,mask:CAT_WORLD|CAT_WAITING},render:{fillStyle:COLORS[ci],strokeStyle:'rgba(255,255,255,.22)',lineWidth:2}});body.pocho={radius:r,face:choice(FACES),launched:false,cluster:null,colorIndex:ci,popping:false};return body}
+function spawnCluster(){if(currentCluster&&!currentCluster.launched)removeCluster(currentCluster);const cx=W*.5,cy=zoneTop+(H-zoneTop)*.55,maxR=Math.min(29,W*.064),minR=Math.max(16,maxR*.64),r1=rand(minR,maxR),r2=rand(minR,maxR),r3=rand(minR,maxR);const b1=makePocho(cx-(r1+r2)*.48,cy+rand(-6,6),r1),b2=makePocho(cx+(r1+r2)*.48,cy+rand(-6,6),r2),b3=makePocho(cx+rand(-8,8),cy-(r2+r3)*.8,r3);const bodies=[b1,b2,b3],soft=.065,damp=.095;const links=[Constraint.create({bodyA:b1,bodyB:b2,length:r1+r2-5,stiffness:soft,damping:damp,render:{visible:false}}),Constraint.create({bodyA:b2,bodyB:b3,length:r2+r3-5,stiffness:soft,damping:damp,render:{visible:false}}),Constraint.create({bodyA:b3,bodyB:b1,length:r3+r1-5,stiffness:soft,damping:damp,render:{visible:false}})];const c={bodies,links,launched:false,jointsCut:false};bodies.forEach(b=>b.pocho.cluster=c);Composite.add(engine.world,[...bodies,...links]);clusters.add(c);currentCluster=c;status.textContent='ぽちょを掴んでください'}
+function cutJoints(c){if(!c||c.jointsCut)return;c.jointsCut=true;c.links.forEach(x=>Composite.remove(engine.world,x));status.textContent='ぽちょ、解放'}
+function removeCluster(c){if(!c)return;c.links.forEach(x=>Composite.remove(engine.world,x));c.bodies.forEach(b=>Composite.remove(engine.world,b));clusters.delete(c);if(currentCluster===c)currentCluster=null}
+function clearAll(){[...stickyLinks].forEach(l=>Composite.remove(engine.world,l));stickyLinks.clear();popFx.length=0;[...clusters].forEach(removeCluster);spawnCluster()}
+function bodiesLinked(a,b){for(const l of stickyLinks)if((l.bodyA===a&&l.bodyB===b)||(l.bodyA===b&&l.bodyB===a))return true;return false}
+function addStickyLink(a,b){if(!a?.pocho||!b?.pocho||a.pocho.popping||b.pocho.popping||a.pocho.colorIndex!==b.pocho.colorIndex||bodiesLinked(a,b))return;const d=Math.hypot(a.position.x-b.position.x,a.position.y-b.position.y);const l=Constraint.create({bodyA:a,bodyB:b,length:Math.min(d,a.pocho.radius+b.pocho.radius*.98),stiffness:.13,damping:.18,render:{visible:false}});stickyLinks.add(l);Composite.add(engine.world,l);setTimeout(()=>checkSameColorGroup(a),30)}
+function neighbors(body){const out=[];for(const l of stickyLinks){if(l.bodyA===body&&l.bodyB?.pocho)out.push(l.bodyB);else if(l.bodyB===body&&l.bodyA?.pocho)out.push(l.bodyA)}return out}
+function checkSameColorGroup(start){if(!start?.pocho||start.pocho.popping)return;const color=start.pocho.colorIndex,seen=new Set([start]),stack=[start];while(stack.length){const b=stack.pop();for(const n of neighbors(b))if(!seen.has(n)&&n.pocho.colorIndex===color&&!n.pocho.popping){seen.add(n);stack.push(n)}}if(seen.size>=3)popBodies([...seen])}
+function popBodies(bodies){const now=performance.now();bodies.forEach(b=>b.pocho.popping=true);for(const l of [...stickyLinks])if(bodies.includes(l.bodyA)||bodies.includes(l.bodyB)){Composite.remove(engine.world,l);stickyLinks.delete(l)}for(const c of clusters){for(const l of c.links)if(bodies.includes(l.bodyA)||bodies.includes(l.bodyB))Composite.remove(engine.world,l);c.links=c.links.filter(l=>!bodies.includes(l.bodyA)&&!bodies.includes(l.bodyB))}bodies.forEach(b=>{popFx.push({x:b.position.x,y:b.position.y,r:b.pocho.radius,color:COLORS[b.pocho.colorIndex],t:now});Composite.remove(engine.world,b);for(const c of clusters)c.bodies=c.bodies.filter(x=>x!==b)});for(const c of [...clusters])if(c.bodies.length===0){clusters.delete(c);if(currentCluster===c)currentCluster=null}status.textContent='ぽちょ！ 同色3つで消滅'}
+Events.on(engine,'collisionStart',ev=>{for(const pair of ev.pairs){const a=pair.bodyA,b=pair.bodyB;if(!a.pocho||!b.pocho||!a.pocho.launched||!b.pocho.launched)continue;if(a.pocho.colorIndex===b.pocho.colorIndex)addStickyLink(a,b)}});
+const mouse=Mouse.create(render.canvas);mouse.pixelRatio=render.options.pixelRatio;const mc=MouseConstraint.create(engine,{mouse,constraint:{stiffness:.038,damping:.18,render:{visible:false}}});Composite.add(engine.world,mc);render.mouse=mouse;
+let dragBody=null,dragCluster=null,samples=[];const canGrab=b=>b&&b.pocho&&b.pocho.cluster&&!b.pocho.cluster.launched;
+Events.on(mc,'startdrag',e=>{if(!canGrab(e.body)){mc.constraint.bodyB=null;mc.body=null;return}dragBody=e.body;dragCluster=e.body.pocho.cluster;samples=[{x:mouse.position.x,y:mouse.position.y,t:performance.now()}];status.textContent='射出ゾーン内で振って、離す'});
+Events.on(mc,'mousemove',()=>{if(!dragBody)return;const now=performance.now();samples.push({x:mouse.position.x,y:mouse.position.y,t:now});while(samples.length>9||(samples.length>2&&now-samples[0].t>125))samples.shift()});
+function throwVelocity(){if(samples.length<2)return{x:0,y:0};const b=samples[samples.length-1];let a=samples[0];for(let i=samples.length-2;i>=0;i--)if(b.t-samples[i].t>=50){a=samples[i];break}const dt=Math.max(16,b.t-a.t),f=16.666/dt*THROW_SCALE;return{x:(b.x-a.x)*f,y:(b.y-a.y)*f}}
+function cap(v,max){const m=Math.hypot(v.x,v.y);if(m<=max||m===0)return v;const s=max/m;return{x:v.x*s,y:v.y*s}}
+Events.on(mc,'enddrag',e=>{if(!dragBody||!dragCluster||e.body!==dragBody)return;const v=cap(throwVelocity(),MAX_SPEED),gi=dragCluster.bodies.indexOf(dragBody);dragCluster.launched=true;dragCluster.bodies.forEach((b,i)=>{b.collisionFilter.category=CAT_WORLD;b.collisionFilter.mask=CAT_WORLD;b.pocho.launched=true;const share=i===gi?1:.72;Body.setVelocity(b,cap({x:b.velocity.x*.45+v.x*share,y:b.velocity.y*.45+v.y*share},MAX_SPEED))});status.textContent='慣性で漂います';dragBody=null;dragCluster=null;samples=[];setTimeout(()=>{if(!currentCluster||currentCluster.launched)spawnCluster()},650)});
+Events.on(engine,'beforeUpdate',()=>{if(dragBody&&dragCluster){const m=Math.max(10,dragBody.pocho.radius*.4);mouse.position.x=Math.max(m,Math.min(W-m,mouse.position.x));mouse.position.y=Math.max(zoneTop+m,Math.min(H-m,mouse.position.y))}for(const c of clusters)if(c.launched){for(const b of c.bodies){const vv=cap(b.velocity,MAX_SPEED);if(vv.x!==b.velocity.x||vv.y!==b.velocity.y)Body.setVelocity(b,vv);if(Math.abs(b.angularVelocity)>MAX_ANGULAR_SPEED)Body.setAngularVelocity(b,Math.sign(b.angularVelocity)*MAX_ANGULAR_SPEED)}if(!c.jointsCut&&c.bodies.some(b=>b.position.y<zoneTop-b.pocho.radius*.2))cutJoints(c)}});
+Events.on(render,'afterRender',()=>{const ctx=render.context;ctx.save();ctx.strokeStyle='rgba(235,240,255,.20)';ctx.lineWidth=2;ctx.strokeRect(1,1,W-2,H-2);const g=ctx.createLinearGradient(0,zoneTop,0,H);g.addColorStop(0,'rgba(122,136,255,.03)');g.addColorStop(1,'rgba(122,136,255,.13)');ctx.fillStyle=g;ctx.fillRect(0,zoneTop,W,H-zoneTop);ctx.strokeStyle='rgba(180,190,255,.32)';ctx.setLineDash([7,8]);ctx.beginPath();ctx.moveTo(0,zoneTop+.5);ctx.lineTo(W,zoneTop+.5);ctx.stroke();ctx.setLineDash([]);ctx.font='11px system-ui';ctx.fillStyle='rgba(220,225,255,.48)';ctx.fillText('射出ゾーン',12,zoneTop+18);for(const c of clusters){if(!c.jointsCut){ctx.lineWidth=7;ctx.lineCap='round';ctx.strokeStyle='rgba(238,241,255,.14)';for(const l of c.links){if(!l.bodyA||!l.bodyB)continue;ctx.beginPath();ctx.moveTo(l.bodyA.position.x,l.bodyA.position.y);ctx.lineTo(l.bodyB.position.x,l.bodyB.position.y);ctx.stroke()}}for(const b of c.bodies)drawFace(ctx,b)}ctx.lineWidth=5;ctx.strokeStyle='rgba(255,255,255,.12)';for(const l of stickyLinks){ctx.beginPath();ctx.moveTo(l.bodyA.position.x,l.bodyA.position.y);ctx.lineTo(l.bodyB.position.x,l.bodyB.position.y);ctx.stroke()}const now=performance.now();for(let i=popFx.length-1;i>=0;i--){const f=popFx[i],age=(now-f.t)/360;if(age>=1){popFx.splice(i,1);continue}ctx.globalAlpha=1-age;ctx.strokeStyle=f.color;ctx.lineWidth=5*(1-age)+1;ctx.beginPath();ctx.arc(f.x,f.y,f.r*(1+1.8*age),0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1}if(dragBody){ctx.beginPath();ctx.arc(mouse.position.x,mouse.position.y,6,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.75)';ctx.fill()}ctx.restore()});
+function drawFace(ctx,b){const r=b.pocho.radius;ctx.save();ctx.translate(b.position.x,b.position.y);ctx.rotate(b.angle);ctx.strokeStyle=ctx.fillStyle='rgba(20,24,32,.72)';ctx.lineWidth=Math.max(2,r*.055);ctx.lineCap='round';const ey=-r*.12,ex=r*.28,er=Math.max(1.8,r*.055);ctx.beginPath();ctx.arc(-ex,ey,er,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(ex,ey,er,0,Math.PI*2);ctx.fill();ctx.beginPath();if(b.pocho.face==='happy')ctx.arc(0,r*.02,r*.27,.15*Math.PI,.85*Math.PI);else if(b.pocho.face==='grumpy')ctx.arc(0,r*.34,r*.24,1.18*Math.PI,1.82*Math.PI);else{ctx.moveTo(-r*.18,r*.18);ctx.lineTo(r*.18,r*.18)}ctx.stroke();ctx.restore()}
+respawnBtn.addEventListener('click',spawnCluster);resetBtn.addEventListener('click',clearAll);window.addEventListener('resize',()=>{measure();render.options.width=W;render.options.height=H;render.canvas.width=W*render.options.pixelRatio;render.canvas.height=H*render.options.pixelRatio;render.canvas.style.width=W+'px';render.canvas.style.height=H+'px';render.bounds.max.x=W;render.bounds.max.y=H;rebuildWalls()},{passive:true});spawnCluster();
 })();
-</script>
-</body>
-</html>
+</script></body></html>
