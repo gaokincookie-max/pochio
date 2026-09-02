@@ -37,7 +37,7 @@ $$('[data-mode]').forEach(b=>b.onclick=()=>startGame(b.dataset.mode));
 $('[data-action="replay"]').onclick=()=>startGame(modeKey);
 $('#settings-btn').onclick=openSettings;
 $$('[data-setting]').forEach(b=>b.onclick=()=>settingAction(b.dataset.setting));
-$('#confirm-no').onclick=()=>confirmModal.classList.add('hidden');
+$('#confirm-no').onclick=()=>{confirmModal.classList.add('hidden');settingsModal.classList.remove('hidden');};
 
 function openSettings(){if(state!=='game')return;paused=true;runner.enabled=false;settingsModal.classList.remove('hidden')}
 function settingAction(a){
@@ -61,7 +61,7 @@ function createPocho(desc){
  b.pocho={id:'p'+eventSerial++, ...desc, _initialExpression:desc.expression, launched:false,launchIndex:0,bornAt:now,lastUpdate:now,distance:0,maxSpeed:0,highSpeedSeen:false,wall:{left:0,right:0,top:0,bottom:0,last:null,lastAt:0,sequence:[]},contacts:new Map(),contactColors:[],colorsSeen:new Set(),expressionsSeen:new Set([desc.expression]),sizesSeen:new Set(),decorationsSeen:new Set(),contactCount:0,sameColorContacts:0,diffColorContacts:0,stickCount:0,detachCount:0,everStuck:false,expressionChanges:0,lastExpressionChange:0,lastContactAt:0,lastContactId:null,lastEvent:'spawn',lastEventAt:now,aloneSince:now,longStill:false,stillSince:0,groupsHistory:[],maxGroup:1,popWitnessed:0,lastPushedBy:null,lastPushAt:0,behaviorCandidateHits:0};
  Body.setStatic(b,true); return b;
 }
-function measure(){const r=shell.getBoundingClientRect();W=Math.max(280,r.width);H=Math.max(520,r.height);launchY=H*.80}
+function measure(){const r=gameEl.getBoundingClientRect();W=Math.max(280,r.width);H=Math.max(380,r.height);launchY=H*.80}
 function setupPhysics(){
  measure();engine=Engine.create({positionIterations:10,velocityIterations:8,constraintIterations:5,enableSleeping:false});engine.gravity.x=0;engine.gravity.y=0;
  render=Render.create({element:gameEl,engine,options:{width:W,height:H,wireframes:false,background:'#eef0ed',pixelRatio:Math.min(devicePixelRatio||1,2)}});Render.run(render);runner=Runner.create();Runner.run(runner,engine);rebuildWalls();
@@ -79,7 +79,7 @@ function startGame(m){
  runStats={contacts:0,sticks:0,pops:0,induced:0,newRoles:new Set(),maxRarity:0,maxSingle:0,rolesTriggered:0,shots:0};
  showScreen('game');setupPhysics();nextDesc=makeDescriptor();spawnCurrent();updateHud();drawNext();
 }
-function stopGame(){paused=false;settingsModal.classList.add('hidden');confirmModal.classList.add('hidden');teardownPhysics()}
+function stopGame(){persist();paused=false;settingsModal.classList.add('hidden');confirmModal.classList.add('hidden');teardownPhysics()}
 function spawnCurrent(){if(remaining<=0)return;const d=nextDesc||makeDescriptor();nextDesc=makeDescriptor();current=createPocho(d);Composite.add(engine.world,current);bodies.add(current);gameStatus.textContent='ぽちょを引っ張ってください';drawNext();}
 function updateHud(){hudScore.textContent=score.toLocaleString();hudRemain.textContent=remaining;hudBest.textContent='BEST '+(save.best[modeKey]||0).toLocaleString()}
 function drawNext(){const ctx=nextCanvas.getContext('2d'),d=nextDesc;ctx.clearRect(0,0,70,70);if(!d)return;drawPocho2D(ctx,35,36,Math.min(19,d.radius*.68),d,0)}
@@ -93,23 +93,22 @@ function pointerEnd(e){if(!dragging||!current)return;dragging=false;const dx=anc
 
 function speed(b){return Math.hypot(b.velocity.x,b.velocity.y)}
 function pairKey(a,b){return a.pocho.id<b.pocho.id?a.pocho.id+'|'+b.pocho.id:b.pocho.id+'|'+a.pocho.id}
-function contactRec(a,b){let r=a.pocho.contacts.get(b.pocho.id);if(!r){r={count:0,lastAt:0,firstAt:0,everStuck:false,detachCount:0,lastStickAt:0,lastStickExpression:null,maxSpeed:0};a.pocho.contacts.set(b.pocho.id,r)}return r}
+function contactRec(a,b){let r=a.pocho.contacts.get(b.pocho.id);if(!r){r={count:0,lastAt:0,firstAt:0,everStuck:false,stickCount:0,detachCount:0,lastStickAt:0,lastStickExpression:null,maxSpeed:0};a.pocho.contacts.set(b.pocho.id,r)}return r}
 function collisionContext(a,b,pair){
  const now=performance.now(),av=speed(a),bv=speed(b),rv=Math.hypot(a.velocity.x-b.velocity.x,a.velocity.y-b.velocity.y),dx=b.position.x-a.position.x,dy=b.position.y-a.position.y,dist=Math.max(1,Math.hypot(dx,dy));
  const relDot=((a.velocity.x-b.velocity.x)*dx+(a.velocity.y-b.velocity.y)*dy)/(Math.max(.01,rv)*dist); // + moving toward roughly
  const near=getNearby((a.position.x+b.position.x)/2,(a.position.y+b.position.y)/2,T.NEAR,[a,b]);
- return {id:eventSerial++,time:now,a,b,primary:a,other:b,x:(a.position.x+b.position.x)/2,y:(a.position.y+b.position.y)/2,av,bv,relativeSpeed:rv,headOn:Math.abs(relDot)>.62,shallow:Math.abs(relDot)<.34,near,nearCount:near.length,groupA:getGroup(a),groupB:getGroup(b),trigger:null,victims:[],causeType:'collision',pair};
+ return {id:eventSerial++,time:now,a,b,primary:a,other:b,x:(a.position.x+b.position.x)/2,y:(a.position.y+b.position.y)/2,av,bv,relativeSpeed:rv,headOn:Math.abs(relDot)>.62,shallow:Math.abs(relDot)<.34,near,nearCount:near.length,groupA:getGroup(a),groupB:getGroup(b),preColorsA:new Set(a.pocho.colorsSeen),preColorsB:new Set(b.pocho.colorsSeen),prevContactIdA:a.pocho.lastContactId,prevContactIdB:b.pocho.lastContactId,prevPushedByA:a.pocho.lastPushedBy,prevPushedByB:b.pocho.lastPushedBy,trigger:null,victims:[],causeType:'collision',pair};
 }
 function collisionStart(ev){if(state!=='game'||paused)return;for(const pair of ev.pairs){const a=pair.bodyA,b=pair.bodyB;if(!a.pocho||!b.pocho||!a.pocho.launched||!b.pocho.launched)continue;if(isBonded(a,b))continue;processContact(a,b,pair)}}
 function processContact(a,b,pair){
  const ctx=collisionContext(a,b,pair),now=ctx.time;runStats.contacts++;save.totals.contacts++;lastActivity=now;
  for(const [self,other] of [[a,b],[b,a]]){const p=self.pocho,r=contactRec(self,other);r.count++;if(!r.firstAt)r.firstAt=now;r.lastAt=now;r.maxSpeed=Math.max(r.maxSpeed,ctx.relativeSpeed);p.contactCount++;p.lastContactAt=now;p.lastContactId=other.pocho.id;p.colorsSeen.add(other.pocho.color);p.expressionsSeen.add(other.pocho.expression);p.sizesSeen.add(other.pocho.sizeClass);if(other.pocho.decoration!=='なし')p.decorationsSeen.add(other.pocho.decoration);p.contactColors.push(other.pocho.color);if(p.contactColors.length>8)p.contactColors.shift();if(p.color===other.pocho.color)p.sameColorContacts++;else p.diffColorContacts++;p.lastEvent='contact';p.lastEventAt=now;p.aloneSince=now;}
- a.pocho.lastPushedBy=b.pocho.id;a.pocho.lastPushAt=now;b.pocho.lastPushedBy=a.pocho.id;b.pocho.lastPushAt=now;
  maybeExpressionChange(a,ctx);maybeExpressionChange(b,ctx);
  const outcome=evaluateBehavior(ctx);
- if(outcome==='POP'){ctx.trigger='弾ける';const origin=ctx.primary;popGroup(origin,ctx)}
- else if(outcome==='STICK'){ctx.trigger='くっつく';stick(a,b,ctx);scoreEvent(ctx)}
- else{ctx.trigger='何も起こらない';scoreEvent(ctx)}
+ if(outcome==='POP'){ctx.trigger='弾ける';const origin=ctx.primary,culprit=origin===a?b:a;origin.pocho.lastPushedBy=culprit.pocho.id;origin.pocho.lastPushAt=now;popGroup(origin,ctx)}
+ else if(outcome==='STICK'){ctx.trigger='くっつく';stick(a,b,ctx);scoreEvent(ctx);a.pocho.lastPushedBy=b.pocho.id;a.pocho.lastPushAt=now;b.pocho.lastPushedBy=a.pocho.id;b.pocho.lastPushAt=now}
+ else{ctx.trigger='何も起こらない';scoreEvent(ctx);a.pocho.lastPushedBy=b.pocho.id;a.pocho.lastPushAt=now;b.pocho.lastPushedBy=a.pocho.id;b.pocho.lastPushAt=now}
  pushRecent({type:ctx.trigger,time:now,x:ctx.x,y:ctx.y,a:a.pocho.id,b:b.pocho.id});
 }
 function collisionActive(ev){for(const pair of ev.pairs){let b=null;if(pair.bodyA===topWall&&pair.bodyB?.pocho)b=pair.bodyB;else if(pair.bodyB===topWall&&pair.bodyA?.pocho)b=pair.bodyA;if(b){const p=b.pocho,now=performance.now();if(now-p.wall.lastAt>180){p.wall.top++;p.wall.last='top';p.wall.lastAt=now;p.wall.sequence.push('top');trimSeq(p.wall.sequence,8)}if(b.velocity.y<0||Math.abs(b.velocity.y)<2)Body.setVelocity(b,{x:b.velocity.x*.28,y:0});Body.setAngularVelocity(b,b.angularVelocity*.35)}}}
@@ -137,6 +136,73 @@ function checkClause(c,ctx,self=ctx.primary||ctx.a,other=ctx.other||(self===ctx.
  const rec=q?contactRec(self,other):null, age=(now-p.bornAt)/1000, sv=speed(self), ov=other?speed(other):0, rv=ctx.relativeSpeed??(other?Math.hypot(self.velocity.x-other.velocity.x,self.velocity.y-other.velocity.y):0);
  const g=getGroup(self), og=other?getGroup(other):[], all=ctx.victims?.length?ctx.victims:g, near=ctx.near||getNearby(ctx.x??self.position.x,ctx.y??self.position.y,T.NEAR,[self]);
  const colors=new Set(all.filter(x=>x.pocho).map(x=>x.pocho.color)), exprs=new Set(all.filter(x=>x.pocho).map(x=>x.pocho.expression)), sizes=new Set(all.filter(x=>x.pocho).map(x=>x.pocho.sizeClass)), decos=all.filter(x=>x.pocho&&x.pocho.decoration!=='なし').map(x=>x.pocho.decoration);
+ // role/compound shorthands that need exact semantics
+ if(c==='両方ごきげん')return q&&p.expression==='ごきげん'&&q.expression==='ごきげん';
+ if(c==='両方不機嫌'||c==='不機嫌同士')return q&&p.expression==='不機嫌'&&q.expression==='不機嫌';
+ if(c==='両方大'||c==='両方大サイズ'||c==='大サイズ同士')return q&&p.sizeClass==='大'&&q.sizeClass==='大';
+ if(c==='両方装飾あり'||c==='両方装飾付き')return q&&p.decoration!=='なし'&&q.decoration!=='なし';
+ if(c==='同装飾')return q&&p.decoration!=='なし'&&p.decoration===q.decoration;
+ if(c==='同色ではない')return q&&p.color!==q.color;
+ if(c==='同表情ではない')return q&&p.expression!==q.expression;
+ if(c==='双方長時間生存'||c==='長時間同じ盤面に存在')return q&&age>=T.LONG&&((now-q.bornAt)/1000)>=T.LONG;
+ if(c==='互いに一度も接触したことがない')return rec&&rec.count<=1;
+ if(c==='全員高速ではない')return all.length>0&&all.every(x=>speed(x)<T.HIGH);
+ if(c==='低速ぽちょが過半数'){const pool=near.length?near:all;return pool.length>0&&pool.filter(x=>speed(x)<=T.LOW).length>pool.length/2;}
+ if(c==='壁3種類以上へ接触')return ['left','right','top','bottom'].filter(k=>p.wall[k]>0).length>=3;
+ if(c==='左右壁接触済み')return p.wall.left>0&&p.wall.right>0;
+ if(c==='起爆ぽちょが単独ではない')return (ctx.victims?.length||1)>1;
+ if(c==='起爆ぽちょと誘爆ぽちょが異色')return (ctx.victims||[]).some(x=>x!==ctx.primary&&x.pocho.color!==ctx.primary?.pocho.color);
+ if(c==='最後は誘爆ではなく自分が起爆')return ctx.trigger==='弾ける'&&self===ctx.primary;
+ if(c==='装飾ありが含まれる')return decos.length>=1;
+ if(c==='ごきげん・ふつう・不機嫌を全経験'||c==='3表情すべて経験済み')return p.expressionsSeen.size>=3;
+ if(c==='3表情全て'||c==='3表情すべて含む')return exprs.size===3;
+ if(c==='3サイズすべて含む')return sizes.size===3;
+ if(c==='3体のうち2色以上')return (ctx.groupAfter?.length||0)>=3&&new Set(ctx.groupAfter.map(x=>x.pocho.color)).size>=2;
+ if(c==='4体すべて異なる色')return (ctx.causeChain?.length||0)>=4&&new Set(ctx.causeChain.slice(-4).map(x=>x.pocho.color)).size===4;
+ if(c==='AとDは直接接触していない')return (ctx.causeChain?.length||0)>=4&&!(ctx.causeChain[0].pocho.contacts.has(ctx.causeChain.at(-1).pocho.id));
+ if(c==='他グループ2つ以上が至近距離'){const groups=[];const seen=new Set();for(const n of near){if(seen.has(n))continue;const gg=getGroup(n);gg.forEach(x=>seen.add(x));groups.push(gg)}return groups.length>=2;}
+ if(c==='爆発によって密集が解消')return !!ctx.densityWillResolve;
+ if(c==='加入者が単独だった')return !!ctx.newlyJoined&&((ctx.preGroupSize?.get(ctx.newlyJoined.pocho.id)||1)===1);
+ if(c==='加入者が異色')return !!ctx.newlyJoined&&ctx.groupBefore?.some(x=>x.pocho.color!==ctx.newlyJoined.pocho.color);
+ if(c==='初めて接着')return (ctx.prePairStickCount||0)===0;
+ if(c==='3回目の再接着')return (ctx.prePairStickCount||0)===2;
+ if(c==='同じ相手と過去2回接着')return (rec?.stickCount||0)>=2;
+ if(c==='2回とも一度離れている')return (rec?.detachCount||0)>=2;
+ if(c==='4体以上のグループ成立'||c==='一度の連続接着で4体グループ成立')return (ctx.groupAfter?.length||0)>=4;
+ if(c==='誰も過去に接着経験なし')return ctx.preEverStuck&&[...ctx.preEverStuck.values()].every(v=>!v);
+ if(c==='両方ともその後別グループ所属経験あり')return q&&p.maxGroup>=2&&q.maxGroup>=2&&p.detachCount>0&&q.detachCount>0;
+ if(c==='離れている間に双方が別ぽちょへ接触')return q&&(rec?.detachCount||0)>0&&p.contacts.size>=2&&q.contacts.size>=2;
+ if(c==='再会')return rec&&rec.count>=2;
+ if(c==='一度離れて一定時間経過'||c==='一定時間以上離れていた')return (rec?.detachCount||0)>0&&now-(rec?.lastStickAt||0)>=3000;
+ if(c==='接触時間が短い')return false; // collisionEnd計測未実装。該当役はinactive
+ if(c==='自分もごきげん')return p.expression==='ごきげん';
+ if(c==='互いに過去3回以上接触')return rec&&rec.count>=3;
+ if(c==='他ぽちょへ接触'||c==='他ぽちょへ衝突')return !!q;
+ if(c==='一度くっついて離れた履歴あり'||c==='一度くっついて離れた')return p.everStuck&&p.detachCount>0;
+ if(c==='別グループに接触'||c==='別グループへ衝突'||c==='新しいグループへ接触')return q&&og.length>=2&&!g.includes(q);
+ if(c==='初回衝突')return p.contactCount<=1;
+ if(c==='直前に周囲で別のぽちょが弾けた')return recentEvents.some(e=>e.type==='弾ける'&&now-e.time<2000);
+ if(c==='小さいあんず')return p.color==='あんず'&&p.sizeClass==='小';
+ if(c==='接触地点の近くに他ぽちょが少ない')return near.length<=2;
+ if(c==='過去に接触したことのない色'){const pre=self===ctx.a?ctx.preColorsA:ctx.preColorsB;return q&&!pre.has(q.color);}
+ if(c==='自分の速度も低い')return sv<=T.LOW;
+ if(c==='自分も移動中')return sv>T.STILL;
+ if(c==='総接触回数が偶数')return p.contactCount>0&&p.contactCount%2===0;
+ if(c==='自分が周辺最大サイズ'||c==='自分が周辺で最大サイズ')return near.every(x=>x.pocho.radius<=p.radius+.1);
+ if(c==='外部ぽちょに衝突')return q&&!g.includes(other);
+ if(c==='生存中に3色以上へ接触済み')return p.colorsSeen.size>=3;
+ if(c==='今回が同色')return q&&p.color===q.color;
+ if(c==='壁に2回以上当たっている')return wallTotal(p)>=2;
+ if(c==='自分からぶつかる')return sv>ov+0.5;
+ if(c==='接触地点付近に他ぽちょが2体以上')return near.length>=2;
+ if(c==='1回の接触を起点')return !!q;
+ if(c==='一度も接着なし')return !p.everStuck;
+ if(c==='誘爆数3体以上')return Math.max(0,(ctx.victims?.length||1)-1)>=3;
+ if(c==='4体全員が互いに未接触だった組み合わせを含む'){const gg=ctx.groupAfter||[];if(gg.length<4)return false;for(let i=0;i<gg.length;i++)for(let j=i+1;j<gg.length;j++){const rr=gg[i].pocho.contacts.get(gg[j].pocho.id);if(!rr||rr.count===0)return true;}return false;}
+ if(c==='過去に複数回接触')return rec&&rec.count>=3;
+ if(c==='離脱')return p.detachCount>0;
+ if(c==='接着3回以上')return p.stickCount>=3;
+ if(c==='装飾あり'){if(ctx.victims?.length)return ctx.victims.some(x=>x.pocho.decoration!=='なし');return p.decoration!=='なし';}
  // literal self attributes
  if(COLORS.some(x=>x.id===c))return p.color===c;if(EXPRESSIONS.includes(c))return p.expression===c;if(DECOS.includes(c))return p.decoration===c;if(['小','中','大'].includes(c))return p.sizeClass===c;
  if(c==='リボン付き')return p.decoration==='リボン';if(c==='メガネ付き')return p.decoration==='メガネ';if(c==='王冠付き')return p.decoration==='王冠';if(c==='芽付き')return p.decoration==='芽';
@@ -191,6 +257,7 @@ function checkClause(c,ctx,self=ctx.primary||ctx.a,other=ctx.other||(self===ctx.
  if((m=c.match(/同じ相手との(\d+)回目以上?の?接触/))||(m=c.match(/接触(\d+)回目以上/))||(m=c.match(/過去に(\d+)回以上接触/)))return rec&&rec.count>=+m[1];
  if((m=c.match(/同じ相手との(\d+)回目の接触/)))return rec&&rec.count===+m[1];
  if((m=c.match(/接触回数(\d+)回以上/))||(m=c.match(/総接触回数が(\d+)回以上/)))return p.contactCount>=+m[1];if(c.includes('接触回数2回以下'))return p.contactCount<=2;
+ if((m=c.match(/同じ2体が過去(\d+)回以上接触/))||(m=c.match(/同じ相手と接触(\d+)回以上/)))return rec&&rec.count>=+m[1];if((m=c.match(/過去接触(\d+)回以上/)))return rec&&rec.count>=+m[1];
  if(c.includes('接触相手5体以上'))return p.contacts.size>=5;if(c.includes('3色以上と接触')||c.includes('過去に3種類以上の色と接触'))return p.colorsSeen.size>=3;if(c.includes('4色以上と接触'))return p.colorsSeen.size>=4;if(c.includes('全6色と接触')||c.includes('6色全てに接触')||c.includes('全基本色へ接触'))return p.colorsSeen.size>=6;
  if(c.includes('小中大すべてのサイズ区分と接触'))return p.sizesSeen.size>=3;if(c.includes('装飾4種すべてと接触'))return p.decorationsSeen.size>=4;
  if(c.includes('直近3回の接触相手がすべて異なる'))return p.contactColors.length>=3&&new Set(p.contactColors.slice(-3)).size===3;if(c.includes('直近の接触色が3種類すべて異なる'))return p.contactColors.length>=3&&new Set(p.contactColors.slice(-3)).size===3;
@@ -220,7 +287,7 @@ function checkClause(c,ctx,self=ctx.primary||ctx.a,other=ctx.other||(self===ctx.
  if(c==='誘爆なし'||c==='今回誘爆なし')return (ctx.victims?.length||1)===1;if((m=c.match(/誘爆(\d+)体以上/)))return Math.max(0,(ctx.victims?.length||1)-1)>=+m[1];if(c.includes('誘爆あり'))return (ctx.victims?.length||1)>1;
  if(c.includes('誘爆込み4体以上'))return (ctx.victims?.length||0)>=4;if(c.includes('誘爆込み6体'))return (ctx.victims?.length||0)===6;if(c.includes('1回の起爆から5体以上消滅'))return (ctx.victims?.length||0)>=5;
  if(c.includes('起爆ぽちょが大サイズ'))return ctx.primary?.pocho.sizeClass==='大';if(c.includes('起爆ぽちょが小サイズ'))return ctx.primary?.pocho.sizeClass==='小';if(c.includes('起爆ぽちょがごきげん'))return ctx.primary?.pocho.expression==='ごきげん';if(c.includes('起爆ぽちょが天井接触済み'))return ctx.primary?.pocho.wall.top>0;if(c.includes('起爆ぽちょが装飾なし'))return ctx.primary?.pocho.decoration==='なし';if(c.includes('起爆ぽちょが不機嫌ではない'))return ctx.primary?.pocho.expression!=='不機嫌';
- if(c.includes('高速衝突が原因'))return ctx.relativeSpeed>=T.HIGH;if(c.includes('起爆原因が第三者から押された衝突'))return !!ctx.primary?.pocho.lastPushedBy&&ctx.primary.pocho.lastPushedBy!==other?.pocho.id;
+ if(c.includes('高速衝突が原因'))return ctx.relativeSpeed>=T.HIGH;if(c.includes('起爆原因が第三者から押された衝突')){const prev=ctx.primary===ctx.a?ctx.prevPushedByA:ctx.prevPushedByB;return !!prev&&prev!==other?.pocho.id;}
  if(c.includes('誘爆ぽちょに2色以上'))return new Set((ctx.victims||[]).filter(x=>x!==ctx.primary).map(x=>x.pocho.color)).size>=2;if(c.includes('起爆ぽちょと異表情が含まれる'))return (ctx.victims||[]).some(x=>x!==ctx.primary&&x.pocho.expression!==ctx.primary.pocho.expression);if(c.includes('起爆ぽちょと同色が誘爆にいない'))return !(ctx.victims||[]).some(x=>x!==ctx.primary&&x.pocho.color===ctx.primary.pocho.color);
  if(c.includes('誘爆内に3色以上'))return new Set((ctx.victims||[]).filter(x=>x!==ctx.primary).map(x=>x.pocho.color)).size>=3;
  if(c.includes('誘爆経験を目撃済み'))return p.popWitnessed>0;
@@ -253,11 +320,20 @@ function checkClause(c,ctx,self=ctx.primary||ctx.a,other=ctx.other||(self===ctx.
  if(c.includes('3体すべて異色'))return ctx.groupAfter?.length===3&&new Set(ctx.groupAfter.map(x=>x.pocho.color)).size===3;
  if(c.includes('表情が3種類すべて揃う'))return ctx.groupAfter?.length>=3&&new Set(ctx.groupAfter.map(x=>x.pocho.expression)).size===3;
  if(c.includes('サイズ区分も3種類すべて揃う'))return ctx.groupAfter?.length>=3&&new Set(ctx.groupAfter.map(x=>x.pocho.sizeClass)).size===3;
- if(c.includes('1秒以内に')||c.includes('一定時間以内'))return true;
+ if(c.includes('1秒以内')||c.includes('一定時間以内'))return true;
  if(c.includes('3体以上が順番に接着'))return recentEvents.filter(e=>e.type==='くっつく'&&now-e.time<1000).length>=2;
  if(c.includes('最終グループが3色以上'))return ctx.groupAfter&&new Set(ctx.groupAfter.map(x=>x.pocho.color)).size>=3;
  if(c.includes('自分だけ異表情'))return near.length>=2&&near.filter(x=>x.pocho.expression===p.expression).length===0;
  if(c.includes('相手は周囲の多数派表情')){if(!q)return false;const co={};near.forEach(x=>co[x.pocho.expression]=(co[x.pocho.expression]||0)+1);const max=Math.max(0,...Object.values(co));return (co[q.expression]||0)===max}
+ if(c.includes('相手と同じ壁に触れた履歴がある'))return q&&['left','right','top','bottom'].some(k=>p.wall[k]>0&&q.wall[k]>0);
+ if(c.includes('その後初接触'))return rec&&rec.count<=1;
+ if(c.includes('相手の周囲に自分以外のふじがいる'))return q&&getNearby(other.position.x,other.position.y,T.NEAR,[self,other]).some(x=>x.pocho.color==='ふじ');
+ if(c.includes('自分がグループの端')){let degree=0;for(const bond of bonds)if(bond.bodyA===self||bond.bodyB===self)degree++;return g.length>=2&&degree<=1;}
+ if(c.includes('相手が装飾なし'))return q&&q.decoration==='なし';
+ if(c.includes('相手が現在2体以上と接触中'))return og.length>=2;
+ if(c.includes('接触相手が直前に別ぽちょと離れている'))return q&&q.lastEvent==='detach'&&now-q.lastEventAt<2500;
+ if(c.includes('相手の表情が変化済み'))return q&&q.expressionChanges>0;
+ if(c.includes('直前に別のぽちょへ触れていない')){const prev=self===ctx.a?ctx.prevContactIdA:ctx.prevContactIdB;return !prev||prev===q?.id;}
  if(c.includes('接着後に自分が多数派側へ入る'))return true;
  if(c.includes('過去2回とは違う位置帯'))return true;if(c.includes('現在表情が初回と異なる'))return p.expressionChanges>0;
  if(c.includes('一度も相互誘爆なし'))return true;
@@ -270,7 +346,7 @@ function checkClause(c,ctx,self=ctx.primary||ctx.a,other=ctx.other||(self===ctx.
  if(c.includes('相手も長時間生存'))return q&&(now-q.bornAt)/1000>=T.LONG;
  if(c.includes('直前の接触で何も起きていない'))return p.lastEvent==='none';if(c.includes('直前イベントが「離れる」'))return p.lastEvent==='detach';
  if(c.includes('直前に別ぽちょへ衝突済み')||c.includes('直前の衝突から短時間以内'))return now-p.lastContactAt<1600;
- if(c.includes('その反動で今回の相手に接触')||c.includes('他ぽちょに押されて高速化')||c.includes('第三者へ衝突'))return p.lastPushedBy&&p.lastPushedBy!==q?.id&&now-p.lastPushAt<2000;
+ if(c.includes('その反動で今回の相手に接触')||c.includes('他ぽちょに押されて高速化')||c.includes('第三者へ衝突')){const prev=self===ctx.a?ctx.prevPushedByA:ctx.prevPushedByB;return prev&&prev!==q?.id&&now-p.lastPushAt<2000;}
  if(c.includes('下から高速で飛んできた相手'))return q&&q.velocity.y<0&&ov>=T.HIGH;
  if(c.includes('下方向へ動いている相手'))return q&&q.velocity.y>0;
  if(c.includes('接触時にほぼ同じ方向へ移動')){if(!other)return false;const dot=self.velocity.x*other.velocity.x+self.velocity.y*other.velocity.y;return dot>0}
@@ -303,8 +379,8 @@ function wallTotal(p){return p.wall.left+p.wall.right+p.wall.top+p.wall.bottom}
 function maxContactPartner(p){let id=null,n=-1;for(const [k,v] of p.contacts)if(v.count>n){n=v.count;id=k}return id}
 
 function stick(a,b,ctx){
- if(isBonded(a,b))return;const len=(a.pocho.radius+b.pocho.radius)*.93,c=Constraint.create({bodyA:a,bodyB:b,length:len,stiffness:.055,damping:.14,render:{visible:false}});c.pochoBond={createdAt:performance.now(),rest:len};Composite.add(engine.world,c);bonds.add(c);
- for(const [x,y] of [[a,b],[b,a]]){const p=x.pocho,r=contactRec(x,y);p.stickCount++;p.everStuck=true;p.aloneSince=performance.now();r.everStuck=true;r.lastStickAt=performance.now();r.lastStickExpression=p.expression;p.lastEvent='stick';p.lastEventAt=performance.now()}
+ if(isBonded(a,b))return;ctx.preEverStuck=new Map([...new Set([...ctx.groupA,...ctx.groupB])].map(x=>[x.pocho.id,x.pocho.everStuck]));ctx.preGroupSize=new Map([...new Set([...ctx.groupA,...ctx.groupB])].map(x=>[x.pocho.id,getGroup(x).length]));ctx.prePairStickCount=contactRec(a,b).stickCount||0;const len=(a.pocho.radius+b.pocho.radius)*.93,c=Constraint.create({bodyA:a,bodyB:b,length:len,stiffness:.055,damping:.14,render:{visible:false}});c.pochoBond={createdAt:performance.now(),rest:len};Composite.add(engine.world,c);bonds.add(c);
+ for(const [x,y] of [[a,b],[b,a]]){const p=x.pocho,r=contactRec(x,y);p.stickCount++;p.everStuck=true;p.aloneSince=performance.now();r.everStuck=true;r.stickCount=(r.stickCount||0)+1;r.lastStickAt=performance.now();r.lastStickExpression=p.expression;p.lastEvent='stick';p.lastEventAt=performance.now()}
  const before=ctx.groupA.length>=ctx.groupB.length?ctx.groupA:ctx.groupB;ctx.groupBefore=before;ctx.groupAfter=getGroup(a);ctx.newlyJoined=before.includes(a)?b:a;recordGroups(ctx.groupAfter);runStats.sticks++;save.totals.sticks++;lastActivity=performance.now();
 }
 function recordGroups(g){const ids=g.map(x=>x.pocho.id).sort();for(const b of g){b.pocho.maxGroup=Math.max(b.pocho.maxGroup,g.length);b.pocho.groupsHistory.push(ids);if(b.pocho.groupsHistory.length>8)b.pocho.groupsHistory.shift()}}
@@ -312,7 +388,7 @@ function isBonded(a,b){for(const c of bonds)if((c.bodyA===a&&c.bodyB===b)||(c.bo
 function getGroup(start){if(!start?.pocho)return[];const out=[],seen=new Set([start]),stack=[start];while(stack.length){const b=stack.pop();out.push(b);for(const c of bonds){let n=null;if(c.bodyA===b)n=c.bodyB;else if(c.bodyB===b)n=c.bodyA;if(n?.pocho&&!seen.has(n)){seen.add(n);stack.push(n)}}}return out}
 function breakBond(c){const a=c.bodyA,b=c.bodyB;if(!a?.pocho||!b?.pocho)return;Composite.remove(engine.world,c);bonds.delete(c);const now=performance.now();for(const [x,y] of [[a,b],[b,a]]){x.pocho.detachCount++;x.pocho.aloneSince=now;x.pocho.lastEvent='detach';x.pocho.lastEventAt=now;const r=contactRec(x,y);r.detachCount++}pushRecent({type:'detach',time:now,x:(a.position.x+b.position.x)/2,y:(a.position.y+b.position.y)/2})}
 function popGroup(origin,ctx){
- const victims=getGroup(origin);ctx.primary=origin;ctx.victims=[...victims];ctx.causeChain=buildCauseChain(origin);ctx.x=origin.position.x;ctx.y=origin.position.y;scoreEvent(ctx);
+ const victims=getGroup(origin);ctx.primary=origin;ctx.victims=[...victims];ctx.causeChain=buildCauseChain(origin);ctx.x=origin.position.x;ctx.y=origin.position.y;const beforeNear=getNearby(ctx.x,ctx.y,T.NEAR*1.25,[]);const remainingNear=beforeNear.filter(x=>!victims.includes(x));ctx.densityWillResolve=beforeNear.length>=8&&remainingNear.length<=Math.max(3,beforeNear.length-victims.length);scoreEvent(ctx);
  const now=performance.now();for(const witness of bodies){if(victims.includes(witness)||!witness.pocho)continue;if(Math.hypot(witness.position.x-origin.position.x,witness.position.y-origin.position.y)<170)witness.pocho.popWitnessed+=Math.max(0,victims.length-1)}
  runStats.pops++;runStats.induced+=Math.max(0,victims.length-1);save.totals.pops++;save.totals.induced+=Math.max(0,victims.length-1);
  for(const c of [...bonds])if(victims.includes(c.bodyA)||victims.includes(c.bodyB)){Composite.remove(engine.world,c);bonds.delete(c)}
@@ -344,9 +420,9 @@ function drawPocho2D(ctx,x,y,r,p,angle=0){ctx.save();ctx.translate(x,y);ctx.rota
 function drawDecoration(ctx,r,d){ctx.strokeStyle='#55505acb';ctx.fillStyle='#fff8';ctx.lineWidth=Math.max(1.4,r*.055);if(d==='リボン'){ctx.fillStyle='#f8d0dc';ctx.beginPath();ctx.ellipse(-r*.2,-r*.8,r*.25,r*.14,-.5,0,Math.PI*2);ctx.ellipse(r*.2,-r*.8,r*.25,r*.14,.5,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(0,-r*.8,r*.10,0,Math.PI*2);ctx.fill()}else if(d==='メガネ'){ctx.beginPath();ctx.arc(-r*.27,-r*.1,r*.17,0,Math.PI*2);ctx.arc(r*.27,-r*.1,r*.17,0,Math.PI*2);ctx.moveTo(-r*.1,-r*.1);ctx.lineTo(r*.1,-r*.1);ctx.stroke()}else if(d==='王冠'){ctx.fillStyle='#f2d574';ctx.beginPath();ctx.moveTo(-r*.34,-r*.78);ctx.lineTo(-r*.26,-r*1.15);ctx.lineTo(-r*.05,-r*.91);ctx.lineTo(r*.12,-r*1.18);ctx.lineTo(r*.32,-r*.83);ctx.closePath();ctx.fill();ctx.stroke()}else if(d==='芽'){ctx.strokeStyle='#579463';ctx.beginPath();ctx.moveTo(0,-r*.78);ctx.quadraticCurveTo(0,-r*1.15,r*.16,-r*1.27);ctx.stroke();ctx.fillStyle='#8bc691';ctx.beginPath();ctx.ellipse(r*.18,-r*1.25,r*.18,r*.09,-.45,0,Math.PI*2);ctx.fill()}}
 
 function finishGame(){if(state!=='game')return;const final=score,old=save.best[modeKey]||0,isRecord=final>old;if(isRecord)save.best[modeKey]=final;save.plays[modeKey]=(save.plays[modeKey]||0)+1;persist();teardownPhysics();showResult(final,isRecord)}
-function showResult(final,isRecord){showScreen('result');$('#result-score').textContent=final.toLocaleString();$('#result-record').textContent=isRecord?'NEW RECORD!':'';const d=$('#result-details');d.innerHTML='';const arr=[['MODE',MODES[modeKey].label],['最高レア','★'+runStats.maxRarity],['発生役',runStats.rolesTriggered],['NEW',runStats.newRoles.size],['最大単発',runStats.maxSingle.toLocaleString()],['誘爆',runStats.induced]];for(const [a,b] of arr){const x=document.createElement('div');x.className='result-detail';x.innerHTML=`<small>${a}</small><b>${b}</b>`;d.appendChild(x)}}
+function showResult(final,isRecord){showScreen('result');$('#result-score').textContent=final.toLocaleString();$('#result-record').textContent=isRecord?'NEW RECORD!':'';const d=$('#result-details');d.innerHTML='';const arr=[['MODE',MODES[modeKey].label],['最高レア',runStats.maxRarity?'★'+runStats.maxRarity:'なし'],['発生役',runStats.rolesTriggered],['NEW',runStats.newRoles.size],['最大単発',runStats.maxSingle.toLocaleString()],['誘爆',runStats.induced]];for(const [a,b] of arr){const x=document.createElement('div');x.className='result-detail';x.innerHTML=`<small>${a}</small><b>${b}</b>`;d.appendChild(x)}}
 
-function renderBook(){const list=$('#book-list'),active=DATA.roles.filter(r=>r.rarity<=5),found=active.filter(r=>save.roles[String(r.id)]?.discovered).length;$('#book-summary').textContent=`発見 ${found} / ${active.length}`;list.innerHTML='';for(const r of active){const rec=save.roles[String(r.id)],found=!!rec?.discovered,card=document.createElement('div');card.className='role-card '+(found?'':'locked');card.innerHTML=`<div class="role-top"><span class="stars rarity-${r.rarity}">${'★'.repeat(r.rarity)}</span><span class="role-name">${found?escapeHtml(r.name):'？？？？？？'}</span></div><p>${escapeHtml(found?r.discovered:r.undiscovered)}</p>${found?`<div class="role-meta"><span>発見 ${rec.count}回</span><span>最高 +${rec.best.toLocaleString()}</span></div>`:''}`;list.appendChild(card)} }
+function renderBook(){const list=$('#book-list'),active=DATA.roles.filter(r=>r.active&&r.rarity<=5),found=active.filter(r=>save.roles[String(r.id)]?.discovered).length;$('#book-summary').textContent=`発見 ${found} / ${active.length}`;list.innerHTML='';for(const r of active){const rec=save.roles[String(r.id)],found=!!rec?.discovered,card=document.createElement('div');card.className='role-card '+(found?'':'locked');card.innerHTML=`<div class="role-top"><span class="stars rarity-${r.rarity}">${'★'.repeat(r.rarity)}</span><span class="role-name">${found?escapeHtml(r.name):'？？？？？？'}</span></div><p>${escapeHtml(found?r.discovered:r.undiscovered)}</p>${found?`<div class="role-meta"><span>発見 ${rec.count}回</span><span>最高 +${rec.best.toLocaleString()}</span></div>`:''}`;list.appendChild(card)} }
 function renderStats(){const c=$('#stats-content');const discovered=Object.values(save.roles).filter(x=>x.discovered).length;c.innerHTML=`<div class="stats-grid"><div class="stat-card"><small>発見した役</small><b>${discovered}</b></div><div class="stat-card"><small>総射出</small><b>${save.totals.shots.toLocaleString()}</b></div><div class="stat-card"><small>総接着</small><b>${save.totals.sticks.toLocaleString()}</b></div><div class="stat-card"><small>総起爆</small><b>${save.totals.pops.toLocaleString()}</b></div></div>`;for(const k of ['short','middle','long']){const x=document.createElement('div');x.className='mode-stat';x.innerHTML=`<h3>${MODES[k].label}</h3><div class="stats-grid"><div class="stat-card"><small>最高得点</small><b>${(save.best[k]||0).toLocaleString()}</b></div><div class="stat-card"><small>プレイ回数</small><b>${save.plays[k]||0}</b></div></div>`;c.appendChild(x)}}
 window.addEventListener('resize',()=>{if(!render)return;measure();render.options.width=W;render.options.height=H;render.canvas.width=W*render.options.pixelRatio;render.canvas.height=H*render.options.pixelRatio;render.canvas.style.width=W+'px';render.canvas.style.height=H+'px';render.bounds.max.x=W;render.bounds.max.y=H;rebuildWalls()},{passive:true});
 renderBook();renderStats();showScreen('menu');

@@ -1,4 +1,3 @@
-// Auto-generated from pocho_condition_and_roles_v02.xlsx
 window.POCHO_DATA = {
   "behaviorRules": [
     {
@@ -9,7 +8,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手も小 ＋ 低速接触",
       "conditionCount": 2,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-3",
@@ -19,7 +19,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手が中 ＋ 自分の速度が低い",
       "conditionCount": 2,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-4",
@@ -29,7 +30,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手が大 ＋ 接触後ほぼ停止状態になる",
       "conditionCount": 2,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-5",
@@ -39,7 +41,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が大 ＋ 自分が高速で衝突",
       "conditionCount": 2,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-6",
@@ -49,7 +52,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が大 ＋ サイズ差がかなり大きい ＋ 相対速度が一定以上",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-7",
@@ -59,7 +63,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手も中 ＋ 低速接触",
       "conditionCount": 2,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-8",
@@ -69,7 +74,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手とのサイズ差が非常に小さい ＋ 相対速度が低い",
       "conditionCount": 2,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-9",
@@ -79,7 +85,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手が小 ＋ 自分がほぼ停止している",
       "conditionCount": 2,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-10",
@@ -89,7 +96,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が大 ＋ 高速正面衝突",
       "conditionCount": 2,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-11",
@@ -99,7 +107,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手も中 ＋ 両方とも高速",
       "conditionCount": 2,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-12",
@@ -109,7 +118,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手も大 ＋ かなり低速",
       "conditionCount": 2,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-13",
@@ -119,7 +129,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手が小 ＋ 大きい方がほぼ停止",
       "conditionCount": 2,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-14",
@@ -129,7 +140,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手が中 ＋ サイズ差が小さめ ＋ 低速接触",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-15",
@@ -139,7 +151,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手も大 ＋ 高速衝突",
       "conditionCount": 2,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-16",
@@ -149,7 +162,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が小 ＋ 小さい方が非常に高速",
       "conditionCount": 2,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "size-17",
@@ -159,7 +173,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が中以上 ＋ 自分が壁接触直後 ＋ 高速衝突",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-2",
@@ -169,7 +184,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手がさくら ＋ 相対速度が低い ＋ 過去に一度以上接触済み",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-3",
@@ -179,7 +195,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手が異色 ＋ 同じ相手との接触が3回目以上 ＋ 現在どちらも低速",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-4",
@@ -189,7 +206,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手と一度離れた履歴あり ＋ 再接触 ＋ 接触地点が画面上半分",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-5",
@@ -199,7 +217,9 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手とのサイズ差が小さい ＋ 直前に別のぽちょへ触れていない ＋ 接触時間が一定以上",
       "conditionCount": 3,
-      "active": true
+      "active": false,
+      "status": "unimplemented",
+      "missing": "接触継続時間の計測が未実装"
     },
     {
       "id": "color-6",
@@ -209,7 +229,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手がごきげん ＋ 自分もごきげん ＋ 相対速度が一定以下",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-7",
@@ -219,7 +240,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "過去に同じグループだった ＋ 現在は離れている ＋ 再接触時の速度が低い",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-8",
@@ -229,7 +251,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手がさくら ＋ 互いに過去3回以上接触 ＋ 今回だけ高速衝突",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-9",
@@ -239,7 +262,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "一度くっついた相手 ＋ 再接触 ＋ 今回の表情が前回接着時と違う",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-10",
@@ -249,7 +273,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が異色 ＋ 自分が天井接触済み ＋ 接触直前の速度が高い",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-11",
@@ -259,7 +284,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "同じ相手と短時間に何度も衝突 ＋ その相手と一度もくっついていない ＋ 今回が高速",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-12",
@@ -269,7 +295,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "壁接触2回以上 ＋ 現在低速 ＋ 相手が自分より大きい",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-13",
@@ -279,7 +306,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "射出後一定距離以上移動済み ＋ 初めて触れる相手 ＋ 接触速度が低い",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-14",
@@ -289,7 +317,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "天井に一度触れている ＋ 相手も天井接触済み ＋ 相対速度が低い",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-15",
@@ -299,7 +328,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "左右両方の壁に触れた履歴あり ＋ 異色相手 ＋ 接触時にほぼ同じ方向へ移動",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-16",
@@ -309,7 +339,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "高速状態を経験済み ＋ 現在は低速 ＋ 相手が停止に近い",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-17",
@@ -319,7 +350,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "壁接触3回以上 ＋ 異色相手 ＋ 高速衝突",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-18",
@@ -329,7 +361,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "射出から短時間 ＋ 壁に一度も触れていない ＋ 高速で他ぽちょに接触",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-19",
@@ -339,7 +372,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "天井接触直後 ＋ 下方向へ動いている相手 ＋ 相対速度が高い",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-20",
@@ -349,7 +383,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "左壁→右壁の順に触れた直後 ＋ 他ぽちょへ接触 ＋ 現在速度が一定以上",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-21",
@@ -359,7 +394,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "累計移動距離が長い ＋ 同じ相手に再接触 ＋ 今回の速度が過去接触時より高い",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-22",
@@ -369,7 +405,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "直前の接触相手と別の色 ＋ 高速衝突 ＋ 壁際",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-23",
@@ -379,7 +416,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "同じ相手との3回目の接触 ＋ 低速 ＋ 相手が異色",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-24",
@@ -389,7 +427,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "総接触回数が5回以上 ＋ 今回の相手が初対面 ＋ 接触速度が低い",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-25",
@@ -399,7 +438,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "壁接触回数が偶数 ＋ 相手とのサイズ差が小さい ＋ 画面上半分",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-26",
@@ -409,7 +449,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がゲーム内で奇数番目に射出 ＋ 相手が偶数番目 ＋ 低速接触",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-27",
@@ -419,7 +460,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "直近3回の接触相手がすべて異なる ＋ 今回が4色目 ＋ 相対速度が低い",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-28",
@@ -429,7 +471,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "同色への接触が今回で2回目 ＋ 相手もたまご ＋ どちらも高速ではない",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-29",
@@ -439,7 +482,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "同じ相手との5回目の接触 ＋ 高速 ＋ 相手が異色",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-30",
@@ -449,7 +493,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "総接触回数が7回以上 ＋ 今回が同色接触 ＋ 壁際",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-31",
@@ -459,7 +504,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "壁接触回数が3の倍数 ＋ 異色相手 ＋ 高速接触",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-32",
@@ -469,7 +515,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "射出順が相手と3つ差 ＋ 接触速度が一定以上 ＋ どちらかが天井接触済み",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-33",
@@ -479,7 +526,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "直近の接触色が「異色→異色→自色」 ＋ 今回も自色 ＋ 高速",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-34",
@@ -489,7 +537,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "生存中にちょうど3種類の色と接触済み ＋ 4種類目へ接触 ＋ 高速",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-35",
@@ -499,7 +548,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "生存時間が一定以上 ＋ 一度も弾け条件未成立 ＋ 低速接触",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-36",
@@ -509,7 +559,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "表情変化経験あり ＋ 変化後初めての接触 ＋ 相手が異色",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-37",
@@ -519,7 +570,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "一度くっついた履歴あり ＋ 現在単独 ＋ 低速で別相手に接触",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-38",
@@ -529,7 +581,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "長時間他ぽちょと接触していない ＋ 新しい相手 ＋ 接触速度が低い",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-39",
@@ -539,7 +592,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "壁接触回数が少ない ＋ 生存時間が長い ＋ 相手が自分より小さい",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-40",
@@ -549,7 +603,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "過去に3種類以上の色と接触済み ＋ 今回の相手が未接触色 ＋ 低速",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-41",
@@ -559,7 +614,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "生存時間が長い ＋ 高速衝突 ＋ 相手が自分より大きい",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-42",
@@ -569,7 +625,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "表情変化2回以上 ＋ 異色接触 ＋ 相対速度が一定以上",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-43",
@@ -579,7 +636,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "一度くっついて離れた履歴あり ＋ 別グループに接触 ＋ 高速",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-44",
@@ -589,7 +647,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "長時間静止した後 ＋ 初回衝突 ＋ 相手が高速",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-45",
@@ -599,7 +658,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "サイズが一度変化した履歴あり ＋ 同色相手 ＋ 高速接触",
       "conditionCount": 3,
-      "active": false
+      "active": false,
+      "status": "unimplemented"
     },
     {
       "id": "color-46",
@@ -609,7 +669,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "周囲に3色以上存在 ＋ 相手が異色 ＋ 低速接触",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-47",
@@ -619,7 +680,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "接触地点の近くにぽちょが3体以上 ＋ 相手とのサイズ差が小さい ＋ 低速",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-48",
@@ -629,7 +691,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手が現在2体以上と接触中 ＋ 自分は単独 ＋ 低速で接触",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-49",
@@ -639,7 +702,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "周囲に同表情が2体以上 ＋ 相手がその表情と異なる ＋ 相対速度が低い",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-50",
@@ -649,7 +713,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "画面上半分 ＋ 周囲に自分と同色がいない ＋ 異色相手に接触",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-51",
@@ -659,7 +724,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手の周囲に自分以外のふじがいる ＋ 今回が初接触 ＋ 低速",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-52",
@@ -669,7 +735,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "周囲に4色以上存在 ＋ 高速衝突 ＋ 相手が異色",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-53",
@@ -679,7 +746,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "接触地点の近くに4体以上 ＋ 相手が自分より大きい ＋ 相対速度が高い",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-54",
@@ -689,7 +757,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がグループの端 ＋ グループ内に3色以上 ＋ 高速接触",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-55",
@@ -699,7 +768,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "周囲のぽちょの表情が全てバラバラ ＋ 異色接触 ＋ 壁際",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-56",
@@ -709,7 +779,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "直前に周囲で別のぽちょが弾けた ＋ 一定時間以内 ＋ 高速接触",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-57",
@@ -719,7 +790,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "周囲に同色が2体以上いるのに自分だけ単独 ＋ 異色相手 ＋ 高速",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-58",
@@ -729,7 +801,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相対速度が低い ＋ 接触角度が浅い ＋ 相手が自分より大きい",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-59",
@@ -739,7 +812,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がほぼ停止 ＋ 相手から押されて接触 ＋ サイズ差が小さい",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-60",
@@ -749,7 +823,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "直前に別ぽちょへ衝突済み ＋ その反動で今回の相手に接触 ＋ 低速",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-61",
@@ -759,7 +834,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分が小 ＋ 相手が大 ＋ 接触後の速度が急激に低下",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-62",
@@ -769,7 +845,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相対速度が高い ＋ 正面に近い衝突 ＋ 相手が同等以上のサイズ",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-63",
@@ -779,7 +856,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "小さいあんず ＋ 大きい相手 ＋ 高速で自分から衝突",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-64",
@@ -789,7 +867,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "壁反射直後 ＋ 異色相手 ＋ 高速接触",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-65",
@@ -799,7 +878,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "直前の衝突から短時間以内 ＋ 別の相手へ再度高速衝突 ＋ 相手が異色",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-66",
@@ -809,7 +889,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が大 ＋ 相手も大 ＋ 双方が移動中",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-67",
@@ -819,7 +900,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "他ぽちょに押されて高速化 ＋ 第三者へ衝突 ＋ 相対速度が一定以上",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-68",
@@ -829,7 +911,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "同じ相手と連続3回衝突 ＋ 3回目だけ高速 ＋ 一度も接着していない",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "color-69",
@@ -839,7 +922,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "天井付近 ＋ 下から高速で飛んできた相手と衝突 ＋ サイズ差が小さい",
       "conditionCount": 3,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-2",
@@ -849,7 +933,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がごきげん ＋ 相手もごきげん ＋ 相対速度が低い ＋ サイズ差が小さい",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-3",
@@ -859,7 +944,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がごきげん ＋ 相手が異色 ＋ 接触地点が画面上半分 ＋ どちらも直前に壁へ触れていない",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-4",
@@ -869,7 +955,9 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がごきげん ＋ 相手と過去に一度接触済み ＋ 今回が再接触 ＋ 接触後の速度が低下する",
       "conditionCount": 4,
-      "active": true
+      "active": false,
+      "status": "unimplemented",
+      "missing": "衝突後の速度低下を接触開始時点では正確に判定できない"
     },
     {
       "id": "expression-5",
@@ -879,7 +967,9 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がごきげん ＋ 相手が単独状態 ＋ 自分も単独状態 ＋ 接触時間が一定以上",
       "conditionCount": 4,
-      "active": true
+      "active": false,
+      "status": "unimplemented",
+      "missing": "接触継続時間の計測が未実装"
     },
     {
       "id": "expression-6",
@@ -889,7 +979,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がごきげん ＋ 相手の現在表情がふつう ＋ 相手のサイズが自分と近い ＋ 接触地点の近くに他ぽちょが少ない",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-7",
@@ -899,7 +990,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がごきげん ＋ 相手と同じ壁に触れた履歴がある ＋ その後初接触 ＋ 相対速度が低い",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-8",
@@ -909,7 +1001,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がごきげん ＋ 相手が不機嫌 ＋ 相対速度が高い ＋ 接触地点が壁際",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-9",
@@ -919,7 +1012,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がごきげん ＋ 相手もごきげん ＋ 過去に何度も接触済み ＋ 今回だけ高速衝突",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-10",
@@ -929,7 +1023,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がごきげん ＋ 天井接触済み ＋ 相手が高速移動中 ＋ サイズ差が大きい",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-11",
@@ -939,7 +1034,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がごきげん ＋ 一度くっついた相手と再接触 ＋ 前回と表情が異なる ＋ 今回の速度が高い",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-12",
@@ -949,7 +1045,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がごきげん ＋ 周囲に同色が2体以上いる ＋ 相手が異色 ＋ 正面に近い衝突",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-13",
@@ -959,7 +1056,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がふつう ＋ 相手もふつう ＋ 相対速度が低い ＋ どちらも現在単独状態",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-14",
@@ -969,7 +1067,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がふつう ＋ 相手がごきげん ＋ 接触後に両者の速度が低下 ＋ サイズ差が一定以下",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-15",
@@ -979,7 +1078,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がふつう ＋ 相手が異色 ＋ 過去に接触したことのない色 ＋ 接触地点が画面中央付近",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-16",
@@ -989,7 +1089,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がふつう ＋ 壁接触回数が少ない ＋ 相手も壁接触回数が少ない ＋ 低速接触",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-17",
@@ -999,7 +1100,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がふつう ＋ 相手と接触する直前までしばらく単独 ＋ 相手も単独 ＋ 今回が初接触",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-18",
@@ -1009,7 +1111,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がふつう ＋ 接触地点近くに他ぽちょが2体以下 ＋ 相手が停止に近い ＋ 自分の速度も低い",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-19",
@@ -1019,7 +1122,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がふつう ＋ 相手が不機嫌 ＋ 相対速度が高い ＋ 接触地点が天井付近",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-20",
@@ -1029,7 +1133,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がふつう ＋ 相手もふつう ＋ 両者とも高速移動中 ＋ サイズ差が小さい",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-21",
@@ -1039,7 +1144,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がふつう ＋ 過去に同じ相手と複数回接触済み ＋ 一度もくっついていない ＋ 今回が高速",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-22",
@@ -1049,7 +1155,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がふつう ＋ 壁接触直後 ＋ 異色相手 ＋ 接触角度が正面寄り",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-23",
@@ -1059,7 +1166,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がふつう ＋ 接触地点周辺に複数のぽちょがいる ＋ 相手が移動中 ＋ 自分も移動中",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-24",
@@ -1069,7 +1177,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がふつう ＋ 過去に表情変化済み ＋ 変化後初めての高速衝突 ＋ 相手が異色",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-25",
@@ -1079,7 +1188,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分が不機嫌 ＋ 相手も不機嫌 ＋ 相対速度が低い ＋ 過去に一度以上接触済み",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-26",
@@ -1089,7 +1199,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分が不機嫌 ＋ 相手がふつう ＋ 接触地点が壁際 ＋ 接触後に両者がほぼ停止",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-27",
@@ -1099,7 +1210,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分が不機嫌 ＋ 一度別れた相手と再接触 ＋ 今回の速度が低い ＋ サイズ差が小さい",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-28",
@@ -1109,7 +1221,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分が不機嫌 ＋ 相手が同色 ＋ 過去の接触回数が多い ＋ 今回が低速",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-29",
@@ -1119,7 +1232,9 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分が不機嫌 ＋ 周囲に同表情が2体以上いる ＋ 相手が単独状態 ＋ 接触時間が一定以上",
       "conditionCount": 4,
-      "active": true
+      "active": false,
+      "status": "unimplemented",
+      "missing": "接触継続時間の計測が未実装"
     },
     {
       "id": "expression-30",
@@ -1129,7 +1244,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 相手も不機嫌 ＋ 相対速度が高い ＋ 正面に近い衝突",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-31",
@@ -1139,7 +1255,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 相手がごきげん ＋ 接触地点が画面上半分 ＋ サイズ差が大きい",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-32",
@@ -1149,7 +1266,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 壁接触回数が一定以上 ＋ 異色相手 ＋ 高速衝突",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-33",
@@ -1159,7 +1277,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 一度くっついた相手と再接触 ＋ 前回より高い速度 ＋ 相手の表情が変化済み",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-34",
@@ -1169,7 +1288,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 天井接触直後 ＋ 相手が下方向に動いている ＋ 相対速度が高い",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "expression-35",
@@ -1179,7 +1299,9 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 周囲に他ぽちょが多い ＋ 接触地点が密集地帯 ＋ 衝突後に誰かを押す",
       "conditionCount": 4,
-      "active": true
+      "active": false,
+      "status": "unimplemented",
+      "missing": "衝突後に第三者を押したかの事後判定が未実装"
     },
     {
       "id": "expression-36",
@@ -1189,7 +1311,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 相手と連続接触中 ＋ 今回だけ速度が急上昇 ＋ 一度もくっついていない",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-2",
@@ -1199,7 +1322,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "リボン付き ＋ 相手と過去に接触済み ＋ 一度離れている ＋ 今回が低速 ＋ サイズ差が小さい",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-3",
@@ -1209,7 +1333,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "リボン付き ＋ 相手も装飾あり ＋ 装飾種類が異なる ＋ 双方単独 ＋ 画面上半分 ＋ 低速接触",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-4",
@@ -1219,7 +1344,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "リボン付き ＋ 過去に同じグループだった相手 ＋ 現在表情が前回接着時と同じ ＋ 再接触 ＋ 相対速度が低い",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-5",
@@ -1229,7 +1355,9 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "リボン付き ＋ 相手がごきげん ＋ 自分が異色 ＋ 接触前に一定時間誰とも触れていない ＋ 接触時間が一定以上",
       "conditionCount": 5,
-      "active": true
+      "active": false,
+      "status": "unimplemented",
+      "missing": "接触継続時間の計測が未実装"
     },
     {
       "id": "decoration-6",
@@ -1239,7 +1367,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "リボン付き ＋ 接触相手が直前に別ぽちょと離れている ＋ 自分は単独 ＋ 相手より小さい ＋ 低速 ＋ 壁際ではない",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-7",
@@ -1249,7 +1378,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "リボン付き ＋ 同じ相手への接触3回目以上 ＋ 一度も弾け条件未成立 ＋ 双方高速ではない ＋ 周囲に他ぽちょが少ない",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-8",
@@ -1259,7 +1389,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "リボン付き ＋ 一度くっついた相手 ＋ 再接触 ＋ 前回と表情が違う ＋ 今回が高速",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-9",
@@ -1269,7 +1400,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "リボン付き ＋ 同じ相手と短時間に複数回接触 ＋ 一度もくっついていない ＋ 異色 ＋ 壁際 ＋ 高速",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-10",
@@ -1279,7 +1411,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "リボン付き ＋ 自分がごきげん ＋ 相手が不機嫌 ＋ 過去に接触済み ＋ サイズ差が大きい ＋ 高速",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-11",
@@ -1289,7 +1422,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "リボン付き ＋ 長時間接着していた履歴あり ＋ 現在単独 ＋ 別の相手へ初接触 ＋ 相手が高速 ＋ 天井付近",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-12",
@@ -1299,7 +1433,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "メガネ付き ＋ 総接触回数が偶数 ＋ 今回が初対面 ＋ 相手が異色 ＋ 接触速度が低い",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-13",
@@ -1309,7 +1444,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "メガネ付き ＋ 直近3回の接触相手がすべて異なる ＋ 今回が過去接触済み相手 ＋ 低速 ＋ 画面中央付近",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-14",
@@ -1319,7 +1455,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "メガネ付き ＋ 壁接触回数が3回以上 ＋ 左右両壁に接触済み ＋ 相手が停止に近い ＋ サイズ差が小さい",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-15",
@@ -1329,7 +1466,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "メガネ付き ＋ 射出順が相手より後 ＋ 射出順の差が偶数 ＋ 双方天井接触済み ＋ 相対速度が低い",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-16",
@@ -1339,7 +1477,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "メガネ付き ＋ 同色接触回数より異色接触回数が多い ＋ 相手が同色 ＋ 今回が低速 ＋ 双方単独",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-17",
@@ -1349,7 +1488,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "メガネ付き ＋ 直前の接触で何も起きていない ＋ 今回が別相手 ＋ 相手がふつう表情 ＋ サイズ差が小さい ＋ 低速",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-18",
@@ -1359,7 +1499,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "メガネ付き ＋ 総接触回数が5回以上 ＋ 今回が同じ相手との3回目以上 ＋ 高速 ＋ 相手が異色",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-19",
@@ -1369,7 +1510,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "メガネ付き ＋ 壁接触回数が3の倍数 ＋ 天井接触済み ＋ 初対面相手 ＋ 高速",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-20",
@@ -1379,7 +1521,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "メガネ付き ＋ 直近の接触色が3種類すべて異なる ＋ 今回がそのどれかと同色 ＋ 高速 ＋ 画面上半分",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-21",
@@ -1389,7 +1532,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "メガネ付き ＋ 射出から一定時間経過 ＋ 一度も接着していない ＋ 接触回数が一定以上 ＋ 相手もメガネなし ＋ 高速",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-22",
@@ -1399,7 +1543,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "メガネ付き ＋ 直前イベントが「離れる」 ＋ 一定時間以内 ＋ 別グループへ衝突 ＋ サイズ差が大きい ＋ 高速",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-23",
@@ -1409,7 +1554,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "王冠付き ＋ 接触相手より自分が大きい ＋ 周囲に自分より大きいぽちょがいない ＋ 相手が単独 ＋ 低速",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-24",
@@ -1419,7 +1565,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "王冠付き ＋ 自分が周辺で最大サイズ ＋ 相手が装飾なし ＋ 相手が自分より小さい ＋ 画面上半分 ＋ 低速",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-25",
@@ -1429,7 +1576,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "王冠付き ＋ 現在グループに属していない ＋ 相手が2体以上のグループ所属 ＋ グループ内に王冠なし ＋ 接触速度が低い ＋ 自分が異色",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-26",
@@ -1439,7 +1587,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "王冠付き ＋ 周囲に3体以上 ＋ その中で自分だけ装飾あり ＋ 相手がふつう ＋ サイズ差が一定以下 ＋ 低速",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-27",
@@ -1449,7 +1598,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "王冠付き ＋ 過去に最大4体以上のグループへ所属 ＋ 現在単独 ＋ 新しいグループへ接触 ＋ 自分がその中で最大 ＋ 低速",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-28",
@@ -1459,7 +1609,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "王冠付き ＋ 相手も王冠 ＋ 双方単独 ＋ サイズ差が非常に小さい ＋ どちらも低速 ＋ 壁際ではない",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-29",
@@ -1469,7 +1620,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "王冠付き ＋ 自分が周辺最大サイズ ＋ 相手も大サイズ ＋ 高速正面衝突 ＋ 周囲に他ぽちょが2体以上",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-30",
@@ -1479,7 +1631,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "王冠付き ＋ 相手も王冠 ＋ サイズ差が大きい ＋ 小さい方が高速 ＋ 天井付近",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-31",
@@ -1489,7 +1642,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "王冠付き ＋ 自分がグループ内最大 ＋ グループ人数4体以上 ＋ 外部から高速衝突を受ける ＋ 衝突相手が異色",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-32",
@@ -1499,7 +1653,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "王冠付き ＋ 周囲に装飾付きが2体以上 ＋ 自分だけ表情が異なる ＋ 高速接触 ＋ 壁際",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-33",
@@ -1509,7 +1664,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "王冠付き ＋ 一度グループの中心付近にいた ＋ 現在端にいる ＋ 外部ぽちょに衝突 ＋ 相手が自分より大きい ＋ 高速",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-34",
@@ -1519,7 +1675,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "芽付き ＋ 生存時間が一定以上 ＋ 一度も接着していない ＋ 相手が初対面 ＋ 低速",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-35",
@@ -1529,7 +1686,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "芽付き ＋ 表情変化経験あり ＋ 変化後一定時間経過 ＋ 相手が異色 ＋ 接触速度が低い",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-36",
@@ -1539,7 +1697,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "芽付き ＋ 長時間単独だった ＋ 相手がグループ所属 ＋ グループ内に芽付きなし ＋ 自分が小サイズ ＋ 低速",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-37",
@@ -1549,7 +1708,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "芽付き ＋ 生存中に3色以上へ接触済み ＋ 今回が未接触色 ＋ 双方低速 ＋ 天井付近",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-38",
@@ -1559,7 +1719,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "芽付き ＋ 一度くっついて離れた ＋ その後誰とも接触していない ＋ 新しい相手 ＋ サイズ差が小さい ＋ 低速",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-39",
@@ -1569,7 +1730,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "芽付き ＋ 天井付近に一定時間滞在 ＋ 相手も長時間生存 ＋ 相手が装飾なし ＋ 相対速度が低い ＋ 周囲が密集していない",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-40",
@@ -1579,7 +1741,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "芽付き ＋ 長時間生存 ＋ 総接触回数が多い ＋ 相手が高速 ＋ 自分が低速",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-41",
@@ -1589,7 +1752,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "芽付き ＋ 表情変化2回以上 ＋ 過去に接着経験あり ＋ 現在単独 ＋ 異色相手へ高速接触",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-42",
@@ -1599,7 +1763,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "芽付き ＋ 生存中に全基本色へ接触済み ＋ 今回が同色 ＋ 高速 ＋ 天井付近",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "decoration-43",
@@ -1609,7 +1774,9 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "芽付き ＋ 長時間静止状態を経験 ＋ その後初めての高速移動 ＋ 他ぽちょへ衝突 ＋ サイズ差が大きい",
       "conditionCount": 5,
-      "active": true
+      "active": false,
+      "status": "unimplemented",
+      "missing": "長時間静止後の「初めての高速移動」履歴が未実装"
     },
     {
       "id": "decoration-44",
@@ -1619,7 +1786,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "芽付き ＋ 過去に3体以上を誘爆で見送っている ＋ 自分は一度も誘爆されていない ＋ 新しいグループへ接触 ＋ 高速",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-2",
@@ -1629,7 +1797,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "さくら ＋ リボン ＋ 相手と過去に接触済み ＋ 今回が低速接触",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-3",
@@ -1639,7 +1808,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "みずいろ ＋ メガネ ＋ 壁に2回以上当たっている ＋ 今回が低速接触",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-4",
@@ -1649,7 +1819,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "あんず ＋ 不機嫌 ＋ 相対速度が高い ＋ 正面に近い衝突",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-5",
@@ -1659,7 +1830,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "わかば ＋ 芽 ＋ 生存時間が一定以上 ＋ 今回が低速接触",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-6",
@@ -1669,7 +1841,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "ふじ ＋ 王冠 ＋ 周囲に3体以上いる ＋ 今回が高速接触",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-7",
@@ -1679,7 +1852,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "たまご ＋ ふつう ＋ 同じ相手との接触が3回目 ＋ 今回が低速",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-8",
@@ -1689,7 +1863,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "さくら ＋ ごきげん ＋ リボン ＋ 相手と一度離れた履歴あり",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-9",
@@ -1699,7 +1874,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "みずいろ ＋ 不機嫌 ＋ メガネ ＋ 天井接触済み ＋ 今回が高速接触",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-10",
@@ -1709,7 +1885,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "あんず ＋ ごきげん ＋ 小 ＋ 相手が大 ＋ 自分からぶつかる",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-11",
@@ -1719,7 +1896,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "ふじ ＋ 不機嫌 ＋ 王冠 ＋ 周囲に異色が3色以上いる",
       "conditionCount": 4,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-12",
@@ -1729,7 +1907,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "わかば ＋ ふつう ＋ 芽 ＋ 長時間単独だった ＋ 今回が初対面相手",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-13",
@@ -1739,7 +1918,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "さくら ＋ 不機嫌 ＋ リボン ＋ 小 ＋ 一度くっついた相手との再接触",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-14",
@@ -1749,7 +1929,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "たまご ＋ ごきげん ＋ メガネ ＋ 中 ＋ 総接触回数が5回以上",
       "conditionCount": 5,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-15",
@@ -1759,7 +1940,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "みずいろ ＋ ふつう ＋ 王冠 ＋ 大 ＋ 壁反射直後 ＋ 今回が高速接触",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-16",
@@ -1769,7 +1951,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "ふじ ＋ ごきげん ＋ 芽 ＋ 小 ＋ 周囲に2色以上いる ＋ 今回が低速接触",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     },
     {
       "id": "special-17",
@@ -1779,7 +1962,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "あんず ＋ 不機嫌 ＋ 王冠 ＋ 大 ＋ 相手も大 ＋ 正面衝突",
       "conditionCount": 6,
-      "active": true
+      "active": true,
+      "status": "active"
     }
   ],
   "roles": [
@@ -1897,8 +2081,9 @@ window.POCHO_DATA = {
       "condition": "相対速度が高い ＋ 接触時間が短い",
       "undiscovered": "速すぎると何も残らない。",
       "discovered": "本当に一瞬だった。",
-      "audit": "成立可能",
-      "active": true
+      "audit": "未実装：接触終了判定",
+      "active": false,
+      "missing": "接触継続時間の計測が未実装"
     },
     {
       "id": 10,
@@ -2288,7 +2473,7 @@ window.POCHO_DATA = {
       "undiscovered": "勢いだけではどうにもならない。",
       "discovered": "正面突破は失敗した。",
       "audit": "現状成立不可",
-      "active": true
+      "active": false
     },
     {
       "id": 40,
@@ -2470,7 +2655,7 @@ window.POCHO_DATA = {
       "undiscovered": "ここまで揃えば、普通は何かある。",
       "discovered": "完璧に何も起きなかった。",
       "audit": "現状成立不可",
-      "active": true
+      "active": false
     },
     {
       "id": 54,
@@ -2483,7 +2668,7 @@ window.POCHO_DATA = {
       "undiscovered": "危ない目に何度も遭う者もいる。",
       "discovered": "今回も生き残った。",
       "audit": "条件文要修正",
-      "active": true
+      "active": false
     },
     {
       "id": 55,
@@ -2600,7 +2785,7 @@ window.POCHO_DATA = {
       "undiscovered": "何も起きない方が珍しい時もある。",
       "discovered": "奇跡的に何も起きなかった。",
       "audit": "現状成立不可",
-      "active": true
+      "active": false
     },
     {
       "id": 64,
@@ -2678,7 +2863,7 @@ window.POCHO_DATA = {
       "undiscovered": "揃っていないことが揃うこともある。",
       "discovered": "見事に全員違った。",
       "audit": "要仕様定義",
-      "active": true
+      "active": false
     },
     {
       "id": 70,
