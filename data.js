@@ -41,9 +41,10 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が大 ＋ 自分が高速で衝突 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 3,
-      "active": true,
-      "status": "active",
-      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
+      "active": false,
+      "status": "disabled",
+      "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
+      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
     },
     {
       "id": "size-6",
@@ -53,9 +54,10 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が大 ＋ サイズ差がかなり大きい ＋ 相対速度が一定以上 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 4,
-      "active": true,
-      "status": "active",
-      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
+      "active": false,
+      "status": "disabled",
+      "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
+      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
     },
     {
       "id": "size-7",
@@ -98,9 +100,10 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が大 ＋ 高速正面衝突 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 3,
-      "active": true,
-      "status": "active",
-      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
+      "active": false,
+      "status": "disabled",
+      "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
+      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
     },
     {
       "id": "size-11",
@@ -110,9 +113,10 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手も中 ＋ 両方とも高速 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 3,
-      "active": true,
-      "status": "active",
-      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
+      "active": false,
+      "status": "disabled",
+      "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
+      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
     },
     {
       "id": "size-12",
@@ -155,9 +159,10 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手も大 ＋ 高速衝突 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 3,
-      "active": true,
-      "status": "active",
-      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
+      "active": false,
+      "status": "disabled",
+      "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
+      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
     },
     {
       "id": "size-16",
@@ -167,9 +172,10 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が小 ＋ 小さい方が非常に高速 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 3,
-      "active": true,
-      "status": "active",
-      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
+      "active": false,
+      "status": "disabled",
+      "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
+      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
     },
     {
       "id": "size-17",
@@ -179,9 +185,10 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が中以上 ＋ 自分が壁接触直後 ＋ 高速衝突 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 4,
-      "active": true,
-      "status": "active",
-      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
+      "active": false,
+      "status": "disabled",
+      "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
+      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
     },
     {
       "id": "color-2",
