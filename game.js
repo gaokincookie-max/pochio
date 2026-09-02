@@ -15,7 +15,7 @@ const DECOS=['なし','リボン','メガネ','王冠','芽'];
 const DECO_RATE=[.85,.04,.04,.03,.04];
 const RARITY_COLOR=['','#6f747d','#58a66b','#568cb9','#9a68bd','#d09a29','#fff7cf'];
 const SAVE_KEY='pocho_save_v01';
-const T={LOW:3.5,VERY_LOW:1.8,HIGH:8,VERY_HIGH:12,STILL:1.0,LONG:18,SHORT:2.8,RECENT:1.2,NEAR:110};
+const T={LOW:3.5,VERY_LOW:1.8,HIGH:8,VERY_HIGH:12,STILL:1.0,LONG:18,SHORT:2.8,RECENT:1.2,NEAR:110,POP_PROTECT:.4};
 const PHYS={UP_FORCE:.00175,MAX_SPEED:16.5,MAX_ANG:.28,MAX_PULL:140,SLING:.112};
 let save=loadSave();
 let engine,render,runner,W=1,H=1,launchY=1,walls=[],topWall=null;
@@ -122,7 +122,7 @@ function evaluateBehavior(ctx){
  for(const layer of ordered){
    const rules=DATA.behaviorRules.filter(r=>r.active&&r.layer===layer);
    const results=[];
-   for(const self of [ctx.a,ctx.b]){const other=self===ctx.a?ctx.b:ctx.a;for(const r of rules){if(!ruleAppliesAttribute(r,self))continue;if(checkCondition(r.condition,ctx,self,other)){results.push(r)}}}
+   for(const self of [ctx.a,ctx.b]){const other=self===ctx.a?ctx.b:ctx.a;for(const r of rules){if(!ruleAppliesAttribute(r,self))continue;if(r.result==='POP'&&performance.now()-(self.pocho.launchedAt||0)<T.POP_PROTECT*1000)continue;if(checkCondition(r.condition,ctx,self,other)){results.push(r)}}}
    if(results.length){const pop=results.find(r=>r.result==='POP'),chosen=pop||results[0];ctx.primary=choosePrimaryForRule(chosen,ctx);ctx.behaviorRule=chosen;ctx.primary.pocho.behaviorCandidateHits++;return chosen.result}
  }
  return 'NONE';
@@ -134,6 +134,7 @@ function checkCondition(text,ctx,self,other){return String(text).split('＋').ma
 function checkClause(c,ctx,self=ctx.primary||ctx.a,other=ctx.other||(self===ctx.a?ctx.b:ctx.a)){
  const p=self?.pocho,q=other?.pocho,now=ctx.time||performance.now();if(!p)return false;
  const rec=q?contactRec(self,other):null, age=(now-p.bornAt)/1000, sv=speed(self), ov=other?speed(other):0, rv=ctx.relativeSpeed??(other?Math.hypot(self.velocity.x-other.velocity.x,self.velocity.y-other.velocity.y):0);
+ if(c.startsWith('弾け補正：相対速度')){const m=c.match(/([0-9]+(?:\.[0-9]+)?)以上/);return !!m&&rv>=Number(m[1]);}
  const g=getGroup(self), og=other?getGroup(other):[], all=ctx.victims?.length?ctx.victims:g, near=ctx.near||getNearby(ctx.x??self.position.x,ctx.y??self.position.y,T.NEAR,[self]);
  const colors=new Set(all.filter(x=>x.pocho).map(x=>x.pocho.color)), exprs=new Set(all.filter(x=>x.pocho).map(x=>x.pocho.expression)), sizes=new Set(all.filter(x=>x.pocho).map(x=>x.pocho.sizeClass)), decos=all.filter(x=>x.pocho&&x.pocho.decoration!=='なし').map(x=>x.pocho.decoration);
  // role/compound shorthands that need exact semantics

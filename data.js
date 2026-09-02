@@ -39,10 +39,11 @@ window.POCHO_DATA = {
       "priority": 1,
       "attribute": "小",
       "result": "POP",
-      "condition": "相手が大 ＋ 自分が高速で衝突",
-      "conditionCount": 2,
+      "condition": "相手が大 ＋ 自分が高速で衝突 ＋ 弾け補正：相対速度8.8以上",
+      "conditionCount": 3,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
     },
     {
       "id": "size-6",
@@ -50,10 +51,11 @@ window.POCHO_DATA = {
       "priority": 1,
       "attribute": "小",
       "result": "POP",
-      "condition": "相手が大 ＋ サイズ差がかなり大きい ＋ 相対速度が一定以上",
-      "conditionCount": 3,
+      "condition": "相手が大 ＋ サイズ差がかなり大きい ＋ 相対速度が一定以上 ＋ 弾け補正：相対速度8.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
     },
     {
       "id": "size-7",
@@ -94,10 +96,11 @@ window.POCHO_DATA = {
       "priority": 1,
       "attribute": "中",
       "result": "POP",
-      "condition": "相手が大 ＋ 高速正面衝突",
-      "conditionCount": 2,
+      "condition": "相手が大 ＋ 高速正面衝突 ＋ 弾け補正：相対速度8.8以上",
+      "conditionCount": 3,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
     },
     {
       "id": "size-11",
@@ -105,10 +108,11 @@ window.POCHO_DATA = {
       "priority": 1,
       "attribute": "中",
       "result": "POP",
-      "condition": "相手も中 ＋ 両方とも高速",
-      "conditionCount": 2,
+      "condition": "相手も中 ＋ 両方とも高速 ＋ 弾け補正：相対速度8.8以上",
+      "conditionCount": 3,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
     },
     {
       "id": "size-12",
@@ -149,10 +153,11 @@ window.POCHO_DATA = {
       "priority": 1,
       "attribute": "大",
       "result": "POP",
-      "condition": "相手も大 ＋ 高速衝突",
-      "conditionCount": 2,
+      "condition": "相手も大 ＋ 高速衝突 ＋ 弾け補正：相対速度8.8以上",
+      "conditionCount": 3,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
     },
     {
       "id": "size-16",
@@ -160,10 +165,11 @@ window.POCHO_DATA = {
       "priority": 1,
       "attribute": "大",
       "result": "POP",
-      "condition": "相手が小 ＋ 小さい方が非常に高速",
-      "conditionCount": 2,
+      "condition": "相手が小 ＋ 小さい方が非常に高速 ＋ 弾け補正：相対速度8.8以上",
+      "conditionCount": 3,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
     },
     {
       "id": "size-17",
@@ -171,10 +177,11 @@ window.POCHO_DATA = {
       "priority": 1,
       "attribute": "大",
       "result": "POP",
-      "condition": "相手が中以上 ＋ 自分が壁接触直後 ＋ 高速衝突",
-      "conditionCount": 3,
+      "condition": "相手が中以上 ＋ 自分が壁接触直後 ＋ 高速衝突 ＋ 弾け補正：相対速度8.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度8.8以上"
     },
     {
       "id": "color-2",
@@ -249,10 +256,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "さくら",
       "result": "POP",
-      "condition": "相手がさくら ＋ 互いに過去3回以上接触 ＋ 今回だけ高速衝突",
-      "conditionCount": 3,
+      "condition": "相手がさくら ＋ 互いに過去3回以上接触 ＋ 今回だけ高速衝突 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-9",
@@ -260,10 +268,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "さくら",
       "result": "POP",
-      "condition": "一度くっついた相手 ＋ 再接触 ＋ 今回の表情が前回接着時と違う",
-      "conditionCount": 3,
+      "condition": "一度くっついた相手 ＋ 再接触 ＋ 今回の表情が前回接着時と違う ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-10",
@@ -271,10 +280,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "さくら",
       "result": "POP",
-      "condition": "相手が異色 ＋ 自分が天井接触済み ＋ 接触直前の速度が高い",
-      "conditionCount": 3,
+      "condition": "相手が異色 ＋ 自分が天井接触済み ＋ 接触直前の速度が高い ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-11",
@@ -282,10 +292,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "さくら",
       "result": "POP",
-      "condition": "同じ相手と短時間に何度も衝突 ＋ その相手と一度もくっついていない ＋ 今回が高速",
-      "conditionCount": 3,
+      "condition": "同じ相手と短時間に何度も衝突 ＋ その相手と一度もくっついていない ＋ 今回が高速 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-12",
@@ -348,10 +359,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "みずいろ",
       "result": "POP",
-      "condition": "壁接触3回以上 ＋ 異色相手 ＋ 高速衝突",
-      "conditionCount": 3,
+      "condition": "壁接触3回以上 ＋ 異色相手 ＋ 高速衝突 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-18",
@@ -359,10 +371,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "みずいろ",
       "result": "POP",
-      "condition": "射出から短時間 ＋ 壁に一度も触れていない ＋ 高速で他ぽちょに接触",
-      "conditionCount": 3,
+      "condition": "射出から短時間 ＋ 壁に一度も触れていない ＋ 高速で他ぽちょに接触 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-19",
@@ -370,10 +383,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "みずいろ",
       "result": "POP",
-      "condition": "天井接触直後 ＋ 下方向へ動いている相手 ＋ 相対速度が高い",
-      "conditionCount": 3,
+      "condition": "天井接触直後 ＋ 下方向へ動いている相手 ＋ 相対速度が高い ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-20",
@@ -381,10 +395,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "みずいろ",
       "result": "POP",
-      "condition": "左壁→右壁の順に触れた直後 ＋ 他ぽちょへ接触 ＋ 現在速度が一定以上",
-      "conditionCount": 3,
+      "condition": "左壁→右壁の順に触れた直後 ＋ 他ぽちょへ接触 ＋ 現在速度が一定以上 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-21",
@@ -392,10 +407,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "みずいろ",
       "result": "POP",
-      "condition": "累計移動距離が長い ＋ 同じ相手に再接触 ＋ 今回の速度が過去接触時より高い",
-      "conditionCount": 3,
+      "condition": "累計移動距離が長い ＋ 同じ相手に再接触 ＋ 今回の速度が過去接触時より高い ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-22",
@@ -403,10 +419,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "みずいろ",
       "result": "POP",
-      "condition": "直前の接触相手と別の色 ＋ 高速衝突 ＋ 壁際",
-      "conditionCount": 3,
+      "condition": "直前の接触相手と別の色 ＋ 高速衝突 ＋ 壁際 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-23",
@@ -480,10 +497,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "たまご",
       "result": "POP",
-      "condition": "同じ相手との5回目の接触 ＋ 高速 ＋ 相手が異色",
-      "conditionCount": 3,
+      "condition": "同じ相手との5回目の接触 ＋ 高速 ＋ 相手が異色 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-30",
@@ -491,10 +509,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "たまご",
       "result": "POP",
-      "condition": "総接触回数が7回以上 ＋ 今回が同色接触 ＋ 壁際",
-      "conditionCount": 3,
+      "condition": "総接触回数が7回以上 ＋ 今回が同色接触 ＋ 壁際 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-31",
@@ -502,10 +521,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "たまご",
       "result": "POP",
-      "condition": "壁接触回数が3の倍数 ＋ 異色相手 ＋ 高速接触",
-      "conditionCount": 3,
+      "condition": "壁接触回数が3の倍数 ＋ 異色相手 ＋ 高速接触 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-32",
@@ -513,10 +533,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "たまご",
       "result": "POP",
-      "condition": "射出順が相手と3つ差 ＋ 接触速度が一定以上 ＋ どちらかが天井接触済み",
-      "conditionCount": 3,
+      "condition": "射出順が相手と3つ差 ＋ 接触速度が一定以上 ＋ どちらかが天井接触済み ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-33",
@@ -524,10 +545,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "たまご",
       "result": "POP",
-      "condition": "直近の接触色が「異色→異色→自色」 ＋ 今回も自色 ＋ 高速",
-      "conditionCount": 3,
+      "condition": "直近の接触色が「異色→異色→自色」 ＋ 今回も自色 ＋ 高速 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-34",
@@ -535,10 +557,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "たまご",
       "result": "POP",
-      "condition": "生存中にちょうど3種類の色と接触済み ＋ 4種類目へ接触 ＋ 高速",
-      "conditionCount": 3,
+      "condition": "生存中にちょうど3種類の色と接触済み ＋ 4種類目へ接触 ＋ 高速 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-35",
@@ -612,10 +635,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "わかば",
       "result": "POP",
-      "condition": "生存時間が長い ＋ 高速衝突 ＋ 相手が自分より大きい",
-      "conditionCount": 3,
+      "condition": "生存時間が長い ＋ 高速衝突 ＋ 相手が自分より大きい ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-42",
@@ -623,10 +647,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "わかば",
       "result": "POP",
-      "condition": "表情変化2回以上 ＋ 異色接触 ＋ 相対速度が一定以上",
-      "conditionCount": 3,
+      "condition": "表情変化2回以上 ＋ 異色接触 ＋ 相対速度が一定以上 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-43",
@@ -634,10 +659,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "わかば",
       "result": "POP",
-      "condition": "一度くっついて離れた履歴あり ＋ 別グループに接触 ＋ 高速",
-      "conditionCount": 3,
+      "condition": "一度くっついて離れた履歴あり ＋ 別グループに接触 ＋ 高速 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-44",
@@ -645,10 +671,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "わかば",
       "result": "POP",
-      "condition": "長時間静止した後 ＋ 初回衝突 ＋ 相手が高速",
-      "conditionCount": 3,
+      "condition": "長時間静止した後 ＋ 初回衝突 ＋ 相手が高速 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-45",
@@ -656,10 +683,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "わかば",
       "result": "POP",
-      "condition": "サイズが一度変化した履歴あり ＋ 同色相手 ＋ 高速接触",
-      "conditionCount": 3,
+      "condition": "サイズが一度変化した履歴あり ＋ 同色相手 ＋ 高速接触 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": false,
-      "status": "unimplemented"
+      "status": "unimplemented",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-46",
@@ -733,10 +761,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "ふじ",
       "result": "POP",
-      "condition": "周囲に4色以上存在 ＋ 高速衝突 ＋ 相手が異色",
-      "conditionCount": 3,
+      "condition": "周囲に4色以上存在 ＋ 高速衝突 ＋ 相手が異色 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-53",
@@ -744,10 +773,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "ふじ",
       "result": "POP",
-      "condition": "接触地点の近くに4体以上 ＋ 相手が自分より大きい ＋ 相対速度が高い",
-      "conditionCount": 3,
+      "condition": "接触地点の近くに4体以上 ＋ 相手が自分より大きい ＋ 相対速度が高い ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-54",
@@ -755,10 +785,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "ふじ",
       "result": "POP",
-      "condition": "自分がグループの端 ＋ グループ内に3色以上 ＋ 高速接触",
-      "conditionCount": 3,
+      "condition": "自分がグループの端 ＋ グループ内に3色以上 ＋ 高速接触 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-55",
@@ -766,10 +797,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "ふじ",
       "result": "POP",
-      "condition": "周囲のぽちょの表情が全てバラバラ ＋ 異色接触 ＋ 壁際",
-      "conditionCount": 3,
+      "condition": "周囲のぽちょの表情が全てバラバラ ＋ 異色接触 ＋ 壁際 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-56",
@@ -777,10 +809,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "ふじ",
       "result": "POP",
-      "condition": "直前に周囲で別のぽちょが弾けた ＋ 一定時間以内 ＋ 高速接触",
-      "conditionCount": 3,
+      "condition": "直前に周囲で別のぽちょが弾けた ＋ 一定時間以内 ＋ 高速接触 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-57",
@@ -788,10 +821,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "ふじ",
       "result": "POP",
-      "condition": "周囲に同色が2体以上いるのに自分だけ単独 ＋ 異色相手 ＋ 高速",
-      "conditionCount": 3,
+      "condition": "周囲に同色が2体以上いるのに自分だけ単独 ＋ 異色相手 ＋ 高速 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-58",
@@ -843,10 +877,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "あんず",
       "result": "POP",
-      "condition": "相対速度が高い ＋ 正面に近い衝突 ＋ 相手が同等以上のサイズ",
-      "conditionCount": 3,
+      "condition": "相対速度が高い ＋ 正面に近い衝突 ＋ 相手が同等以上のサイズ ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-63",
@@ -854,10 +889,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "あんず",
       "result": "POP",
-      "condition": "小さいあんず ＋ 大きい相手 ＋ 高速で自分から衝突",
-      "conditionCount": 3,
+      "condition": "小さいあんず ＋ 大きい相手 ＋ 高速で自分から衝突 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-64",
@@ -865,10 +901,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "あんず",
       "result": "POP",
-      "condition": "壁反射直後 ＋ 異色相手 ＋ 高速接触",
-      "conditionCount": 3,
+      "condition": "壁反射直後 ＋ 異色相手 ＋ 高速接触 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-65",
@@ -876,10 +913,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "あんず",
       "result": "POP",
-      "condition": "直前の衝突から短時間以内 ＋ 別の相手へ再度高速衝突 ＋ 相手が異色",
-      "conditionCount": 3,
+      "condition": "直前の衝突から短時間以内 ＋ 別の相手へ再度高速衝突 ＋ 相手が異色 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-66",
@@ -887,10 +925,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "あんず",
       "result": "POP",
-      "condition": "自分が大 ＋ 相手も大 ＋ 双方が移動中",
-      "conditionCount": 3,
+      "condition": "自分が大 ＋ 相手も大 ＋ 双方が移動中 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-67",
@@ -898,10 +937,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "あんず",
       "result": "POP",
-      "condition": "他ぽちょに押されて高速化 ＋ 第三者へ衝突 ＋ 相対速度が一定以上",
-      "conditionCount": 3,
+      "condition": "他ぽちょに押されて高速化 ＋ 第三者へ衝突 ＋ 相対速度が一定以上 ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-68",
@@ -909,10 +949,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "あんず",
       "result": "POP",
-      "condition": "同じ相手と連続3回衝突 ＋ 3回目だけ高速 ＋ 一度も接着していない",
-      "conditionCount": 3,
+      "condition": "同じ相手と連続3回衝突 ＋ 3回目だけ高速 ＋ 一度も接着していない ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "color-69",
@@ -920,10 +961,11 @@ window.POCHO_DATA = {
       "priority": 2,
       "attribute": "あんず",
       "result": "POP",
-      "condition": "天井付近 ＋ 下から高速で飛んできた相手と衝突 ＋ サイズ差が小さい",
-      "conditionCount": 3,
+      "condition": "天井付近 ＋ 下から高速で飛んできた相手と衝突 ＋ サイズ差が小さい ＋ 弾け補正：相対速度7.8以上",
+      "conditionCount": 4,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上"
     },
     {
       "id": "expression-2",
@@ -999,10 +1041,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "ごきげん",
       "result": "POP",
-      "condition": "自分がごきげん ＋ 相手が不機嫌 ＋ 相対速度が高い ＋ 接触地点が壁際",
-      "conditionCount": 4,
+      "condition": "自分がごきげん ＋ 相手が不機嫌 ＋ 相対速度が高い ＋ 接触地点が壁際 ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-9",
@@ -1010,10 +1053,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "ごきげん",
       "result": "POP",
-      "condition": "自分がごきげん ＋ 相手もごきげん ＋ 過去に何度も接触済み ＋ 今回だけ高速衝突",
-      "conditionCount": 4,
+      "condition": "自分がごきげん ＋ 相手もごきげん ＋ 過去に何度も接触済み ＋ 今回だけ高速衝突 ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-10",
@@ -1021,10 +1065,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "ごきげん",
       "result": "POP",
-      "condition": "自分がごきげん ＋ 天井接触済み ＋ 相手が高速移動中 ＋ サイズ差が大きい",
-      "conditionCount": 4,
+      "condition": "自分がごきげん ＋ 天井接触済み ＋ 相手が高速移動中 ＋ サイズ差が大きい ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-11",
@@ -1032,10 +1077,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "ごきげん",
       "result": "POP",
-      "condition": "自分がごきげん ＋ 一度くっついた相手と再接触 ＋ 前回と表情が異なる ＋ 今回の速度が高い",
-      "conditionCount": 4,
+      "condition": "自分がごきげん ＋ 一度くっついた相手と再接触 ＋ 前回と表情が異なる ＋ 今回の速度が高い ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-12",
@@ -1043,10 +1089,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "ごきげん",
       "result": "POP",
-      "condition": "自分がごきげん ＋ 周囲に同色が2体以上いる ＋ 相手が異色 ＋ 正面に近い衝突",
-      "conditionCount": 4,
+      "condition": "自分がごきげん ＋ 周囲に同色が2体以上いる ＋ 相手が異色 ＋ 正面に近い衝突 ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-13",
@@ -1120,10 +1167,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "ふつう",
       "result": "POP",
-      "condition": "自分がふつう ＋ 相手が不機嫌 ＋ 相対速度が高い ＋ 接触地点が天井付近",
-      "conditionCount": 4,
+      "condition": "自分がふつう ＋ 相手が不機嫌 ＋ 相対速度が高い ＋ 接触地点が天井付近 ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-20",
@@ -1131,10 +1179,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "ふつう",
       "result": "POP",
-      "condition": "自分がふつう ＋ 相手もふつう ＋ 両者とも高速移動中 ＋ サイズ差が小さい",
-      "conditionCount": 4,
+      "condition": "自分がふつう ＋ 相手もふつう ＋ 両者とも高速移動中 ＋ サイズ差が小さい ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-21",
@@ -1142,10 +1191,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "ふつう",
       "result": "POP",
-      "condition": "自分がふつう ＋ 過去に同じ相手と複数回接触済み ＋ 一度もくっついていない ＋ 今回が高速",
-      "conditionCount": 4,
+      "condition": "自分がふつう ＋ 過去に同じ相手と複数回接触済み ＋ 一度もくっついていない ＋ 今回が高速 ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-22",
@@ -1153,10 +1203,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "ふつう",
       "result": "POP",
-      "condition": "自分がふつう ＋ 壁接触直後 ＋ 異色相手 ＋ 接触角度が正面寄り",
-      "conditionCount": 4,
+      "condition": "自分がふつう ＋ 壁接触直後 ＋ 異色相手 ＋ 接触角度が正面寄り ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-23",
@@ -1164,10 +1215,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "ふつう",
       "result": "POP",
-      "condition": "自分がふつう ＋ 接触地点周辺に複数のぽちょがいる ＋ 相手が移動中 ＋ 自分も移動中",
-      "conditionCount": 4,
+      "condition": "自分がふつう ＋ 接触地点周辺に複数のぽちょがいる ＋ 相手が移動中 ＋ 自分も移動中 ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-24",
@@ -1175,10 +1227,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "ふつう",
       "result": "POP",
-      "condition": "自分がふつう ＋ 過去に表情変化済み ＋ 変化後初めての高速衝突 ＋ 相手が異色",
-      "conditionCount": 4,
+      "condition": "自分がふつう ＋ 過去に表情変化済み ＋ 変化後初めての高速衝突 ＋ 相手が異色 ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-25",
@@ -1242,10 +1295,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "不機嫌",
       "result": "POP",
-      "condition": "自分が不機嫌 ＋ 相手も不機嫌 ＋ 相対速度が高い ＋ 正面に近い衝突",
-      "conditionCount": 4,
+      "condition": "自分が不機嫌 ＋ 相手も不機嫌 ＋ 相対速度が高い ＋ 正面に近い衝突 ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-31",
@@ -1253,10 +1307,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "不機嫌",
       "result": "POP",
-      "condition": "自分が不機嫌 ＋ 相手がごきげん ＋ 接触地点が画面上半分 ＋ サイズ差が大きい",
-      "conditionCount": 4,
+      "condition": "自分が不機嫌 ＋ 相手がごきげん ＋ 接触地点が画面上半分 ＋ サイズ差が大きい ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-32",
@@ -1264,10 +1319,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "不機嫌",
       "result": "POP",
-      "condition": "自分が不機嫌 ＋ 壁接触回数が一定以上 ＋ 異色相手 ＋ 高速衝突",
-      "conditionCount": 4,
+      "condition": "自分が不機嫌 ＋ 壁接触回数が一定以上 ＋ 異色相手 ＋ 高速衝突 ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-33",
@@ -1275,10 +1331,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "不機嫌",
       "result": "POP",
-      "condition": "自分が不機嫌 ＋ 一度くっついた相手と再接触 ＋ 前回より高い速度 ＋ 相手の表情が変化済み",
-      "conditionCount": 4,
+      "condition": "自分が不機嫌 ＋ 一度くっついた相手と再接触 ＋ 前回より高い速度 ＋ 相手の表情が変化済み ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-34",
@@ -1286,10 +1343,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "不機嫌",
       "result": "POP",
-      "condition": "自分が不機嫌 ＋ 天井接触直後 ＋ 相手が下方向に動いている ＋ 相対速度が高い",
-      "conditionCount": 4,
+      "condition": "自分が不機嫌 ＋ 天井接触直後 ＋ 相手が下方向に動いている ＋ 相対速度が高い ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-35",
@@ -1297,11 +1355,12 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "不機嫌",
       "result": "POP",
-      "condition": "自分が不機嫌 ＋ 周囲に他ぽちょが多い ＋ 接触地点が密集地帯 ＋ 衝突後に誰かを押す",
-      "conditionCount": 4,
+      "condition": "自分が不機嫌 ＋ 周囲に他ぽちょが多い ＋ 接触地点が密集地帯 ＋ 衝突後に誰かを押す ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": false,
       "status": "unimplemented",
-      "missing": "衝突後に第三者を押したかの事後判定が未実装"
+      "missing": "衝突後に第三者を押したかの事後判定が未実装",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "expression-36",
@@ -1309,10 +1368,11 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "不機嫌",
       "result": "POP",
-      "condition": "自分が不機嫌 ＋ 相手と連続接触中 ＋ 今回だけ速度が急上昇 ＋ 一度もくっついていない",
-      "conditionCount": 4,
+      "condition": "自分が不機嫌 ＋ 相手と連続接触中 ＋ 今回だけ速度が急上昇 ＋ 一度もくっついていない ＋ 弾け補正：相対速度7.4以上",
+      "conditionCount": 5,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上"
     },
     {
       "id": "decoration-2",
@@ -1387,10 +1447,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "リボン",
       "result": "POP",
-      "condition": "リボン付き ＋ 一度くっついた相手 ＋ 再接触 ＋ 前回と表情が違う ＋ 今回が高速",
-      "conditionCount": 5,
+      "condition": "リボン付き ＋ 一度くっついた相手 ＋ 再接触 ＋ 前回と表情が違う ＋ 今回が高速 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 6,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-9",
@@ -1398,10 +1459,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "リボン",
       "result": "POP",
-      "condition": "リボン付き ＋ 同じ相手と短時間に複数回接触 ＋ 一度もくっついていない ＋ 異色 ＋ 壁際 ＋ 高速",
-      "conditionCount": 6,
+      "condition": "リボン付き ＋ 同じ相手と短時間に複数回接触 ＋ 一度もくっついていない ＋ 異色 ＋ 壁際 ＋ 高速 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 7,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-10",
@@ -1409,10 +1471,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "リボン",
       "result": "POP",
-      "condition": "リボン付き ＋ 自分がごきげん ＋ 相手が不機嫌 ＋ 過去に接触済み ＋ サイズ差が大きい ＋ 高速",
-      "conditionCount": 6,
+      "condition": "リボン付き ＋ 自分がごきげん ＋ 相手が不機嫌 ＋ 過去に接触済み ＋ サイズ差が大きい ＋ 高速 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 7,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-11",
@@ -1420,10 +1483,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "リボン",
       "result": "POP",
-      "condition": "リボン付き ＋ 長時間接着していた履歴あり ＋ 現在単独 ＋ 別の相手へ初接触 ＋ 相手が高速 ＋ 天井付近",
-      "conditionCount": 6,
+      "condition": "リボン付き ＋ 長時間接着していた履歴あり ＋ 現在単独 ＋ 別の相手へ初接触 ＋ 相手が高速 ＋ 天井付近 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 7,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-12",
@@ -1497,10 +1561,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "メガネ",
       "result": "POP",
-      "condition": "メガネ付き ＋ 総接触回数が5回以上 ＋ 今回が同じ相手との3回目以上 ＋ 高速 ＋ 相手が異色",
-      "conditionCount": 5,
+      "condition": "メガネ付き ＋ 総接触回数が5回以上 ＋ 今回が同じ相手との3回目以上 ＋ 高速 ＋ 相手が異色 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 6,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-19",
@@ -1508,10 +1573,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "メガネ",
       "result": "POP",
-      "condition": "メガネ付き ＋ 壁接触回数が3の倍数 ＋ 天井接触済み ＋ 初対面相手 ＋ 高速",
-      "conditionCount": 5,
+      "condition": "メガネ付き ＋ 壁接触回数が3の倍数 ＋ 天井接触済み ＋ 初対面相手 ＋ 高速 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 6,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-20",
@@ -1519,10 +1585,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "メガネ",
       "result": "POP",
-      "condition": "メガネ付き ＋ 直近の接触色が3種類すべて異なる ＋ 今回がそのどれかと同色 ＋ 高速 ＋ 画面上半分",
-      "conditionCount": 5,
+      "condition": "メガネ付き ＋ 直近の接触色が3種類すべて異なる ＋ 今回がそのどれかと同色 ＋ 高速 ＋ 画面上半分 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 6,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-21",
@@ -1530,10 +1597,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "メガネ",
       "result": "POP",
-      "condition": "メガネ付き ＋ 射出から一定時間経過 ＋ 一度も接着していない ＋ 接触回数が一定以上 ＋ 相手もメガネなし ＋ 高速",
-      "conditionCount": 6,
+      "condition": "メガネ付き ＋ 射出から一定時間経過 ＋ 一度も接着していない ＋ 接触回数が一定以上 ＋ 相手もメガネなし ＋ 高速 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 7,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-22",
@@ -1541,10 +1609,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "メガネ",
       "result": "POP",
-      "condition": "メガネ付き ＋ 直前イベントが「離れる」 ＋ 一定時間以内 ＋ 別グループへ衝突 ＋ サイズ差が大きい ＋ 高速",
-      "conditionCount": 6,
+      "condition": "メガネ付き ＋ 直前イベントが「離れる」 ＋ 一定時間以内 ＋ 別グループへ衝突 ＋ サイズ差が大きい ＋ 高速 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 7,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-23",
@@ -1618,10 +1687,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "王冠",
       "result": "POP",
-      "condition": "王冠付き ＋ 自分が周辺最大サイズ ＋ 相手も大サイズ ＋ 高速正面衝突 ＋ 周囲に他ぽちょが2体以上",
-      "conditionCount": 5,
+      "condition": "王冠付き ＋ 自分が周辺最大サイズ ＋ 相手も大サイズ ＋ 高速正面衝突 ＋ 周囲に他ぽちょが2体以上 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 6,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-30",
@@ -1629,10 +1699,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "王冠",
       "result": "POP",
-      "condition": "王冠付き ＋ 相手も王冠 ＋ サイズ差が大きい ＋ 小さい方が高速 ＋ 天井付近",
-      "conditionCount": 5,
+      "condition": "王冠付き ＋ 相手も王冠 ＋ サイズ差が大きい ＋ 小さい方が高速 ＋ 天井付近 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 6,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-31",
@@ -1640,10 +1711,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "王冠",
       "result": "POP",
-      "condition": "王冠付き ＋ 自分がグループ内最大 ＋ グループ人数4体以上 ＋ 外部から高速衝突を受ける ＋ 衝突相手が異色",
-      "conditionCount": 5,
+      "condition": "王冠付き ＋ 自分がグループ内最大 ＋ グループ人数4体以上 ＋ 外部から高速衝突を受ける ＋ 衝突相手が異色 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 6,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-32",
@@ -1651,10 +1723,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "王冠",
       "result": "POP",
-      "condition": "王冠付き ＋ 周囲に装飾付きが2体以上 ＋ 自分だけ表情が異なる ＋ 高速接触 ＋ 壁際",
-      "conditionCount": 5,
+      "condition": "王冠付き ＋ 周囲に装飾付きが2体以上 ＋ 自分だけ表情が異なる ＋ 高速接触 ＋ 壁際 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 6,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-33",
@@ -1662,10 +1735,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "王冠",
       "result": "POP",
-      "condition": "王冠付き ＋ 一度グループの中心付近にいた ＋ 現在端にいる ＋ 外部ぽちょに衝突 ＋ 相手が自分より大きい ＋ 高速",
-      "conditionCount": 6,
+      "condition": "王冠付き ＋ 一度グループの中心付近にいた ＋ 現在端にいる ＋ 外部ぽちょに衝突 ＋ 相手が自分より大きい ＋ 高速 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 7,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-34",
@@ -1739,10 +1813,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "芽",
       "result": "POP",
-      "condition": "芽付き ＋ 長時間生存 ＋ 総接触回数が多い ＋ 相手が高速 ＋ 自分が低速",
-      "conditionCount": 5,
+      "condition": "芽付き ＋ 長時間生存 ＋ 総接触回数が多い ＋ 相手が高速 ＋ 自分が低速 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 6,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-41",
@@ -1750,10 +1825,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "芽",
       "result": "POP",
-      "condition": "芽付き ＋ 表情変化2回以上 ＋ 過去に接着経験あり ＋ 現在単独 ＋ 異色相手へ高速接触",
-      "conditionCount": 5,
+      "condition": "芽付き ＋ 表情変化2回以上 ＋ 過去に接着経験あり ＋ 現在単独 ＋ 異色相手へ高速接触 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 6,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-42",
@@ -1761,10 +1837,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "芽",
       "result": "POP",
-      "condition": "芽付き ＋ 生存中に全基本色へ接触済み ＋ 今回が同色 ＋ 高速 ＋ 天井付近",
-      "conditionCount": 5,
+      "condition": "芽付き ＋ 生存中に全基本色へ接触済み ＋ 今回が同色 ＋ 高速 ＋ 天井付近 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 6,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-43",
@@ -1772,11 +1849,12 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "芽",
       "result": "POP",
-      "condition": "芽付き ＋ 長時間静止状態を経験 ＋ その後初めての高速移動 ＋ 他ぽちょへ衝突 ＋ サイズ差が大きい",
-      "conditionCount": 5,
+      "condition": "芽付き ＋ 長時間静止状態を経験 ＋ その後初めての高速移動 ＋ 他ぽちょへ衝突 ＋ サイズ差が大きい ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 6,
       "active": false,
       "status": "unimplemented",
-      "missing": "長時間静止後の「初めての高速移動」履歴が未実装"
+      "missing": "長時間静止後の「初めての高速移動」履歴が未実装",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "decoration-44",
@@ -1784,10 +1862,11 @@ window.POCHO_DATA = {
       "priority": 4,
       "attribute": "芽",
       "result": "POP",
-      "condition": "芽付き ＋ 過去に3体以上を誘爆で見送っている ＋ 自分は一度も誘爆されていない ＋ 新しいグループへ接触 ＋ 高速",
-      "conditionCount": 5,
+      "condition": "芽付き ＋ 過去に3体以上を誘爆で見送っている ＋ 自分は一度も誘爆されていない ＋ 新しいグループへ接触 ＋ 高速 ＋ 弾け補正：相対速度7.0以上",
+      "conditionCount": 6,
       "active": true,
-      "status": "active"
+      "status": "active",
+      "burstTuning": "v0.1.3: 弾け補正：相対速度7.0以上"
     },
     {
       "id": "special-2",
@@ -2878,5 +2957,17 @@ window.POCHO_DATA = {
       "audit": "保留：表情変化未定義",
       "active": true
     }
-  ]
+  ],
+  "balance": {
+    "version": "0.1.3",
+    "targetOutcome": "NONE≈50% / STICK≈30〜35% / POP≈15〜20%",
+    "launchPopProtectionSeconds": 0.4,
+    "popGates": {
+      "size": 8.8,
+      "color": 7.8,
+      "expression": 7.4,
+      "decoration": 7.0
+    },
+    "specialPopGate": "追加なし"
+  }
 };
