@@ -199,7 +199,7 @@ function collisionContext(a,b,pair){
  const now=performance.now(),av=speed(a),bv=speed(b),rv=Math.hypot(a.velocity.x-b.velocity.x,a.velocity.y-b.velocity.y),dx=b.position.x-a.position.x,dy=b.position.y-a.position.y,dist=Math.max(1,Math.hypot(dx,dy));
  const relDot=((a.velocity.x-b.velocity.x)*dx+(a.velocity.y-b.velocity.y)*dy)/(Math.max(.01,rv)*dist); // + moving toward roughly
  const near=getNearby((a.position.x+b.position.x)/2,(a.position.y+b.position.y)/2,T.NEAR,[a,b]);
- return {id:eventSerial++,time:now,a,b,primary:a,other:b,x:(a.position.x+b.position.x)/2,y:(a.position.y+b.position.y)/2,av,bv,relativeSpeed:rv,headOn:Math.abs(relDot)>.62,shallow:Math.abs(relDot)<.34,near,nearCount:near.length,groupA:getGroup(a),groupB:getGroup(b),preColorsA:new Set(a.pocho.colorsSeen),preColorsB:new Set(b.pocho.colorsSeen),prevContactIdA:a.pocho.lastContactId,prevContactIdB:b.pocho.lastContactId,prevPushedByA:a.pocho.lastPushedBy,prevPushedByB:b.pocho.lastPushedBy,trigger:null,victims:[],causeType:'collision',pair};
+ return {id:eventSerial++,time:now,a,b,primary:a,other:b,x:(a.position.x+b.position.x)/2,y:(a.position.y+b.position.y)/2,av,bv,relativeSpeed:rv,headOn:Math.abs(relDot)>.62,shallow:Math.abs(relDot)<.34,near,nearCount:near.length,groupA:getGroup(a),groupB:getGroup(b),preColorsA:new Set(a.pocho.colorsSeen),preColorsB:new Set(b.pocho.colorsSeen),preContactCountA:(a.pocho.contacts.get(b.pocho.id)?.count||0),preContactCountB:(b.pocho.contacts.get(a.pocho.id)?.count||0),preTotalContactsA:a.pocho.contactCount,preTotalContactsB:b.pocho.contactCount,preGA:getGroup(a).length,preGB:getGroup(b).length,prevContactIdA:a.pocho.lastContactId,prevContactIdB:b.pocho.lastContactId,prevPushedByA:a.pocho.lastPushedBy,prevPushedByB:b.pocho.lastPushedBy,prevPushAtA:a.pocho.lastPushAt,prevPushAtB:b.pocho.lastPushAt,trigger:null,victims:[],causeType:'collision',pair};
 }
 function collisionStart(ev){if(state!=='game'||paused||initializingBoard)return;const now=performance.now();for(const pair of ev.pairs){const a=pair.bodyA,b=pair.bodyB;if(!a.pocho||!b.pocho||!a.pocho.launched||!b.pocho.launched)continue;if(isBonded(a,b))continue;if(a.pocho.launchSetId&&a.pocho.launchSetId===b.pocho.launchSetId&&now-Math.max(a.pocho.launchedAt||0,b.pocho.launchedAt||0)<450)continue;processContact(a,b,pair)}}
 function processContact(a,b,pair){
@@ -207,10 +207,13 @@ function processContact(a,b,pair){
  for(const [self,other] of [[a,b],[b,a]]){const p=self.pocho,r=contactRec(self,other);r.count++;if(!r.firstAt)r.firstAt=now;r.lastAt=now;r.maxSpeed=Math.max(r.maxSpeed,ctx.relativeSpeed);p.contactCount++;p.lastContactAt=now;p.lastContactId=other.pocho.id;p.colorsSeen.add(other.pocho.color);p.expressionsSeen.add(other.pocho.expression);p.sizesSeen.add(other.pocho.sizeClass);if(other.pocho.decoration!=='なし')p.decorationsSeen.add(other.pocho.decoration);p.contactColors.push(other.pocho.color);if(p.contactColors.length>8)p.contactColors.shift();if(p.color===other.pocho.color)p.sameColorContacts++;else p.diffColorContacts++;p.lastEvent='contact';p.lastEventAt=now;p.aloneSince=now;}
  maybeExpressionChange(a,ctx);maybeExpressionChange(b,ctx);
  const outcome=evaluateBehavior(ctx);
- if(outcome==='POP'){ctx.trigger='弾ける';const origin=ctx.primary,culprit=origin===a?b:a;origin.pocho.lastPushedBy=culprit.pocho.id;origin.pocho.lastPushAt=now;popGroup(origin,ctx)}
- else if(outcome==='STICK'){ctx.trigger='くっつく';stick(a,b,ctx);scoreEvent(ctx);a.pocho.lastPushedBy=b.pocho.id;a.pocho.lastPushAt=now;b.pocho.lastPushedBy=a.pocho.id;b.pocho.lastPushAt=now}
- else{ctx.trigger='何も起こらない';scoreEvent(ctx);a.pocho.lastPushedBy=b.pocho.id;a.pocho.lastPushAt=now;b.pocho.lastPushedBy=a.pocho.id;b.pocho.lastPushAt=now}
- pushRecent({type:ctx.trigger,time:now,x:ctx.x,y:ctx.y,a:a.pocho.id,b:b.pocho.id});
+ if(outcome==='POP'){ctx.trigger='弾ける';popGroup(ctx.primary,ctx)}
+ else if(outcome==='STICK'){ctx.trigger='くっつく';stick(a,b,ctx);scoreEvent(ctx)}
+ else{ctx.trigger='何も起こらない';scoreEvent(ctx)}
+ // 「第三者に押された」は、単に触れただけではなく速度差のある衝突だけを履歴化する。
+ if(a.pocho&&b.pocho){const sa=speed(a),sb=speed(b),rv=ctx.relativeSpeed;if(rv>=4.5&&sb>sa+.75){a.pocho.lastPushedBy=b.pocho.id;a.pocho.lastPushAt=now}if(rv>=4.5&&sa>sb+.75){b.pocho.lastPushedBy=a.pocho.id;b.pocho.lastPushAt=now}}
+ const eventBodies=(ctx.groupAfter?.length?ctx.groupAfter:(ctx.victims?.length?ctx.victims:[a,b])).filter(x=>x?.pocho).map(x=>x.pocho.id);
+ pushRecent({type:ctx.trigger,time:now,x:ctx.x,y:ctx.y,a:a.pocho?.id,b:b.pocho?.id,bodyIds:eventBodies,contactId:ctx.id,preGA:ctx.preGA,preGB:ctx.preGB,groupAfter:ctx.groupAfter?.length||0});
 }
 function collisionActive(ev){for(const pair of ev.pairs){let b=null;if(pair.bodyA===topWall&&pair.bodyB?.pocho)b=pair.bodyB;else if(pair.bodyB===topWall&&pair.bodyA?.pocho)b=pair.bodyA;if(b){const p=b.pocho,now=performance.now();if(now-p.wall.lastAt>180){p.wall.top++;p.wall.last='top';p.wall.lastAt=now;p.wall.sequence.push('top');trimSeq(p.wall.sequence,8)}if(b.velocity.y<0||Math.abs(b.velocity.y)<2)Body.setVelocity(b,{x:b.velocity.x*.28,y:0});Body.setAngularVelocity(b,b.angularVelocity*.35)}}}
 function wallChecks(){for(const b of bodies){if(!b.pocho?.launched)continue;const p=b.pocho,now=performance.now(),r=p.radius;if(b.position.x<r+4)wallHit(p,'left',now);if(b.position.x>W-r-4)wallHit(p,'right',now);if(b.position.y>H-r-4)wallHit(p,'bottom',now)}}
@@ -238,6 +241,36 @@ function checkClause(c,ctx,self=ctx.primary||ctx.a,other=ctx.other||(self===ctx.
  if(c.startsWith('弾け補正：相対速度')){const m=c.match(/([0-9]+(?:\.[0-9]+)?)以上/);return !!m&&rv>=Number(m[1]);}
  const g=getGroup(self), og=other?getGroup(other):[], all=ctx.victims?.length?ctx.victims:g, near=ctx.near||getNearby(ctx.x??self.position.x,ctx.y??self.position.y,T.NEAR,[self]);
  const colors=new Set(all.filter(x=>x.pocho).map(x=>x.pocho.color)), exprs=new Set(all.filter(x=>x.pocho).map(x=>x.pocho.expression)), sizes=new Set(all.filter(x=>x.pocho).map(x=>x.pocho.sizeClass)), decos=all.filter(x=>x.pocho&&x.pocho.decoration!=='なし').map(x=>x.pocho.decoration);
+ // v0.2.2: LAB v0.8.4で検証した強化条件の厳密判定。
+ if(c==='相対速度9.5以上')return rv>=9.5;
+ if(c==='相対速度9以上')return rv>=9;
+ if(c==='相対速度10以上')return rv>=10;
+ if(c==='1.2秒以内に自分が壁へ接触済み')return wallTotal(p)>0&&now-(p.wall.lastAt||0)<=1200;
+ if(c==='接触地点が画面上1/3')return (ctx.y??self.position.y)<H/3;
+ if(c==='両者が初接触'){const pre=self===ctx.a?ctx.preContactCountA:ctx.preContactCountB;return (pre||0)===0;}
+ if(c==='過去にこの相手と接着済み')return !!rec&&rec.stickCount>0;
+ if(c==='一度離れている')return !!rec&&rec.detachCount>0;
+ if(c==='前回接着時と現在の表情が異なる')return !!rec?.lastStickExpression&&rec.lastStickExpression!==p.expression;
+ if(c==='離れてから2秒以上経過')return !!rec&&rec.detachCount>0&&now-(rec.lastStickAt||0)>=2000;
+ if(c==='一方が小')return q&&[p.sizeClass,q.sizeClass].includes('小');
+ if(c==='もう一方が大')return q&&[p.sizeClass,q.sizeClass].includes('大');
+ if(c==='小さい方の速度12以上'){if(!q)return false;const small=p.radius<=q.radius?self:other;return speed(small)>=12;}
+ if(c==='大きい方の速度3以下'){if(!q)return false;const big=p.radius>=q.radius?self:other;return speed(big)<=3;}
+ if(c==='過去に2回以上接触'){const pre=self===ctx.a?ctx.preContactCountA:ctx.preContactCountB;return (pre||0)>=2;}
+ if(c==='接触地点110px以内に5体以上')return getNearby(ctx.x??self.position.x,ctx.y??self.position.y,110,[self,other]).length>=5;
+ if(c==='そのうち3体以上が互いに接触圏内'){const pool=[...getNearby(ctx.x??self.position.x,ctx.y??self.position.y,110,[self,other]),self,other].filter(Boolean);const touching=new Set();for(let i=0;i<pool.length;i++)for(let j=i+1;j<pool.length;j++){const aa=pool[i],bb=pool[j];if(Math.hypot(aa.position.x-bb.position.x,aa.position.y-bb.position.y)<=aa.pocho.radius+bb.pocho.radius+8){touching.add(aa);touching.add(bb)}}return touching.size>=3;}
+ if(c==='接触後も密集状態が維持')return getNearby(ctx.x??self.position.x,ctx.y??self.position.y,110,[self,other]).length>=4;
+ if(c==='生存5秒以上')return age>=5;
+ if(c==='接触3回以上')return p.contactCount>=3;
+ if(c==='自分が起爆')return ctx.trigger==='弾ける'&&self===ctx.primary;
+ if(c==='射出から0.6秒以内')return age<=0.6;
+ if(c==='それ以前に他ぽちょとの接触なし'){const pre=self===ctx.a?ctx.preTotalContactsA:ctx.preTotalContactsB;return (pre||0)===0;}
+ if(c==='0.7秒以内の連鎖'){const ids=new Set((ctx.groupAfter||[ctx.a,ctx.b]).filter(Boolean).map(x=>x.pocho.id));return recentEvents.some(e=>e.type==='くっつく'&&now-e.time<=700&&e.bodyIds?.some(id=>ids.has(id)));}
+ if(c==='5体以上が順番に接着'){const ids=new Set((ctx.groupAfter||[]).map(x=>x.pocho.id));const related=recentEvents.filter(e=>e.type==='くっつく'&&now-e.time<=700&&e.bodyIds?.some(id=>ids.has(id)));const parts=new Set(ids);for(const e of related)for(const id of(e.bodyIds||[]))parts.add(id);return (ctx.groupAfter?.length||0)>=5&&parts.size>=5&&related.length>=3;}
+ if(c.includes('途中で別グループ同士の合流を1回以上含む')){const ids=new Set((ctx.groupAfter||[]).map(x=>x.pocho.id));return recentEvents.some(e=>e.type==='くっつく'&&now-e.time<=1000&&e.bodyIds?.some(id=>ids.has(id))&&(e.preGA||1)>=2&&(e.preGB||1)>=2)||((ctx.preGA||1)>=2&&(ctx.preGB||1)>=2);}
+ if(c==='最終グループ7体以上')return (ctx.groupAfter?.length||0)>=7;
+ if(c==='最終グループが4色以上')return !!ctx.groupAfter&&new Set(ctx.groupAfter.map(x=>x.pocho.color)).size>=4;
+ if(c==='起点ぽちょと最後に加わったぽちょが直接接触していない'){if(!ctx.newlyJoined)return false;const ids=new Set((ctx.groupAfter||[]).map(x=>x.pocho.id));const related=recentEvents.filter(e=>e.type==='くっつく'&&now-e.time<=700&&e.bodyIds?.some(id=>ids.has(id))).sort((a,b)=>a.time-b.time);if(!related.length)return false;const firstId=related[0].bodyIds?.[0],first=[...bodies].find(x=>x.pocho?.id===firstId);if(!first||first===ctx.newlyJoined)return false;const rr=first.pocho.contacts.get(ctx.newlyJoined.pocho.id);return !rr||rr.count===0;}
  // role/compound shorthands that need exact semantics
  if(c==='両方ごきげん')return q&&p.expression==='ごきげん'&&q.expression==='ごきげん';
  if(c==='両方不機嫌'||c==='不機嫌同士')return q&&p.expression==='不機嫌'&&q.expression==='不機嫌';

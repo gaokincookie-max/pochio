@@ -41,10 +41,11 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が大 ＋ 自分が高速で衝突 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 3,
-      "active": true,
-      "status": "active",
+      "active": false,
+      "status": "disabled",
       "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
-      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
+      "disabledReason": "v0.2.2: POCHO LAB実測調整で高頻度POP条件として本家でも無効化。",
+      "mainTuning": "v0.2.2: LAB個別OFFを本家DB OFFへ正式反映"
     },
     {
       "id": "size-6",
@@ -54,10 +55,11 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が大 ＋ サイズ差がかなり大きい ＋ 相対速度が一定以上 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 4,
-      "active": true,
-      "status": "active",
+      "active": false,
+      "status": "disabled",
       "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
-      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
+      "disabledReason": "v0.2.2: POCHO LAB実測調整で高頻度POP条件として本家でも無効化。",
+      "mainTuning": "v0.2.2: LAB個別OFFを本家DB OFFへ正式反映"
     },
     {
       "id": "size-7",
@@ -113,10 +115,11 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手も中 ＋ 両方とも高速 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 3,
-      "active": true,
-      "status": "active",
+      "active": false,
+      "status": "disabled",
       "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
-      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
+      "disabledReason": "v0.2.2: POCHO LAB実測調整で高頻度POP条件として本家でも無効化。",
+      "mainTuning": "v0.2.2: LAB個別OFFを本家DB OFFへ正式反映"
     },
     {
       "id": "size-12",
@@ -159,10 +162,11 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手も大 ＋ 高速衝突 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 3,
-      "active": true,
-      "status": "active",
+      "active": false,
+      "status": "disabled",
       "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
-      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
+      "disabledReason": "v0.2.2: POCHO LAB実測調整で高頻度POP条件として本家でも無効化。",
+      "mainTuning": "v0.2.2: LAB個別OFFを本家DB OFFへ正式反映"
     },
     {
       "id": "size-16",
@@ -170,12 +174,13 @@ window.POCHO_DATA = {
       "priority": 1,
       "attribute": "大",
       "result": "POP",
-      "condition": "相手が小 ＋ 小さい方が非常に高速 ＋ 弾け補正：相対速度8.8以上",
-      "conditionCount": 3,
+      "condition": "一方が小 ＋ もう一方が大 ＋ 小さい方の速度12以上 ＋ 大きい方の速度3以下 ＋ 相対速度10以上",
+      "conditionCount": 5,
       "active": true,
       "status": "active",
       "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
-      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
+      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。",
+      "labTuning": "v0.8.4実験: 高頻度POPの意味を濃くして成立率を抑制"
     },
     {
       "id": "size-17",
@@ -185,10 +190,11 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が中以上 ＋ 自分が壁接触直後 ＋ 高速衝突 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 4,
-      "active": true,
-      "status": "active",
+      "active": false,
+      "status": "disabled",
       "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
-      "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
+      "disabledReason": "v0.2.2: POCHO LAB実測調整で高頻度POP条件として本家でも無効化。",
+      "mainTuning": "v0.2.2: LAB個別OFFを本家DB OFFへ正式反映"
     },
     {
       "id": "color-2",
@@ -939,10 +945,12 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "壁反射直後 ＋ 異色相手 ＋ 高速接触 ＋ 弾け補正：相対速度7.8以上",
       "conditionCount": 4,
-      "active": true,
-      "status": "active",
+      "active": false,
+      "status": "disabled",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上",
-      "restoredIn": "v0.1.6: 色POP再有効化"
+      "restoredIn": "v0.1.6: 色POP再有効化",
+      "disabledReason": "v0.2.2: POCHO LAB実測調整で高頻度POP条件として本家でも無効化。",
+      "mainTuning": "v0.2.2: LAB個別OFFを本家DB OFFへ正式反映"
     },
     {
       "id": "color-65",
@@ -1083,12 +1091,13 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "ごきげん",
       "result": "POP",
-      "condition": "自分がごきげん ＋ 相手が不機嫌 ＋ 相対速度が高い ＋ 接触地点が壁際 ＋ 弾け補正：相対速度7.4以上",
-      "conditionCount": 5,
+      "condition": "自分がごきげん ＋ 相手が不機嫌 ＋ 相対速度9.5以上 ＋ 1.2秒以内に自分が壁へ接触済み ＋ 接触地点が画面上1/3 ＋ 両者が初接触",
+      "conditionCount": 6,
       "active": true,
       "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
-      "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
+      "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。",
+      "labTuning": "v0.8.4実験: 高頻度POPの意味を濃くして成立率を抑制"
     },
     {
       "id": "expression-9",
@@ -1122,12 +1131,13 @@ window.POCHO_DATA = {
       "priority": 3,
       "attribute": "ごきげん",
       "result": "POP",
-      "condition": "自分がごきげん ＋ 一度くっついた相手と再接触 ＋ 前回と表情が異なる ＋ 今回の速度が高い ＋ 弾け補正：相対速度7.4以上",
-      "conditionCount": 5,
+      "condition": "自分がごきげん ＋ 過去にこの相手と接着済み ＋ 一度離れている ＋ 前回接着時と現在の表情が異なる ＋ 離れてから2秒以上経過 ＋ 相対速度9以上",
+      "conditionCount": 6,
       "active": true,
       "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
-      "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
+      "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。",
+      "labTuning": "v0.8.4実験: 高頻度POPの意味を濃くして成立率を抑制"
     },
     {
       "id": "expression-12",
@@ -1350,10 +1360,11 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 相手も不機嫌 ＋ 相対速度が高い ＋ 正面に近い衝突 ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": true,
-      "status": "active",
+      "active": false,
+      "status": "disabled",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
-      "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
+      "disabledReason": "v0.2.2: POCHO LAB実測調整で高頻度POP条件として本家でも無効化。",
+      "mainTuning": "v0.2.2: LAB個別OFFを本家DB OFFへ正式反映"
     },
     {
       "id": "expression-31",
@@ -1363,10 +1374,11 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 相手がごきげん ＋ 接触地点が画面上半分 ＋ サイズ差が大きい ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": true,
-      "status": "active",
+      "active": false,
+      "status": "disabled",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
-      "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
+      "disabledReason": "v0.2.2: POCHO LAB実測調整で高頻度POP条件として本家でも無効化。",
+      "mainTuning": "v0.2.2: LAB個別OFFを本家DB OFFへ正式反映"
     },
     {
       "id": "expression-32",
@@ -1376,10 +1388,11 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 壁接触回数が一定以上 ＋ 異色相手 ＋ 高速衝突 ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": true,
-      "status": "active",
+      "active": false,
+      "status": "disabled",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
-      "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
+      "disabledReason": "v0.2.2: POCHO LAB実測調整で高頻度POP条件として本家でも無効化。",
+      "mainTuning": "v0.2.2: LAB個別OFFを本家DB OFFへ正式反映"
     },
     {
       "id": "expression-33",
@@ -2111,12 +2124,13 @@ window.POCHO_DATA = {
       "name": "なかよし",
       "trigger": "くっつく",
       "score": 120,
-      "andCount": 2,
-      "condition": "同色 ＋ 同じ表情",
+      "andCount": 4,
+      "condition": "同色 ＋ 同じ表情 ＋ 過去に2回以上接触 ＋ 今回は低速接触",
       "undiscovered": "似ているだけで、うまくいくとは限らない。",
       "discovered": "今回は、うまくいった。",
       "audit": "成立可能",
-      "active": true
+      "active": true,
+      "labTuning": "v0.8.4実験: 300ゲーム実測で頻発したため条件強化"
     },
     {
       "id": 2,
@@ -2150,12 +2164,13 @@ window.POCHO_DATA = {
       "name": "おしくらぽちょ",
       "trigger": "くっつく",
       "score": 130,
-      "andCount": 2,
-      "condition": "接触地点付近に他ぽちょが2体以上 ＋ 画面上半分",
+      "andCount": 4,
+      "condition": "接触地点110px以内に5体以上 ＋ そのうち3体以上が互いに接触圏内 ＋ 接触後も密集状態が維持 ＋ 画面上半分",
       "undiscovered": "狭いところほど距離は縮まる。",
       "discovered": "押されるうちに仲間になった。",
       "audit": "成立可能",
-      "active": true
+      "active": true,
+      "labTuning": "v0.8.4実験: 300ゲーム実測で頻発したため条件強化"
     },
     {
       "id": 5,
@@ -2281,12 +2296,13 @@ window.POCHO_DATA = {
       "name": "最期まで笑顔",
       "trigger": "弾ける",
       "score": 130,
-      "andCount": 2,
-      "condition": "起爆ぽちょがごきげん ＋ 表情変化経験なし",
+      "andCount": 5,
+      "condition": "起爆ぽちょがごきげん ＋ 表情変化経験なし ＋ 生存5秒以上 ＋ 接触3回以上 ＋ 自分が起爆",
       "undiscovered": "最後まで変わらないものもある。",
       "discovered": "最後まで笑っていた。",
       "audit": "成立可能",
-      "active": true
+      "active": true,
+      "labTuning": "v0.8.4実験: 300ゲーム実測で頻発したため条件強化"
     },
     {
       "id": 15,
@@ -2359,12 +2375,13 @@ window.POCHO_DATA = {
       "name": "新入り",
       "trigger": "くっつく",
       "score": 390,
-      "andCount": 4,
-      "condition": "3体以上の既存グループへ加入 ＋ 加入者が単独だった ＋ 加入者が異色 ＋ 低速接触",
+      "andCount": 5,
+      "condition": "既存4体以上グループへ加入 ＋ 加入者が単独だった ＋ 加入先に同色なし ＋ 加入先に同表情が1体以上 ＋ 低速接触",
       "undiscovered": "入る場所があるなら入ってみてもいい。",
       "discovered": "新入りを受け入れた。",
       "audit": "成立可能",
-      "active": true
+      "active": true,
+      "labTuning": "v0.8.4実験: 300ゲーム実測で頻発したため条件強化"
     },
     {
       "id": 21,
@@ -2463,12 +2480,13 @@ window.POCHO_DATA = {
       "name": "短い生涯",
       "trigger": "弾ける",
       "score": 350,
-      "andCount": 3,
-      "condition": "射出から短時間 ＋ 壁未接触 ＋ 接触回数2回以下",
+      "andCount": 6,
+      "condition": "射出から0.6秒以内 ＋ 壁未接触 ＋ 初接触で起爆 ＋ それ以前に他ぽちょとの接触なし ＋ 自分が起爆 ＋ 誘爆なし",
       "undiscovered": "世の中には早い別れもある。",
       "discovered": "かなり短かった。",
       "audit": "成立可能",
-      "active": true
+      "active": true,
+      "labTuning": "v0.8.4実験: 300ゲーム実測で頻発したため条件強化"
     },
     {
       "id": 29,
@@ -2541,12 +2559,13 @@ window.POCHO_DATA = {
       "name": "芋づる式",
       "trigger": "くっつく",
       "score": 1250,
-      "andCount": 4,
-      "condition": "1回の接触を起点 ＋ 1秒以内 ＋ 3体以上が順番に接着 ＋ 最終グループが3色以上",
+      "andCount": 6,
+      "condition": "0.7秒以内の連鎖 ＋ 5体以上が順番に接着 ＋ 途中で別グループ同士の合流を1回以上含む ＋ 最終グループ7体以上 ＋ 最終グループが4色以上 ＋ 起点ぽちょと最後に加わったぽちょが直接接触していない",
       "undiscovered": "一つ動くと、ついてくることがある。",
       "discovered": "本当に芋づる式だった。",
       "audit": "成立可能",
-      "active": true
+      "active": true,
+      "labTuning": "v0.8.4実験: 300ゲーム実測で頻発したため条件強化"
     },
     {
       "id": 35,
