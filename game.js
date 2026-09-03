@@ -17,7 +17,8 @@ const RARITY_COLOR=['','#6f747d','#58a66b','#568cb9','#9a68bd','#d09a29','#fff7c
 const SAVE_KEY='pocho_save_v01';
 const T={LOW:3.5,VERY_LOW:1.8,HIGH:8,VERY_HIGH:12,STILL:1.0,LONG:18,SHORT:2.8,RECENT:1.2,NEAR:110,POP_PROTECT:.4};
 const PHYS={UP_FORCE:.00135,MAX_SPEED:18.5,MAX_ANG:.34,MAX_PULL:170,SLING:.112,PRELINK_STIFFNESS:.075,PRELINK_DAMPING:.09,DRAG_STIFFNESS:.19,DRAG_DAMPING:.045,PRELAUNCH_EDGE_DAMP:.38};
-const LAUNCH_ZONE_TOP_RATIO=.66;
+const POCHO_SIZE_SCALE=1.5;
+const LAUNCH_ZONE_TOP_RATIO=.60;
 let save=loadSave();
 let engine,render,runner,W=1,H=1,launchY=1,walls=[],topWall=null;
 let initializingBoard=false,gameSessionId=0;
@@ -56,7 +57,7 @@ function makeDescriptor(){
  const sizeRoll=Math.random(); const sizeClass=sizeRoll<.31?'小':sizeRoll<.75?'中':'大';
  const ranges={小:[16,21],中:[21.5,27],大:[27.5,34]}, rr=ranges[sizeClass];
  const color=COLORS[(Math.random()*COLORS.length)|0], expression=EXPRESSIONS[(Math.random()*3)|0], decoration=weightedChoice(DECOS,DECO_RATE);
- return {color:color.id,hex:color.hex,expression,decoration,sizeClass,radius:rand(rr[0],rr[1])};
+ return {color:color.id,hex:color.hex,expression,decoration,sizeClass,radius:rand(rr[0],rr[1])*POCHO_SIZE_SCALE};
 }
 function rand(a,b){return a+Math.random()*(b-a)}
 function createPocho(desc,spawnType='shot'){
@@ -85,8 +86,13 @@ function startGame(m){
  initializeBoard(session);
 }
 function initialSlots(){
- const xs1=[.14,.38,.62,.86],xs2=[.25,.50,.75];
- return [...xs1.map((x,i)=>({x:W*x,y:42+(i%2)*3})),...xs2.map((x,i)=>({x:W*x,y:105+(i%2)*4}))];
+ // Larger pochos need more breathing room: 3 + 2 + 2 staggered rows.
+ const rows=[
+  {xs:[.20,.50,.80],y:58},
+  {xs:[.34,.66],y:152},
+  {xs:[.24,.76],y:246}
+ ];
+ return rows.flatMap(row=>row.xs.map(x=>({x:W*x,y:row.y})));
 }
 function resetInitialHistory(b){
  const p=b.pocho,now=performance.now();p.bornAt=now;p.lastUpdate=now;p.distance=0;p.maxSpeed=0;p.highSpeedSeen=false;p.wall={left:0,right:0,top:0,bottom:0,last:null,lastAt:0,sequence:[]};p.contacts=new Map();p.contactColors=[];p.colorsSeen=new Set();p.expressionsSeen=new Set([p.expression]);p.sizesSeen=new Set();p.decorationsSeen=new Set();p.contactCount=0;p.sameColorContacts=0;p.diffColorContacts=0;p.stickCount=0;p.detachCount=0;p.everStuck=false;p.expressionChanges=0;p.lastExpressionChange=0;p.lastContactAt=0;p.lastContactId=null;p.lastEvent='initial';p.lastEventAt=now;p.aloneSince=now;p.longStill=false;p.stillSince=0;p.groupsHistory=[];p.maxGroup=1;p.popWitnessed=0;p.lastPushedBy=null;p.lastPushAt=0;p.behaviorCandidateHits=0;p.launchedAt=now;p.launchIndex=0;
@@ -109,9 +115,9 @@ function makeSetDescriptor(){return [makeDescriptor(),makeDescriptor(),makeDescr
 function spawnCurrent(){
  if(remaining<=0)return;
  const descs=nextSetDesc||makeSetDescriptor();nextSetDesc=makeSetDescriptor();nextDesc=null;
- const cx=W*.5,cy=Math.max(H*LAUNCH_ZONE_TOP_RATIO+80,launchY);
  const maxR=Math.max(...descs.map(d=>d.radius));
- const offsets=[{x:0,y:-maxR*.65},{x:-maxR*.72,y:maxR*.58},{x:maxR*.72,y:maxR*.58}];
+ const cx=W*.5,cy=Math.max(H*LAUNCH_ZONE_TOP_RATIO+maxR*1.45,launchY);
+ const offsets=[{x:0,y:-maxR*.86},{x:-maxR*.90,y:maxR*.70},{x:maxR*.90,y:maxR*.70}];
  const setId='set'+eventSerial++,setBodies=[];
  for(let i=0;i<3;i++){
    const b=createPocho(descs[i],'shot');
@@ -123,7 +129,7 @@ function spawnCurrent(){
  }
  const links=[];
  for(const [i,j] of [[0,1],[1,2],[2,0]]){
-   const a=setBodies[i],b=setBodies[j],rest=Math.max(12,a.pocho.radius+b.pocho.radius-7);
+   const a=setBodies[i],b=setBodies[j],rest=Math.max(18,a.pocho.radius+b.pocho.radius-10);
    const c=Constraint.create({bodyA:a,bodyB:b,length:rest,stiffness:PHYS.PRELINK_STIFFNESS,damping:PHYS.PRELINK_DAMPING,render:{visible:false}});
    c.preLaunchLink=true;Composite.add(engine.world,c);links.push(c);
  }
