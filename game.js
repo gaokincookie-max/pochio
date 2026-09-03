@@ -17,8 +17,7 @@ const RARITY_COLOR=['','#6f747d','#58a66b','#568cb9','#9a68bd','#d09a29','#fff7c
 const SAVE_KEY='pocho_save_v01';
 const T={LOW:3.5,VERY_LOW:1.8,HIGH:8,VERY_HIGH:12,STILL:1.0,LONG:18,SHORT:2.8,RECENT:1.2,NEAR:110,POP_PROTECT:.4};
 const PHYS={UP_FORCE:.00135,MAX_SPEED:18.5,MAX_ANG:.34,MAX_PULL:170,SLING:.112,PRELINK_STIFFNESS:.075,PRELINK_DAMPING:.09,DRAG_STIFFNESS:.19,DRAG_DAMPING:.045,PRELAUNCH_EDGE_DAMP:.38};
-const POCHO_SIZE_SCALE=1.5;
-const LAUNCH_ZONE_TOP_RATIO=.60;
+const LAUNCH_ZONE_TOP_RATIO=.66;
 let save=loadSave();
 let engine,render,runner,W=1,H=1,launchY=1,walls=[],topWall=null;
 let initializingBoard=false,gameSessionId=0;
@@ -55,9 +54,9 @@ function confirmAction(text,fn){settingsModal.classList.add('hidden');confirmTex
 function weightedChoice(items,weights){let r=Math.random()*weights.reduce((a,b)=>a+b,0);for(let i=0;i<items.length;i++){r-=weights[i];if(r<=0)return items[i]}return items.at(-1)}
 function makeDescriptor(){
  const sizeRoll=Math.random(); const sizeClass=sizeRoll<.31?'小':sizeRoll<.75?'中':'大';
- const ranges={小:[16,21],中:[21.5,27],大:[27.5,34]}, rr=ranges[sizeClass];
+ const ranges={小:[19.2,25.2],中:[25.8,32.4],大:[33,40.8]}, rr=ranges[sizeClass];
  const color=COLORS[(Math.random()*COLORS.length)|0], expression=EXPRESSIONS[(Math.random()*3)|0], decoration=weightedChoice(DECOS,DECO_RATE);
- return {color:color.id,hex:color.hex,expression,decoration,sizeClass,radius:rand(rr[0],rr[1])*POCHO_SIZE_SCALE};
+ return {color:color.id,hex:color.hex,expression,decoration,sizeClass,radius:rand(rr[0],rr[1])};
 }
 function rand(a,b){return a+Math.random()*(b-a)}
 function createPocho(desc,spawnType='shot'){
@@ -86,13 +85,8 @@ function startGame(m){
  initializeBoard(session);
 }
 function initialSlots(){
- // Larger pochos need more breathing room: 3 + 2 + 2 staggered rows.
- const rows=[
-  {xs:[.20,.50,.80],y:58},
-  {xs:[.34,.66],y:152},
-  {xs:[.24,.76],y:246}
- ];
- return rows.flatMap(row=>row.xs.map(x=>({x:W*x,y:row.y})));
+ const xs1=[.14,.38,.62,.86],xs2=[.25,.50,.75];
+ return [...xs1.map((x,i)=>({x:W*x,y:42+(i%2)*3})),...xs2.map((x,i)=>({x:W*x,y:105+(i%2)*4}))];
 }
 function resetInitialHistory(b){
  const p=b.pocho,now=performance.now();p.bornAt=now;p.lastUpdate=now;p.distance=0;p.maxSpeed=0;p.highSpeedSeen=false;p.wall={left:0,right:0,top:0,bottom:0,last:null,lastAt:0,sequence:[]};p.contacts=new Map();p.contactColors=[];p.colorsSeen=new Set();p.expressionsSeen=new Set([p.expression]);p.sizesSeen=new Set();p.decorationsSeen=new Set();p.contactCount=0;p.sameColorContacts=0;p.diffColorContacts=0;p.stickCount=0;p.detachCount=0;p.everStuck=false;p.expressionChanges=0;p.lastExpressionChange=0;p.lastContactAt=0;p.lastContactId=null;p.lastEvent='initial';p.lastEventAt=now;p.aloneSince=now;p.longStill=false;p.stillSince=0;p.groupsHistory=[];p.maxGroup=1;p.popWitnessed=0;p.lastPushedBy=null;p.lastPushAt=0;p.behaviorCandidateHits=0;p.launchedAt=now;p.launchIndex=0;
@@ -115,9 +109,9 @@ function makeSetDescriptor(){return [makeDescriptor(),makeDescriptor(),makeDescr
 function spawnCurrent(){
  if(remaining<=0)return;
  const descs=nextSetDesc||makeSetDescriptor();nextSetDesc=makeSetDescriptor();nextDesc=null;
+ const cx=W*.5,cy=Math.max(H*LAUNCH_ZONE_TOP_RATIO+80,launchY);
  const maxR=Math.max(...descs.map(d=>d.radius));
- const cx=W*.5,cy=Math.max(H*LAUNCH_ZONE_TOP_RATIO+maxR*1.45,launchY);
- const offsets=[{x:0,y:-maxR*.86},{x:-maxR*.90,y:maxR*.70},{x:maxR*.90,y:maxR*.70}];
+ const offsets=[{x:0,y:-maxR*.65},{x:-maxR*.72,y:maxR*.58},{x:maxR*.72,y:maxR*.58}];
  const setId='set'+eventSerial++,setBodies=[];
  for(let i=0;i<3;i++){
    const b=createPocho(descs[i],'shot');
@@ -129,7 +123,7 @@ function spawnCurrent(){
  }
  const links=[];
  for(const [i,j] of [[0,1],[1,2],[2,0]]){
-   const a=setBodies[i],b=setBodies[j],rest=Math.max(18,a.pocho.radius+b.pocho.radius-10);
+   const a=setBodies[i],b=setBodies[j],rest=Math.max(14.4,a.pocho.radius+b.pocho.radius-8.4);
    const c=Constraint.create({bodyA:a,bodyB:b,length:rest,stiffness:PHYS.PRELINK_STIFFNESS,damping:PHYS.PRELINK_DAMPING,render:{visible:false}});
    c.preLaunchLink=true;Composite.add(engine.world,c);links.push(c);
  }
@@ -140,7 +134,7 @@ function updateHud(){hudScore.textContent=score.toLocaleString();hudRemain.textC
 function drawNext(){
  const ctx=nextCanvas.getContext('2d'),ds=nextSetDesc;ctx.clearRect(0,0,70,70);if(!ds)return;
  const spots=[[35,18],[22,43],[48,43]];
- for(let i=0;i<3;i++){const d=ds[i],r=Math.min(12,d.radius*.43);drawPocho2D(ctx,spots[i][0],spots[i][1],r,d,0)}
+ for(let i=0;i<3;i++){const d=ds[i],r=Math.min(14.4,d.radius*.43);drawPocho2D(ctx,spots[i][0],spots[i][1],r,d,0)}
 }
 function point(e){const r=render.canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
 function hit(p,b){if(!b)return false;return Math.hypot(p.x-b.position.x,p.y-b.position.y)<=b.pocho.radius*1.5}
@@ -327,8 +321,8 @@ function checkClause(c,ctx,self=ctx.primary||ctx.a,other=ctx.other||(self===ctx.
  if(c.includes('サイズ区分も同じ')||c==='同サイズ区分'||c==='サイズ区分同じ')return q&&p.sizeClass===q.sizeClass;
  if(c.includes('サイズが小と大'))return q&&new Set([p.sizeClass,q.sizeClass]).has('小')&&new Set([p.sizeClass,q.sizeClass]).has('大');
  const rd=q?Math.abs(p.radius-q.radius):0, ratio=q?Math.max(p.radius,q.radius)/Math.min(p.radius,q.radius):1;
- if(c.includes('サイズ差が非常に小')||c.includes('実サイズ差が非常に小'))return rd<=2.4;if(c.includes('サイズ差が小')||c.includes('サイズ差が一定以下')||c.includes('サイズが自分と近い'))return rd<=5;if(c.includes('サイズ差が大き')||c.includes('サイズ差がかなり大き'))return ratio>=1.38;
- if(c.includes('自分より大きい'))return q&&q.radius>p.radius+2;if(c.includes('自分より小さい')||c==='相手より小さい')return q&&q.radius<p.radius-2;if(c.includes('接触相手より自分が大きい'))return q&&p.radius>q.radius+2;if(c==='古い方が大きい')return q&&((p.launchIndex<q.launchIndex&&p.radius>q.radius)||(q.launchIndex<p.launchIndex&&q.radius>p.radius));
+ if(c.includes('サイズ差が非常に小')||c.includes('実サイズ差が非常に小'))return rd<=2.88;if(c.includes('サイズ差が小')||c.includes('サイズ差が一定以下')||c.includes('サイズが自分と近い'))return rd<=6;if(c.includes('サイズ差が大き')||c.includes('サイズ差がかなり大き'))return ratio>=1.38;
+ if(c.includes('自分より大きい'))return q&&q.radius>p.radius+2.4;if(c.includes('自分より小さい')||c==='相手より小さい')return q&&q.radius<p.radius-2.4;if(c.includes('接触相手より自分が大きい'))return q&&p.radius>q.radius+2.4;if(c==='古い方が大きい')return q&&((p.launchIndex<q.launchIndex&&p.radius>q.radius)||(q.launchIndex<p.launchIndex&&q.radius>p.radius));
  // 速度語の意味を厳密化（LAB v0.4準拠）:
  // 「低速接触 / 高速衝突 / 接触速度 / 相対速度」は相対速度。
  // 「自分 / 相手 / 両方」と明記された場合のみ各Bodyの絶対速度。
