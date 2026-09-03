@@ -19,6 +19,8 @@ const T={LOW:3.5,VERY_LOW:1.8,HIGH:8,VERY_HIGH:12,STILL:1.0,LONG:18,SHORT:2.8,RE
 const PHYS={UP_FORCE:.00175,MAX_SPEED:16.5,MAX_ANG:.28,MAX_PULL:140,SLING:.112};
 let save=loadSave();
 let engine,render,runner,W=1,H=1,launchY=1,walls=[],topWall=null;
+let initializingBoard=false,gameSessionId=0;
+const INITIAL_POCHO_COUNT=7;
 let state='menu',modeKey='middle',score=0,remaining=0,current=null,nextDesc=null,shotIndex=0,dragging=false,anchor={x:0,y:0};
 let bodies=new Set(), bonds=new Set(), lastActivity=0, settleSince=0, paused=false, gameStartedAt=0;
 let runStats=null, recentEvents=[], eventSerial=1;
@@ -55,10 +57,10 @@ function makeDescriptor(){
  return {color:color.id,hex:color.hex,expression,decoration,sizeClass,radius:rand(rr[0],rr[1])};
 }
 function rand(a,b){return a+Math.random()*(b-a)}
-function createPocho(desc){
+function createPocho(desc,spawnType='shot'){
  const b=Bodies.circle(W*.5,launchY,desc.radius,{restitution:.72,friction:.014,frictionAir:.0045,density:.00155,slop:.03,collisionFilter:{category:1,mask:0},render:{fillStyle:desc.hex,strokeStyle:'#ffffff70',lineWidth:2}});
  const now=performance.now();
- b.pocho={id:'p'+eventSerial++, ...desc, _initialExpression:desc.expression, launched:false,launchIndex:0,bornAt:now,lastUpdate:now,distance:0,maxSpeed:0,highSpeedSeen:false,wall:{left:0,right:0,top:0,bottom:0,last:null,lastAt:0,sequence:[]},contacts:new Map(),contactColors:[],colorsSeen:new Set(),expressionsSeen:new Set([desc.expression]),sizesSeen:new Set(),decorationsSeen:new Set(),contactCount:0,sameColorContacts:0,diffColorContacts:0,stickCount:0,detachCount:0,everStuck:false,expressionChanges:0,lastExpressionChange:0,lastContactAt:0,lastContactId:null,lastEvent:'spawn',lastEventAt:now,aloneSince:now,longStill:false,stillSince:0,groupsHistory:[],maxGroup:1,popWitnessed:0,lastPushedBy:null,lastPushAt:0,behaviorCandidateHits:0};
+ b.pocho={id:'p'+eventSerial++, ...desc, spawnType, _initialExpression:desc.expression, launched:false,launchIndex:0,bornAt:now,lastUpdate:now,distance:0,maxSpeed:0,highSpeedSeen:false,wall:{left:0,right:0,top:0,bottom:0,last:null,lastAt:0,sequence:[]},contacts:new Map(),contactColors:[],colorsSeen:new Set(),expressionsSeen:new Set([desc.expression]),sizesSeen:new Set(),decorationsSeen:new Set(),contactCount:0,sameColorContacts:0,diffColorContacts:0,stickCount:0,detachCount:0,everStuck:false,expressionChanges:0,lastExpressionChange:0,lastContactAt:0,lastContactId:null,lastEvent:'spawn',lastEventAt:now,aloneSince:now,longStill:false,stillSince:0,groupsHistory:[],maxGroup:1,popWitnessed:0,lastPushedBy:null,lastPushAt:0,behaviorCandidateHits:0};
  Body.setStatic(b,true); return b;
 }
 function measure(){const r=gameEl.getBoundingClientRect();W=Math.max(280,r.width);H=Math.max(380,r.height);launchY=H*.80}
@@ -75,11 +77,32 @@ function rebuildWalls(){
  topWall=Bodies.rectangle(W/2,-30,W+120,60,top);walls=[Bodies.rectangle(-30,H/2,60,H+120,side),Bodies.rectangle(W+30,H/2,60,H+120,side),topWall,Bodies.rectangle(W/2,H+30,W+120,60,floor)];Composite.add(engine.world,walls);
 }
 function startGame(m){
- stopGame();modeKey=m;score=0;remaining=MODES[m].shots;shotIndex=0;lastActivity=performance.now();settleSince=0;gameStartedAt=performance.now();recentEvents=[];
+ stopGame();const session=++gameSessionId;modeKey=m;score=0;remaining=MODES[m].shots;shotIndex=0;lastActivity=performance.now();settleSince=0;gameStartedAt=performance.now();recentEvents=[];
  runStats={contacts:0,sticks:0,pops:0,induced:0,newRoles:new Set(),maxRarity:0,maxSingle:0,rolesTriggered:0,shots:0};
- showScreen('game');setupPhysics();nextDesc=makeDescriptor();spawnCurrent();updateHud();drawNext();
+ showScreen('game');setupPhysics();nextDesc=makeDescriptor();updateHud();drawNext();
+ initializeBoard(session);
 }
-function stopGame(){persist();paused=false;settingsModal.classList.add('hidden');confirmModal.classList.add('hidden');teardownPhysics()}
+function initialSlots(){
+ const xs1=[.14,.38,.62,.86],xs2=[.25,.50,.75];
+ return [...xs1.map((x,i)=>({x:W*x,y:42+(i%2)*3})),...xs2.map((x,i)=>({x:W*x,y:105+(i%2)*4}))];
+}
+function resetInitialHistory(b){
+ const p=b.pocho,now=performance.now();p.bornAt=now;p.lastUpdate=now;p.distance=0;p.maxSpeed=0;p.highSpeedSeen=false;p.wall={left:0,right:0,top:0,bottom:0,last:null,lastAt:0,sequence:[]};p.contacts=new Map();p.contactColors=[];p.colorsSeen=new Set();p.expressionsSeen=new Set([p.expression]);p.sizesSeen=new Set();p.decorationsSeen=new Set();p.contactCount=0;p.sameColorContacts=0;p.diffColorContacts=0;p.stickCount=0;p.detachCount=0;p.everStuck=false;p.expressionChanges=0;p.lastExpressionChange=0;p.lastContactAt=0;p.lastContactId=null;p.lastEvent='initial';p.lastEventAt=now;p.aloneSince=now;p.longStill=false;p.stillSince=0;p.groupsHistory=[];p.maxGroup=1;p.popWitnessed=0;p.lastPushedBy=null;p.lastPushAt=0;p.behaviorCandidateHits=0;p.launchedAt=now;p.launchIndex=0;
+}
+function initializeBoard(session){
+ initializingBoard=true;gameStatus.textContent='最初からいたぽちょが整列中…';
+ const slots=initialSlots();
+ for(let i=0;i<INITIAL_POCHO_COUNT;i++){
+   const b=createPocho(makeDescriptor(),'initial'),slot=slots[i%slots.length];
+   Body.setPosition(b,{x:slot.x+rand(-6,6),y:slot.y+rand(-3,3)});Body.setStatic(b,false);b.collisionFilter.mask=1;b.pocho.launched=true;b.pocho.launchedAt=performance.now();b.pocho.launchIndex=0;Composite.add(engine.world,b);bodies.add(b);
+ }
+ setTimeout(()=>{
+   if(session!==gameSessionId||state!=='game'||!engine)return;
+   for(const b of bodies){if(b.pocho?.spawnType==='initial'){Body.setVelocity(b,{x:0,y:0});Body.setAngularVelocity(b,0);resetInitialHistory(b)}}
+   recentEvents=[];initializingBoard=false;lastActivity=performance.now();gameStartedAt=performance.now();spawnCurrent();updateHud();gameStatus.textContent='ぽちょを引っ張ってください';
+ },900);
+}
+function stopGame(){gameSessionId++;persist();paused=false;initializingBoard=false;settingsModal.classList.add('hidden');confirmModal.classList.add('hidden');teardownPhysics()}
 function spawnCurrent(){if(remaining<=0)return;const d=nextDesc||makeDescriptor();nextDesc=makeDescriptor();current=createPocho(d);Composite.add(engine.world,current);bodies.add(current);gameStatus.textContent='ぽちょを引っ張ってください';drawNext();}
 function updateHud(){hudScore.textContent=score.toLocaleString();hudRemain.textContent=remaining;hudBest.textContent='BEST '+(save.best[modeKey]||0).toLocaleString()}
 function drawNext(){const ctx=nextCanvas.getContext('2d'),d=nextDesc;ctx.clearRect(0,0,70,70);if(!d)return;drawPocho2D(ctx,35,36,Math.min(19,d.radius*.68),d,0)}
@@ -100,7 +123,7 @@ function collisionContext(a,b,pair){
  const near=getNearby((a.position.x+b.position.x)/2,(a.position.y+b.position.y)/2,T.NEAR,[a,b]);
  return {id:eventSerial++,time:now,a,b,primary:a,other:b,x:(a.position.x+b.position.x)/2,y:(a.position.y+b.position.y)/2,av,bv,relativeSpeed:rv,headOn:Math.abs(relDot)>.62,shallow:Math.abs(relDot)<.34,near,nearCount:near.length,groupA:getGroup(a),groupB:getGroup(b),preColorsA:new Set(a.pocho.colorsSeen),preColorsB:new Set(b.pocho.colorsSeen),prevContactIdA:a.pocho.lastContactId,prevContactIdB:b.pocho.lastContactId,prevPushedByA:a.pocho.lastPushedBy,prevPushedByB:b.pocho.lastPushedBy,trigger:null,victims:[],causeType:'collision',pair};
 }
-function collisionStart(ev){if(state!=='game'||paused)return;for(const pair of ev.pairs){const a=pair.bodyA,b=pair.bodyB;if(!a.pocho||!b.pocho||!a.pocho.launched||!b.pocho.launched)continue;if(isBonded(a,b))continue;processContact(a,b,pair)}}
+function collisionStart(ev){if(state!=='game'||paused||initializingBoard)return;for(const pair of ev.pairs){const a=pair.bodyA,b=pair.bodyB;if(!a.pocho||!b.pocho||!a.pocho.launched||!b.pocho.launched)continue;if(isBonded(a,b))continue;processContact(a,b,pair)}}
 function processContact(a,b,pair){
  const ctx=collisionContext(a,b,pair),now=ctx.time;runStats.contacts++;save.totals.contacts++;lastActivity=now;
  for(const [self,other] of [[a,b],[b,a]]){const p=self.pocho,r=contactRec(self,other);r.count++;if(!r.firstAt)r.firstAt=now;r.lastAt=now;r.maxSpeed=Math.max(r.maxSpeed,ctx.relativeSpeed);p.contactCount++;p.lastContactAt=now;p.lastContactId=other.pocho.id;p.colorsSeen.add(other.pocho.color);p.expressionsSeen.add(other.pocho.expression);p.sizesSeen.add(other.pocho.sizeClass);if(other.pocho.decoration!=='なし')p.decorationsSeen.add(other.pocho.decoration);p.contactColors.push(other.pocho.color);if(p.contactColors.length>8)p.contactColors.shift();if(p.color===other.pocho.color)p.sameColorContacts++;else p.diffColorContacts++;p.lastEvent='contact';p.lastEventAt=now;p.aloneSince=now;}
