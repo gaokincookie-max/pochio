@@ -16,7 +16,7 @@ const DECO_RATE=[.85,.04,.04,.03,.04];
 const RARITY_COLOR=['','#6f747d','#58a66b','#568cb9','#9a68bd','#d09a29','#fff7cf'];
 const SAVE_KEY='pocho_save_v01';
 const T={LOW:3.5,VERY_LOW:1.8,HIGH:8,VERY_HIGH:12,STILL:1.0,LONG:18,SHORT:2.8,RECENT:1.2,NEAR:110,POP_PROTECT:.4};
-const PHYS={UP_FORCE:.00175,MAX_SPEED:18.5,MAX_ANG:.34,MAX_PULL:170,SLING:.112,PRELINK_STIFFNESS:.075,PRELINK_DAMPING:.09,DRAG_STIFFNESS:.19,DRAG_DAMPING:.045};
+const PHYS={UP_FORCE:.00135,MAX_SPEED:18.5,MAX_ANG:.34,MAX_PULL:170,SLING:.112,PRELINK_STIFFNESS:.075,PRELINK_DAMPING:.09,DRAG_STIFFNESS:.19,DRAG_DAMPING:.045,PRELAUNCH_EDGE_DAMP:.38};
 const LAUNCH_ZONE_TOP_RATIO=.66;
 let save=loadSave();
 let engine,render,runner,W=1,H=1,launchY=1,walls=[],topWall=null;
@@ -24,7 +24,6 @@ let initializingBoard=false,gameSessionId=0;
 const INITIAL_POCHO_COUNT=7;
 let state='menu',modeKey='middle',score=0,remaining=0,current=null,nextDesc=null,shotIndex=0,dragging=false,anchor={x:0,y:0};
 let currentSet=null,nextSetDesc=null,grabbed=null,grabConstraint=null,pointerHistory=[];
-const launchedSets=new Set();
 let bodies=new Set(), bonds=new Set(), lastActivity=0, settleSince=0, paused=false, gameStartedAt=0;
 let runStats=null, recentEvents=[], eventSerial=1;
 
@@ -128,7 +127,7 @@ function spawnCurrent(){
    const c=Constraint.create({bodyA:a,bodyB:b,length:rest,stiffness:PHYS.PRELINK_STIFFNESS,damping:PHYS.PRELINK_DAMPING,render:{visible:false}});
    c.preLaunchLink=true;Composite.add(engine.world,c);links.push(c);
  }
- currentSet={id:setId,bodies:setBodies,links,launched:false,jointsCut:false,jointsCutAt:0};current=setBodies[0];
+ currentSet={id:setId,bodies:setBodies,links,launched:false};current=setBodies[0];
  gameStatus.textContent='射出ゾーン内の好きなぽちょを掴んで振り回す';drawNext();
 }
 function updateHud(){hudScore.textContent=score.toLocaleString();hudRemain.textContent=remaining;hudBest.textContent='BEST '+(save.best[modeKey]||0).toLocaleString()}
@@ -140,7 +139,25 @@ function drawNext(){
 function point(e){const r=render.canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
 function hit(p,b){if(!b)return false;return Math.hypot(p.x-b.position.x,p.y-b.position.y)<=b.pocho.radius*1.5}
 function launchZoneTop(){return H*LAUNCH_ZONE_TOP_RATIO}
-function clampToLaunchZone(p,r=18){return{x:Math.max(r,Math.min(W-r,p.x)),y:Math.max(launchZoneTop()+r,Math.min(H-r,p.y))}}
+function clampToLaunchZone(p,r=18){return{x:Math.max(r+4,Math.min(W-r-4,p.x)),y:Math.max(launchZoneTop()+r+4,Math.min(H-r-8,p.y))}}
+function confinePrelaunchSet(){
+ if(!currentSet||currentSet.launched)return;
+ const zt=launchZoneTop();
+ for(const b of currentSet.bodies){
+  if(!b?.pocho)continue;
+  const r=b.pocho.radius,pad=6,minX=r+pad,maxX=W-r-pad,minY=zt+r+pad,maxY=H-r-10;
+  let x=b.position.x,y=b.position.y,vx=b.velocity.x,vy=b.velocity.y,hitX=false,hitY=false;
+  if(x<minX){x=minX;hitX=true}else if(x>maxX){x=maxX;hitX=true}
+  if(y<minY){y=minY;hitY=true}else if(y>maxY){y=maxY;hitY=true}
+  if(hitX||hitY){
+   Body.setPosition(b,{x,y});
+   if(hitX)vx*=-PHYS.PRELAUNCH_EDGE_DAMP;
+   if(hitY)vy*=-PHYS.PRELAUNCH_EDGE_DAMP;
+   Body.setVelocity(b,{x:vx,y:vy});
+   Body.setAngularVelocity(b,b.angularVelocity*.72);
+  }
+ }
+}
 function pointerStart(e){
  if(paused||!currentSet||currentSet.launched)return;const p=point(e);let target=null,best=Infinity;
  for(const b of currentSet.bodies){const d=Math.hypot(p.x-b.position.x,p.y-b.position.y);if(d<=b.pocho.radius*1.55&&d<best){target=b;best=d}}
@@ -162,6 +179,7 @@ function pointerEnd(e){
  // Pointer motion contributes a small release impulse so fast finger swings remain responsive on touch devices.
  let pv={x:0,y:0};if(pointerHistory.length>=2){const a=pointerHistory[0],z=pointerHistory.at(-1),dt=Math.max(16,z.t-a.t);pv={x:(z.x-a.x)/dt*16.67,y:(z.y-a.y)/dt*16.67}}
  const pm=Math.hypot(pv.x,pv.y);if(pm>PHYS.MAX_SPEED){pv.x*=PHYS.MAX_SPEED/pm;pv.y*=PHYS.MAX_SPEED/pm}
+ for(const c of set.links)Composite.remove(engine.world,c);set.links=[];
  const launchNo=++shotIndex;
  for(const b of set.bodies){
    b.collisionFilter.mask=1;b.pocho.launched=true;b.pocho.launchedAt=now;b.pocho.launchIndex=launchNo;
@@ -169,27 +187,9 @@ function pointerEnd(e){
    const bv=speed(b),blend=b===grabbed?.55:.18;let vx=b.velocity.x+pv.x*blend,vy=b.velocity.y+pv.y*blend;
    const m=Math.hypot(vx,vy);if(m>PHYS.MAX_SPEED){vx*=PHYS.MAX_SPEED/m;vy*=PHYS.MAX_SPEED/m}Body.setVelocity(b,{x:vx,y:vy});
  }
- set.launched=true;launchedSets.add(set);remaining--;runStats.shots++;save.totals.shots++;lastActivity=now;updateHud();gameStatus.textContent='3ぽちょセットのまま射出・ゾーンを出ると解放';
+ set.launched=true;remaining--;runStats.shots++;save.totals.shots++;lastActivity=now;updateHud();gameStatus.textContent='3ぽちょ解放・上重力 ON';
  currentSet=null;current=null;grabbed=null;pointerHistory=[];
  if(remaining>0)setTimeout(()=>{if(state==='game'&&!currentSet)spawnCurrent()},500);else gameStatus.textContent='最後の3ぽちょを見届けています';e.preventDefault();
-}
-
-function cutLaunchSetJoints(set){
- if(!set||set.jointsCut)return;
- set.jointsCut=true;set.jointsCutAt=performance.now();
- for(const c of set.links)Composite.remove(engine.world,c);
- set.links=[];
- gameStatus.textContent='射出ゾーンを通過・3ぽちょ解放';
-}
-function updateLaunchSets(){
- const zt=launchZoneTop();
- for(const set of [...launchedSets]){
-   if(!set||!set.bodies?.length){launchedSets.delete(set);continue}
-   const alive=set.bodies.filter(b=>bodies.has(b)&&b.pocho);
-   if(!alive.length){launchedSets.delete(set);continue}
-   if(!set.jointsCut&&alive.some(b=>b.position.y<zt-b.pocho.radius*.2))cutLaunchSetJoints(set);
-   if(set.jointsCut&&performance.now()-set.jointsCutAt>1200)launchedSets.delete(set);
- }
 }
 
 function speed(b){return Math.hypot(b.velocity.x,b.velocity.y)}
@@ -201,7 +201,7 @@ function collisionContext(a,b,pair){
  const near=getNearby((a.position.x+b.position.x)/2,(a.position.y+b.position.y)/2,T.NEAR,[a,b]);
  return {id:eventSerial++,time:now,a,b,primary:a,other:b,x:(a.position.x+b.position.x)/2,y:(a.position.y+b.position.y)/2,av,bv,relativeSpeed:rv,headOn:Math.abs(relDot)>.62,shallow:Math.abs(relDot)<.34,near,nearCount:near.length,groupA:getGroup(a),groupB:getGroup(b),preColorsA:new Set(a.pocho.colorsSeen),preColorsB:new Set(b.pocho.colorsSeen),prevContactIdA:a.pocho.lastContactId,prevContactIdB:b.pocho.lastContactId,prevPushedByA:a.pocho.lastPushedBy,prevPushedByB:b.pocho.lastPushedBy,trigger:null,victims:[],causeType:'collision',pair};
 }
-function collisionStart(ev){if(state!=='game'||paused||initializingBoard)return;const now=performance.now();for(const pair of ev.pairs){const a=pair.bodyA,b=pair.bodyB;if(!a.pocho||!b.pocho||!a.pocho.launched||!b.pocho.launched)continue;if(isBonded(a,b))continue;if(a.pocho.launchSetId&&a.pocho.launchSetId===b.pocho.launchSetId){const set=[...launchedSets].find(s=>s.id===a.pocho.launchSetId);if(set&&!set.jointsCut)continue;if(set&&now-(set.jointsCutAt||0)<450)continue;}processContact(a,b,pair)}}
+function collisionStart(ev){if(state!=='game'||paused||initializingBoard)return;const now=performance.now();for(const pair of ev.pairs){const a=pair.bodyA,b=pair.bodyB;if(!a.pocho||!b.pocho||!a.pocho.launched||!b.pocho.launched)continue;if(isBonded(a,b))continue;if(a.pocho.launchSetId&&a.pocho.launchSetId===b.pocho.launchSetId&&now-Math.max(a.pocho.launchedAt||0,b.pocho.launchedAt||0)<450)continue;processContact(a,b,pair)}}
 function processContact(a,b,pair){
  const ctx=collisionContext(a,b,pair),now=ctx.time;runStats.contacts++;save.totals.contacts++;lastActivity=now;
  for(const [self,other] of [[a,b],[b,a]]){const p=self.pocho,r=contactRec(self,other);r.count++;if(!r.firstAt)r.firstAt=now;r.lastAt=now;r.maxSpeed=Math.max(r.maxSpeed,ctx.relativeSpeed);p.contactCount++;p.lastContactAt=now;p.lastContactId=other.pocho.id;p.colorsSeen.add(other.pocho.color);p.expressionsSeen.add(other.pocho.expression);p.sizesSeen.add(other.pocho.sizeClass);if(other.pocho.decoration!=='なし')p.decorationsSeen.add(other.pocho.decoration);p.contactColors.push(other.pocho.color);if(p.contactColors.length>8)p.contactColors.shift();if(p.color===other.pocho.color)p.sameColorContacts++;else p.diffColorContacts++;p.lastEvent='contact';p.lastEventAt=now;p.aloneSince=now;}
@@ -530,11 +530,11 @@ function pushRecent(e){recentEvents.push(e);const t=performance.now()-15000;whil
 function spawnPopFx(b){const p=document.createElement('div');p.className='score-pop';p.style.left=(b.position.x/W*100)+'%';p.style.top=(b.position.y/H*100)+'%';p.style.fontSize='24px';p.style.color=b.pocho.hex;p.textContent='ぽちょ';scoreLayer.appendChild(p);setTimeout(()=>p.remove(),650)}
 
 function getNearby(x,y,r,exclude=[]){const ex=new Set(exclude);return [...bodies].filter(b=>b.pocho&&!ex.has(b)&&Math.hypot(b.position.x-x,b.position.y-y)<=r)}
-function tick(){if(state!=='game'||paused)return;const now=performance.now();updateLaunchSets();wallChecks();for(const b of bodies){if(!b.pocho?.launched)continue;const p=b.pocho,dt=Math.max(0,(now-p.lastUpdate)/1000);p.lastUpdate=now;p.distance+=speed(b)*dt*60;p.maxSpeed=Math.max(p.maxSpeed,speed(b));if(speed(b)>=T.HIGH)p.highSpeedSeen=true;Body.applyForce(b,b.position,{x:0,y:-b.mass*PHYS.UP_FORCE});const m=speed(b);if(m>PHYS.MAX_SPEED){const s=PHYS.MAX_SPEED/m;Body.setVelocity(b,{x:b.velocity.x*s,y:b.velocity.y*s})}if(Math.abs(b.angularVelocity)>PHYS.MAX_ANG)Body.setAngularVelocity(b,Math.sign(b.angularVelocity)*PHYS.MAX_ANG);if(m<T.STILL){if(!p.stillSince)p.stillSince=now;if(now-p.stillSince>5000)p.longStill=true}else p.stillSince=0;}
+function tick(){if(state!=='game'||paused)return;const now=performance.now();confinePrelaunchSet();wallChecks();for(const b of bodies){if(!b.pocho?.launched)continue;const p=b.pocho,dt=Math.max(0,(now-p.lastUpdate)/1000);p.lastUpdate=now;p.distance+=speed(b)*dt*60;p.maxSpeed=Math.max(p.maxSpeed,speed(b));if(speed(b)>=T.HIGH)p.highSpeedSeen=true;Body.applyForce(b,b.position,{x:0,y:-b.mass*PHYS.UP_FORCE});const m=speed(b);if(m>PHYS.MAX_SPEED){const s=PHYS.MAX_SPEED/m;Body.setVelocity(b,{x:b.velocity.x*s,y:b.velocity.y*s})}if(Math.abs(b.angularVelocity)>PHYS.MAX_ANG)Body.setAngularVelocity(b,Math.sign(b.angularVelocity)*PHYS.MAX_ANG);if(m<T.STILL){if(!p.stillSince)p.stillSince=now;if(now-p.stillSince>5000)p.longStill=true}else p.stillSince=0;}
  for(const c of [...bonds]){if(!c.bodyA?.pocho||!c.bodyB?.pocho){bonds.delete(c);continue}const d=Math.hypot(c.bodyA.position.x-c.bodyB.position.x,c.bodyA.position.y-c.bodyB.position.y),rv=Math.hypot(c.bodyA.velocity.x-c.bodyB.velocity.x,c.bodyA.velocity.y-c.bodyB.velocity.y);if(now-c.pochoBond.createdAt>450&&(d>c.pochoBond.rest*1.82||rv>13.2))breakBond(c)}
  if(remaining===0&&!currentSet){const active=[...bodies].some(b=>speed(b)>1.1);if(!active&&now-lastActivity>1200){if(!settleSince)settleSince=now;if(now-settleSince>1500)finishGame()}else settleSince=0;}
 }
-function drawOverlay(){if(!render)return;const ctx=render.context;ctx.save();const zt=launchZoneTop();ctx.fillStyle='#f7f3ecb8';ctx.fillRect(0,zt,W,H-zt);ctx.strokeStyle='#9c8f7f80';ctx.setLineDash([7,7]);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,zt);ctx.lineTo(W,zt);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#766d63a8';ctx.font='600 12px system-ui';ctx.textAlign='left';ctx.fillText('射出ゾーン',12,zt+20);ctx.strokeStyle='#ffffffaa';ctx.lineWidth=2;ctx.strokeRect(1,1,W-2,H-2);for(const c of bonds){if(!c.bodyA?.pocho||!c.bodyB?.pocho)continue;ctx.lineWidth=7;ctx.lineCap='round';ctx.strokeStyle='#ffffff45';ctx.beginPath();ctx.moveTo(c.bodyA.position.x,c.bodyA.position.y);ctx.lineTo(c.bodyB.position.x,c.bodyB.position.y);ctx.stroke()}if(currentSet&&!currentSet.launched){for(const c of currentSet.links){ctx.lineWidth=5;ctx.lineCap='round';ctx.strokeStyle='#8e817151';ctx.beginPath();ctx.moveTo(c.bodyA.position.x,c.bodyA.position.y);ctx.lineTo(c.bodyB.position.x,c.bodyB.position.y);ctx.stroke()}}for(const set of launchedSets){if(set.jointsCut)continue;for(const c of set.links){if(!c.bodyA||!c.bodyB)continue;ctx.lineWidth=5;ctx.lineCap='round';ctx.strokeStyle='#8e81717a';ctx.beginPath();ctx.moveTo(c.bodyA.position.x,c.bodyA.position.y);ctx.lineTo(c.bodyB.position.x,c.bodyB.position.y);ctx.stroke()}}for(const b of bodies)if(b.pocho)drawPocho2D(ctx,b.position.x,b.position.y,b.pocho.radius,b.pocho,b.angle);if(dragging&&grabConstraint&&grabbed){ctx.strokeStyle='#846f59a0';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(grabConstraint.pointA.x,grabConstraint.pointA.y);ctx.lineTo(grabbed.position.x,grabbed.position.y);ctx.stroke();ctx.beginPath();ctx.arc(grabConstraint.pointA.x,grabConstraint.pointA.y,8,0,Math.PI*2);ctx.stroke()}ctx.restore()}
+function drawOverlay(){if(!render)return;const ctx=render.context;ctx.save();const zt=launchZoneTop();ctx.fillStyle='#f7f3ecb8';ctx.fillRect(0,zt,W,H-zt);ctx.strokeStyle='#9c8f7f80';ctx.setLineDash([7,7]);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,zt);ctx.lineTo(W,zt);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#766d63a8';ctx.font='600 12px system-ui';ctx.textAlign='left';ctx.fillText('射出ゾーン',12,zt+20);ctx.strokeStyle='#ffffffaa';ctx.lineWidth=2;ctx.strokeRect(1,1,W-2,H-2);for(const c of bonds){if(!c.bodyA?.pocho||!c.bodyB?.pocho)continue;ctx.lineWidth=7;ctx.lineCap='round';ctx.strokeStyle='#ffffff45';ctx.beginPath();ctx.moveTo(c.bodyA.position.x,c.bodyA.position.y);ctx.lineTo(c.bodyB.position.x,c.bodyB.position.y);ctx.stroke()}if(currentSet&&!currentSet.launched){for(const c of currentSet.links){ctx.lineWidth=5;ctx.lineCap='round';ctx.strokeStyle='#8e817151';ctx.beginPath();ctx.moveTo(c.bodyA.position.x,c.bodyA.position.y);ctx.lineTo(c.bodyB.position.x,c.bodyB.position.y);ctx.stroke()}}for(const b of bodies)if(b.pocho)drawPocho2D(ctx,b.position.x,b.position.y,b.pocho.radius,b.pocho,b.angle);if(dragging&&grabConstraint&&grabbed){ctx.strokeStyle='#846f59a0';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(grabConstraint.pointA.x,grabConstraint.pointA.y);ctx.lineTo(grabbed.position.x,grabbed.position.y);ctx.stroke();ctx.beginPath();ctx.arc(grabConstraint.pointA.x,grabConstraint.pointA.y,8,0,Math.PI*2);ctx.stroke()}ctx.restore()}
 function drawPocho2D(ctx,x,y,r,p,angle=0){ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.fillStyle=p.hex;ctx.strokeStyle='#ffffff90';ctx.lineWidth=Math.max(1.5,r*.065);ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle=ctx.strokeStyle='#4e4a53c9';ctx.lineWidth=Math.max(1.5,r*.06);ctx.lineCap='round';const ex=r*.28,ey=-r*.12,er=Math.max(1.5,r*.055);ctx.beginPath();ctx.arc(-ex,ey,er,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(ex,ey,er,0,Math.PI*2);ctx.fill();ctx.beginPath();if(p.expression==='ごきげん')ctx.arc(0,r*.02,r*.27,.15*Math.PI,.85*Math.PI);else if(p.expression==='不機嫌')ctx.arc(0,r*.34,r*.24,1.18*Math.PI,1.82*Math.PI);else{ctx.moveTo(-r*.18,r*.18);ctx.lineTo(r*.18,r*.18)}ctx.stroke();drawDecoration(ctx,r,p.decoration);ctx.restore()}
 function drawDecoration(ctx,r,d){ctx.strokeStyle='#55505acb';ctx.fillStyle='#fff8';ctx.lineWidth=Math.max(1.4,r*.055);if(d==='リボン'){ctx.fillStyle='#f8d0dc';ctx.beginPath();ctx.ellipse(-r*.2,-r*.8,r*.25,r*.14,-.5,0,Math.PI*2);ctx.ellipse(r*.2,-r*.8,r*.25,r*.14,.5,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(0,-r*.8,r*.10,0,Math.PI*2);ctx.fill()}else if(d==='メガネ'){ctx.beginPath();ctx.arc(-r*.27,-r*.1,r*.17,0,Math.PI*2);ctx.arc(r*.27,-r*.1,r*.17,0,Math.PI*2);ctx.moveTo(-r*.1,-r*.1);ctx.lineTo(r*.1,-r*.1);ctx.stroke()}else if(d==='王冠'){ctx.fillStyle='#f2d574';ctx.beginPath();ctx.moveTo(-r*.34,-r*.78);ctx.lineTo(-r*.26,-r*1.15);ctx.lineTo(-r*.05,-r*.91);ctx.lineTo(r*.12,-r*1.18);ctx.lineTo(r*.32,-r*.83);ctx.closePath();ctx.fill();ctx.stroke()}else if(d==='芽'){ctx.strokeStyle='#579463';ctx.beginPath();ctx.moveTo(0,-r*.78);ctx.quadraticCurveTo(0,-r*1.15,r*.16,-r*1.27);ctx.stroke();ctx.fillStyle='#8bc691';ctx.beginPath();ctx.ellipse(r*.18,-r*1.25,r*.18,r*.09,-.45,0,Math.PI*2);ctx.fill()}}
 

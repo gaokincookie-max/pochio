@@ -1,8 +1,9 @@
-# v0.2.0 3SET launch-zone release
+# v0.2.0
 
-- Restored the older 3-Pocho launch behavior after checking the archived prototype.
-- Releasing the pointer no longer cuts the three temporary joints.
-- The set is launched while still connected.
-- When any member crosses above the launch-zone boundary, all three temporary joints are cut.
-- Same-set behavior reactions are suppressed while the launch joints remain, and for 0.45 s after joint release.
-- Temporary launch links remain visible until the set exits the launch zone.
+- 3SET射出方式の操作感は維持。
+- 射出前3体セットの全メンバーを射出ゾーン内へ拘束する安全処理を追加。
+  - 掴んでいない2体がリンクに引かれて左右端・画面下端・射出ゾーン上端を越えた場合、中心座標を安全範囲へ戻して速度を減衰。
+  - 特に下端を半径+10pxぶん空け、床の裏側へ回り込んで挟まるケースを防止。
+  - 掴んでいるぽちょのポインタ座標も同じく端から少し余白を取るよう調整。
+- 上向き重力 `UP_FORCE` を 0.00175 → 0.00135 に低下（約23%弱化）。
+- 条件・役・初期7体・3体=1カウントなどのゲームルールは変更なし。
