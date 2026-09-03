@@ -222,9 +222,26 @@ function checkClause(c,ctx,self=ctx.primary||ctx.a,other=ctx.other||(self===ctx.
  const rd=q?Math.abs(p.radius-q.radius):0, ratio=q?Math.max(p.radius,q.radius)/Math.min(p.radius,q.radius):1;
  if(c.includes('サイズ差が非常に小')||c.includes('実サイズ差が非常に小'))return rd<=2.4;if(c.includes('サイズ差が小')||c.includes('サイズ差が一定以下')||c.includes('サイズが自分と近い'))return rd<=5;if(c.includes('サイズ差が大き')||c.includes('サイズ差がかなり大き'))return ratio>=1.38;
  if(c.includes('自分より大きい'))return q&&q.radius>p.radius+2;if(c.includes('自分より小さい')||c==='相手より小さい')return q&&q.radius<p.radius-2;if(c.includes('接触相手より自分が大きい'))return q&&p.radius>q.radius+2;if(c==='古い方が大きい')return q&&((p.launchIndex<q.launchIndex&&p.radius>q.radius)||(q.launchIndex<p.launchIndex&&q.radius>p.radius));
- if(c.includes('低速')||c.includes('速度が低い')||c.includes('高速ではない')){if(c.includes('相対'))return rv<=T.LOW;if(c.includes('両方')||c.includes('双方')||c.includes('どちらも')||c.includes('現在どちらも'))return sv<=T.LOW&&ov<=T.LOW;return sv<=T.LOW||rv<=T.LOW}
- if(c.includes('かなり低速'))return rv<=T.VERY_LOW;
- if(c.includes('高速')||c.includes('速度が高い')||c.includes('速度が一定以上')){if(c.includes('非常に高速'))return sv>=T.VERY_HIGH||ov>=T.VERY_HIGH;if(c.includes('両方')||c.includes('双方'))return sv>=T.HIGH&&ov>=T.HIGH;if(c.includes('相対'))return rv>=T.HIGH;return sv>=T.HIGH||rv>=T.HIGH}
+ // 速度語の意味を厳密化（LAB v0.4準拠）:
+ // 「低速接触 / 高速衝突 / 接触速度 / 相対速度」は相対速度。
+ // 「自分 / 相手 / 両方」と明記された場合のみ各Bodyの絶対速度。
+ // 履歴を含む速度句は後段の専用判定へ回す。
+ const historySpeed=/高速状態を経験済み|今回の速度が過去接触時より高い|前回より高い速度|今回だけ速度が急上昇|今回だけ高速|3回目だけ高速|その後初めての高速移動|変化後初めての高速衝突|他ぽちょに押されて高速化/;
+ if(!historySpeed.test(c)){
+   if(c.includes('大きい方がほぼ停止')){if(!q)return false;const big=p.radius>=q.radius?self:other;return speed(big)<T.STILL}
+   if(c.includes('小さい方が非常に高速')){if(!q)return false;const small=p.radius<=q.radius?self:other;return speed(small)>=T.VERY_HIGH}
+   if(c.includes('小さい方が高速')){if(!q)return false;const small=p.radius<=q.radius?self:other;return speed(small)>=T.HIGH}
+   if(c.includes('両者とも高速移動中')||c.includes('両方とも高速')||c.includes('両方高速')||c.includes('双方高速'))return sv>=T.HIGH&&ov>=T.HIGH;
+   if(c.includes('どちらも高速ではない')||c.includes('双方高速ではない'))return sv<T.HIGH&&ov<T.HIGH;
+   if(c.includes('現在どちらも低速')||c.includes('どちらも低速')||c.includes('双方低速'))return sv<=T.LOW&&ov<=T.LOW;
+   if(c.includes('自分の速度が低い')||c.includes('自分の速度も低い')||c.includes('自分が低速')||c==='現在は低速'||c==='現在低速')return sv<=T.LOW;
+   if(c.includes('相手が停止に近い'))return ov<T.STILL;
+   if(c.includes('相手が高速移動中')||c==='相手が高速'||c.includes('外部から高速衝突を受ける'))return ov>=T.HIGH;
+   if(c.includes('自分が高速で衝突')||c.includes('高速で自分から衝突')||c.includes('接触直前の速度が高い')||c.includes('現在速度が一定以上')||c.includes('今回の速度が高い'))return sv>=T.HIGH;
+   if(c.includes('かなり低速'))return rv<=T.VERY_LOW;
+   if(c.includes('相対速度が低い')||c.includes('相対速度が一定以下')||c.includes('低速接触')||c.includes('低速で接触')||c.includes('接触速度が低い')||c==='低速'||c==='今回が低速'||c.includes('再接触時の速度が低い')||c.includes('今回の速度が低い'))return rv<=T.LOW;
+   if(c.includes('相対速度が高い')||c.includes('相対速度が一定以上')||c.includes('接触速度が一定以上')||c.includes('高速衝突')||c.includes('高速接触')||c==='高速'||c==='今回が高速'||c.includes('高速で他ぽちょに接触')||c.includes('別の相手へ再度高速衝突'))return rv>=T.HIGH;
+ }
  if(c.includes('接触速度が中程度'))return rv>T.LOW&&rv<T.HIGH;
  if(c.includes('正面'))return !!ctx.headOn;if(c.includes('接触角度が浅い'))return !!ctx.shallow;
  if(c.includes('停止')||c.includes('ほぼ停止')){if(c.includes('両者'))return sv<T.STILL&&ov<T.STILL;if(c.includes('相手'))return ov<T.STILL;return sv<T.STILL}

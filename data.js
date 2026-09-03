@@ -19,8 +19,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手が中 ＋ 自分の速度が低い",
       "conditionCount": 2,
-      "active": true,
-      "status": "active"
+      "active": false,
+      "status": "disabled"
     },
     {
       "id": "size-4",
@@ -41,8 +41,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が大 ＋ 自分が高速で衝突 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 3,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
       "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
     },
@@ -54,8 +54,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が大 ＋ サイズ差がかなり大きい ＋ 相対速度が一定以上 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 4,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
       "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
     },
@@ -89,8 +89,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "相手が小 ＋ 自分がほぼ停止している",
       "conditionCount": 2,
-      "active": true,
-      "status": "active"
+      "active": false,
+      "status": "disabled"
     },
     {
       "id": "size-10",
@@ -113,8 +113,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手も中 ＋ 両方とも高速 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 3,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
       "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
     },
@@ -159,8 +159,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手も大 ＋ 高速衝突 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 3,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
       "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
     },
@@ -172,8 +172,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が小 ＋ 小さい方が非常に高速 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 3,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
       "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
     },
@@ -185,8 +185,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "相手が中以上 ＋ 自分が壁接触直後 ＋ 高速衝突 ＋ 弾け補正：相対速度8.8以上",
       "conditionCount": 4,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.4: 一時無効化（大きさPOP全停止）",
       "disabledReason": "v0.1.4検証: 大きさレイヤーの弾け条件を一時的に全無効化。弾け頻度の主因切り分け用。"
     },
@@ -385,8 +385,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "射出から短時間 ＋ 壁に一度も触れていない ＋ 高速で他ぽちょに接触 ＋ 弾け補正：相対速度7.8以上",
       "conditionCount": 4,
-      "active": true,
-      "status": "active",
+      "active": false,
+      "status": "disabled",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上",
       "restoredIn": "v0.1.6: 色POP再有効化"
     },
@@ -472,8 +472,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "壁接触回数が偶数 ＋ 相手とのサイズ差が小さい ＋ 画面上半分",
       "conditionCount": 3,
-      "active": true,
-      "status": "active"
+      "active": false,
+      "status": "disabled"
     },
     {
       "id": "color-26",
@@ -714,7 +714,6 @@ window.POCHO_DATA = {
       "conditionCount": 4,
       "active": false,
       "status": "unimplemented",
-      "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上",
       "burstTuning": "v0.1.5: 一時無効化（色POP全停止）",
       "disabledReason": "v0.1.5検証: 色レイヤーの弾け条件を一時的に全無効化。大きさPOP停止後も弾け頻度が高いため主因切り分け用。"
     },
@@ -770,8 +769,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "画面上半分 ＋ 周囲に自分と同色がいない ＋ 異色相手に接触",
       "conditionCount": 3,
-      "active": true,
-      "status": "active"
+      "active": false,
+      "status": "disabled"
     },
     {
       "id": "color-51",
@@ -844,8 +843,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "直前に周囲で別のぽちょが弾けた ＋ 一定時間以内 ＋ 高速接触 ＋ 弾け補正：相対速度7.8以上",
       "conditionCount": 4,
-      "active": true,
-      "status": "active",
+      "active": false,
+      "status": "disabled",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上",
       "restoredIn": "v0.1.6: 色POP再有効化"
     },
@@ -953,8 +952,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "直前の衝突から短時間以内 ＋ 別の相手へ再度高速衝突 ＋ 相手が異色 ＋ 弾け補正：相対速度7.8以上",
       "conditionCount": 4,
-      "active": true,
-      "status": "active",
+      "active": false,
+      "status": "disabled",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.8以上",
       "restoredIn": "v0.1.6: 色POP再有効化"
     },
@@ -1086,8 +1085,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がごきげん ＋ 相手が不機嫌 ＋ 相対速度が高い ＋ 接触地点が壁際 ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
@@ -1099,8 +1098,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がごきげん ＋ 相手もごきげん ＋ 過去に何度も接触済み ＋ 今回だけ高速衝突 ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
@@ -1112,8 +1111,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がごきげん ＋ 天井接触済み ＋ 相手が高速移動中 ＋ サイズ差が大きい ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
@@ -1125,8 +1124,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がごきげん ＋ 一度くっついた相手と再接触 ＋ 前回と表情が異なる ＋ 今回の速度が高い ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
@@ -1138,8 +1137,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がごきげん ＋ 周囲に同色が2体以上いる ＋ 相手が異色 ＋ 正面に近い衝突 ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
@@ -1184,8 +1183,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分がふつう ＋ 壁接触回数が少ない ＋ 相手も壁接触回数が少ない ＋ 低速接触",
       "conditionCount": 4,
-      "active": true,
-      "status": "active"
+      "active": false,
+      "status": "disabled"
     },
     {
       "id": "expression-17",
@@ -1230,8 +1229,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がふつう ＋ 相手もふつう ＋ 両者とも高速移動中 ＋ サイズ差が小さい ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
@@ -1243,8 +1242,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がふつう ＋ 過去に同じ相手と複数回接触済み ＋ 一度もくっついていない ＋ 今回が高速 ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
@@ -1269,8 +1268,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がふつう ＋ 接触地点周辺に複数のぽちょがいる ＋ 相手が移動中 ＋ 自分も移動中 ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
@@ -1282,8 +1281,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分がふつう ＋ 過去に表情変化済み ＋ 変化後初めての高速衝突 ＋ 相手が異色 ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
@@ -1317,8 +1316,8 @@ window.POCHO_DATA = {
       "result": "STICK",
       "condition": "自分が不機嫌 ＋ 一度別れた相手と再接触 ＋ 今回の速度が低い ＋ サイズ差が小さい",
       "conditionCount": 4,
-      "active": true,
-      "status": "active"
+      "active": false,
+      "status": "disabled"
     },
     {
       "id": "expression-28",
@@ -1351,8 +1350,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 相手も不機嫌 ＋ 相対速度が高い ＋ 正面に近い衝突 ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
@@ -1364,8 +1363,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 相手がごきげん ＋ 接触地点が画面上半分 ＋ サイズ差が大きい ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
@@ -1377,8 +1376,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 壁接触回数が一定以上 ＋ 異色相手 ＋ 高速衝突 ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
@@ -1390,8 +1389,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 一度くっついた相手と再接触 ＋ 前回より高い速度 ＋ 相手の表情が変化済み ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
@@ -1403,8 +1402,8 @@ window.POCHO_DATA = {
       "result": "POP",
       "condition": "自分が不機嫌 ＋ 天井接触直後 ＋ 相手が下方向に動いている ＋ 相対速度が高い ＋ 弾け補正：相対速度7.4以上",
       "conditionCount": 5,
-      "active": false,
-      "status": "disabled",
+      "active": true,
+      "status": "active",
       "burstTuning": "v0.1.3: 弾け補正：相対速度7.4以上",
       "disabledReason": "v0.1.6検証: 表情レイヤーの弾け条件を一時的に全無効化。色POPを復帰して原因切り分け。"
     },
