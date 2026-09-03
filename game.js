@@ -16,12 +16,14 @@ const DECO_RATE=[.85,.04,.04,.03,.04];
 const RARITY_COLOR=['','#6f747d','#58a66b','#568cb9','#9a68bd','#d09a29','#fff7cf'];
 const SAVE_KEY='pocho_save_v01';
 const T={LOW:3.5,VERY_LOW:1.8,HIGH:8,VERY_HIGH:12,STILL:1.0,LONG:18,SHORT:2.8,RECENT:1.2,NEAR:110,POP_PROTECT:.4};
-const PHYS={UP_FORCE:.00175,MAX_SPEED:16.5,MAX_ANG:.28,MAX_PULL:140,SLING:.112};
+const PHYS={UP_FORCE:.00175,MAX_SPEED:18.5,MAX_ANG:.34,MAX_PULL:170,SLING:.112,PRELINK_STIFFNESS:.075,PRELINK_DAMPING:.09,DRAG_STIFFNESS:.19,DRAG_DAMPING:.045};
+const LAUNCH_ZONE_TOP_RATIO=.66;
 let save=loadSave();
 let engine,render,runner,W=1,H=1,launchY=1,walls=[],topWall=null;
 let initializingBoard=false,gameSessionId=0;
 const INITIAL_POCHO_COUNT=7;
 let state='menu',modeKey='middle',score=0,remaining=0,current=null,nextDesc=null,shotIndex=0,dragging=false,anchor={x:0,y:0};
+let currentSet=null,nextSetDesc=null,grabbed=null,grabConstraint=null,pointerHistory=[];
 let bodies=new Set(), bonds=new Set(), lastActivity=0, settleSince=0, paused=false, gameStartedAt=0;
 let runStats=null, recentEvents=[], eventSerial=1;
 
@@ -63,14 +65,14 @@ function createPocho(desc,spawnType='shot'){
  b.pocho={id:'p'+eventSerial++, ...desc, spawnType, _initialExpression:desc.expression, launched:false,launchIndex:0,bornAt:now,lastUpdate:now,distance:0,maxSpeed:0,highSpeedSeen:false,wall:{left:0,right:0,top:0,bottom:0,last:null,lastAt:0,sequence:[]},contacts:new Map(),contactColors:[],colorsSeen:new Set(),expressionsSeen:new Set([desc.expression]),sizesSeen:new Set(),decorationsSeen:new Set(),contactCount:0,sameColorContacts:0,diffColorContacts:0,stickCount:0,detachCount:0,everStuck:false,expressionChanges:0,lastExpressionChange:0,lastContactAt:0,lastContactId:null,lastEvent:'spawn',lastEventAt:now,aloneSince:now,longStill:false,stillSince:0,groupsHistory:[],maxGroup:1,popWitnessed:0,lastPushedBy:null,lastPushAt:0,behaviorCandidateHits:0};
  Body.setStatic(b,true); return b;
 }
-function measure(){const r=gameEl.getBoundingClientRect();W=Math.max(280,r.width);H=Math.max(380,r.height);launchY=H*.80}
+function measure(){const r=gameEl.getBoundingClientRect();W=Math.max(280,r.width);H=Math.max(380,r.height);launchY=H*.82}
 function setupPhysics(){
  measure();engine=Engine.create({positionIterations:10,velocityIterations:8,constraintIterations:5,enableSleeping:false});engine.gravity.x=0;engine.gravity.y=0;
  render=Render.create({element:gameEl,engine,options:{width:W,height:H,wireframes:false,background:'#eef0ed',pixelRatio:Math.min(devicePixelRatio||1,2)}});Render.run(render);runner=Runner.create();Runner.run(runner,engine);rebuildWalls();
  const c=render.canvas;c.addEventListener('pointerdown',pointerStart,{passive:false});c.addEventListener('pointermove',pointerMove,{passive:false});c.addEventListener('pointerup',pointerEnd,{passive:false});c.addEventListener('pointercancel',pointerEnd,{passive:false});
  Events.on(engine,'beforeUpdate',tick);Events.on(engine,'collisionStart',collisionStart);Events.on(engine,'collisionActive',collisionActive);Events.on(render,'afterRender',drawOverlay);
 }
-function teardownPhysics(){if(render){Render.stop(render);render.canvas.remove();render=null}if(runner){Runner.stop(runner);runner=null}engine=null;walls=[];topWall=null;bodies.clear();bonds.clear();current=null}
+function teardownPhysics(){if(render){Render.stop(render);render.canvas.remove();render=null}if(runner){Runner.stop(runner);runner=null}engine=null;walls=[];topWall=null;bodies.clear();bonds.clear();current=null;currentSet=null;grabbed=null;grabConstraint=null;pointerHistory=[]}
 function rebuildWalls(){
  if(!engine)return;if(walls.length)Composite.remove(engine.world,walls);
  const side={isStatic:true,restitution:.66,friction:.01,render:{visible:false}}, floor={isStatic:true,restitution:.3,friction:.02,render:{visible:false}}, top={isStatic:true,restitution:0,friction:.02,render:{visible:false}};
@@ -79,7 +81,7 @@ function rebuildWalls(){
 function startGame(m){
  stopGame();const session=++gameSessionId;modeKey=m;score=0;remaining=MODES[m].shots;shotIndex=0;lastActivity=performance.now();settleSince=0;gameStartedAt=performance.now();recentEvents=[];
  runStats={contacts:0,sticks:0,pops:0,induced:0,newRoles:new Set(),maxRarity:0,maxSingle:0,rolesTriggered:0,shots:0};
- showScreen('game');setupPhysics();nextDesc=makeDescriptor();updateHud();drawNext();
+ showScreen('game');setupPhysics();nextSetDesc=makeSetDescriptor();nextDesc=null;updateHud();drawNext();
  initializeBoard(session);
 }
 function initialSlots(){
@@ -99,20 +101,78 @@ function initializeBoard(session){
  setTimeout(()=>{
    if(session!==gameSessionId||state!=='game'||!engine)return;
    for(const b of bodies){if(b.pocho?.spawnType==='initial'){Body.setVelocity(b,{x:0,y:0});Body.setAngularVelocity(b,0);resetInitialHistory(b)}}
-   recentEvents=[];initializingBoard=false;lastActivity=performance.now();gameStartedAt=performance.now();spawnCurrent();updateHud();gameStatus.textContent='ぽちょを引っ張ってください';
+   recentEvents=[];initializingBoard=false;lastActivity=performance.now();gameStartedAt=performance.now();spawnCurrent();updateHud();gameStatus.textContent='射出ゾーンで3ぽちょを振り回して、離してください';
  },900);
 }
 function stopGame(){gameSessionId++;persist();paused=false;initializingBoard=false;settingsModal.classList.add('hidden');confirmModal.classList.add('hidden');teardownPhysics()}
-function spawnCurrent(){if(remaining<=0)return;const d=nextDesc||makeDescriptor();nextDesc=makeDescriptor();current=createPocho(d);Composite.add(engine.world,current);bodies.add(current);gameStatus.textContent='ぽちょを引っ張ってください';drawNext();}
+function makeSetDescriptor(){return [makeDescriptor(),makeDescriptor(),makeDescriptor()]}
+function spawnCurrent(){
+ if(remaining<=0)return;
+ const descs=nextSetDesc||makeSetDescriptor();nextSetDesc=makeSetDescriptor();nextDesc=null;
+ const cx=W*.5,cy=Math.max(H*LAUNCH_ZONE_TOP_RATIO+80,launchY);
+ const maxR=Math.max(...descs.map(d=>d.radius));
+ const offsets=[{x:0,y:-maxR*.65},{x:-maxR*.72,y:maxR*.58},{x:maxR*.72,y:maxR*.58}];
+ const setId='set'+eventSerial++,setBodies=[];
+ for(let i=0;i<3;i++){
+   const b=createPocho(descs[i],'shot');
+   b.pocho.launchSetId=setId;b.pocho.launchSetMember=i;b.pocho.launched=false;
+   Body.setStatic(b,false);b.collisionFilter.mask=0;
+   Body.setPosition(b,{x:cx+offsets[i].x,y:cy+offsets[i].y});
+   Body.setVelocity(b,{x:0,y:0});Body.setAngularVelocity(b,0);
+   Composite.add(engine.world,b);bodies.add(b);setBodies.push(b);
+ }
+ const links=[];
+ for(const [i,j] of [[0,1],[1,2],[2,0]]){
+   const a=setBodies[i],b=setBodies[j],rest=Math.max(12,a.pocho.radius+b.pocho.radius-7);
+   const c=Constraint.create({bodyA:a,bodyB:b,length:rest,stiffness:PHYS.PRELINK_STIFFNESS,damping:PHYS.PRELINK_DAMPING,render:{visible:false}});
+   c.preLaunchLink=true;Composite.add(engine.world,c);links.push(c);
+ }
+ currentSet={id:setId,bodies:setBodies,links,launched:false};current=setBodies[0];
+ gameStatus.textContent='射出ゾーン内の好きなぽちょを掴んで振り回す';drawNext();
+}
 function updateHud(){hudScore.textContent=score.toLocaleString();hudRemain.textContent=remaining;hudBest.textContent='BEST '+(save.best[modeKey]||0).toLocaleString()}
-function drawNext(){const ctx=nextCanvas.getContext('2d'),d=nextDesc;ctx.clearRect(0,0,70,70);if(!d)return;drawPocho2D(ctx,35,36,Math.min(19,d.radius*.68),d,0)}
+function drawNext(){
+ const ctx=nextCanvas.getContext('2d'),ds=nextSetDesc;ctx.clearRect(0,0,70,70);if(!ds)return;
+ const spots=[[35,18],[22,43],[48,43]];
+ for(let i=0;i<3;i++){const d=ds[i],r=Math.min(12,d.radius*.43);drawPocho2D(ctx,spots[i][0],spots[i][1],r,d,0)}
+}
 function point(e){const r=render.canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
-function hit(p,b){if(!b)return false;return Math.hypot(p.x-b.position.x,p.y-b.position.y)<=b.pocho.radius*1.45}
-function pointerStart(e){if(paused||!current||current.pocho.launched)return;const p=point(e);if(!hit(p,current))return;dragging=true;anchor={x:current.position.x,y:current.position.y};render.canvas.setPointerCapture?.(e.pointerId);gameStatus.textContent='引っ張って離す';e.preventDefault()}
-function pointerMove(e){if(!dragging||!current)return;let p=point(e),dx=p.x-anchor.x,dy=p.y-anchor.y,l=Math.hypot(dx,dy);if(l>PHYS.MAX_PULL){const s=PHYS.MAX_PULL/l;dx*=s;dy*=s}p={x:anchor.x+dx,y:anchor.y+dy};p.x=Math.max(current.pocho.radius,Math.min(W-current.pocho.radius,p.x));p.y=Math.max(H*.66+current.pocho.radius,Math.min(H-current.pocho.radius,p.y));Body.setPosition(current,p);e.preventDefault()}
-function pointerEnd(e){if(!dragging||!current)return;dragging=false;const dx=anchor.x-current.position.x,dy=anchor.y-current.position.y,l=Math.hypot(dx,dy),speed=Math.min(PHYS.MAX_SPEED,l*PHYS.SLING),nx=l?dx/l:0,ny=l?dy/l:0;
- Body.setStatic(current,false);current.collisionFilter.mask=1;Body.setVelocity(current,{x:nx*speed,y:ny*speed});current.pocho.launched=true;current.pocho.launchedAt=performance.now();current.pocho.launchIndex=++shotIndex;remaining--;runStats.shots++;save.totals.shots++;lastActivity=performance.now();updateHud();gameStatus.textContent='上重力 ON';current=null;
- if(remaining>0)setTimeout(()=>{if(state==='game'&&!current)spawnCurrent()},420);else gameStatus.textContent='最後のぽちょを見届けています';e.preventDefault();}
+function hit(p,b){if(!b)return false;return Math.hypot(p.x-b.position.x,p.y-b.position.y)<=b.pocho.radius*1.5}
+function launchZoneTop(){return H*LAUNCH_ZONE_TOP_RATIO}
+function clampToLaunchZone(p,r=18){return{x:Math.max(r,Math.min(W-r,p.x)),y:Math.max(launchZoneTop()+r,Math.min(H-r,p.y))}}
+function pointerStart(e){
+ if(paused||!currentSet||currentSet.launched)return;const p=point(e);let target=null,best=Infinity;
+ for(const b of currentSet.bodies){const d=Math.hypot(p.x-b.position.x,p.y-b.position.y);if(d<=b.pocho.radius*1.55&&d<best){target=b;best=d}}
+ if(!target)return;
+ dragging=true;grabbed=target;current=target;anchor={x:target.position.x,y:target.position.y};pointerHistory=[];
+ const q=clampToLaunchZone(p,target.pocho.radius);pointerHistory.push({x:q.x,y:q.y,t:performance.now()});
+ grabConstraint=Constraint.create({pointA:{x:q.x,y:q.y},bodyB:target,pointB:{x:0,y:0},length:0,stiffness:PHYS.DRAG_STIFFNESS,damping:PHYS.DRAG_DAMPING,render:{visible:false}});
+ Composite.add(engine.world,grabConstraint);render.canvas.setPointerCapture?.(e.pointerId);gameStatus.textContent='振り回して、離す！';e.preventDefault();
+}
+function pointerMove(e){
+ if(!dragging||!currentSet||!grabConstraint||!grabbed)return;const p=clampToLaunchZone(point(e),grabbed.pocho.radius);
+ grabConstraint.pointA.x=p.x;grabConstraint.pointA.y=p.y;const now=performance.now();pointerHistory.push({x:p.x,y:p.y,t:now});
+ while(pointerHistory.length>10||pointerHistory.length>2&&now-pointerHistory[0].t>180)pointerHistory.shift();e.preventDefault();
+}
+function pointerEnd(e){
+ if(!dragging||!currentSet||currentSet.launched)return;dragging=false;
+ const set=currentSet,now=performance.now();
+ if(grabConstraint){Composite.remove(engine.world,grabConstraint);grabConstraint=null}
+ // Pointer motion contributes a small release impulse so fast finger swings remain responsive on touch devices.
+ let pv={x:0,y:0};if(pointerHistory.length>=2){const a=pointerHistory[0],z=pointerHistory.at(-1),dt=Math.max(16,z.t-a.t);pv={x:(z.x-a.x)/dt*16.67,y:(z.y-a.y)/dt*16.67}}
+ const pm=Math.hypot(pv.x,pv.y);if(pm>PHYS.MAX_SPEED){pv.x*=PHYS.MAX_SPEED/pm;pv.y*=PHYS.MAX_SPEED/pm}
+ for(const c of set.links)Composite.remove(engine.world,c);set.links=[];
+ const launchNo=++shotIndex;
+ for(const b of set.bodies){
+   b.collisionFilter.mask=1;b.pocho.launched=true;b.pocho.launchedAt=now;b.pocho.launchIndex=launchNo;
+   // Keep the physical swing velocity; only blend in finger velocity when Matter's body is lagging behind the pointer.
+   const bv=speed(b),blend=b===grabbed?.55:.18;let vx=b.velocity.x+pv.x*blend,vy=b.velocity.y+pv.y*blend;
+   const m=Math.hypot(vx,vy);if(m>PHYS.MAX_SPEED){vx*=PHYS.MAX_SPEED/m;vy*=PHYS.MAX_SPEED/m}Body.setVelocity(b,{x:vx,y:vy});
+ }
+ set.launched=true;remaining--;runStats.shots++;save.totals.shots++;lastActivity=now;updateHud();gameStatus.textContent='3ぽちょ解放・上重力 ON';
+ currentSet=null;current=null;grabbed=null;pointerHistory=[];
+ if(remaining>0)setTimeout(()=>{if(state==='game'&&!currentSet)spawnCurrent()},500);else gameStatus.textContent='最後の3ぽちょを見届けています';e.preventDefault();
+}
 
 function speed(b){return Math.hypot(b.velocity.x,b.velocity.y)}
 function pairKey(a,b){return a.pocho.id<b.pocho.id?a.pocho.id+'|'+b.pocho.id:b.pocho.id+'|'+a.pocho.id}
@@ -123,7 +183,7 @@ function collisionContext(a,b,pair){
  const near=getNearby((a.position.x+b.position.x)/2,(a.position.y+b.position.y)/2,T.NEAR,[a,b]);
  return {id:eventSerial++,time:now,a,b,primary:a,other:b,x:(a.position.x+b.position.x)/2,y:(a.position.y+b.position.y)/2,av,bv,relativeSpeed:rv,headOn:Math.abs(relDot)>.62,shallow:Math.abs(relDot)<.34,near,nearCount:near.length,groupA:getGroup(a),groupB:getGroup(b),preColorsA:new Set(a.pocho.colorsSeen),preColorsB:new Set(b.pocho.colorsSeen),prevContactIdA:a.pocho.lastContactId,prevContactIdB:b.pocho.lastContactId,prevPushedByA:a.pocho.lastPushedBy,prevPushedByB:b.pocho.lastPushedBy,trigger:null,victims:[],causeType:'collision',pair};
 }
-function collisionStart(ev){if(state!=='game'||paused||initializingBoard)return;for(const pair of ev.pairs){const a=pair.bodyA,b=pair.bodyB;if(!a.pocho||!b.pocho||!a.pocho.launched||!b.pocho.launched)continue;if(isBonded(a,b))continue;processContact(a,b,pair)}}
+function collisionStart(ev){if(state!=='game'||paused||initializingBoard)return;const now=performance.now();for(const pair of ev.pairs){const a=pair.bodyA,b=pair.bodyB;if(!a.pocho||!b.pocho||!a.pocho.launched||!b.pocho.launched)continue;if(isBonded(a,b))continue;if(a.pocho.launchSetId&&a.pocho.launchSetId===b.pocho.launchSetId&&now-Math.max(a.pocho.launchedAt||0,b.pocho.launchedAt||0)<450)continue;processContact(a,b,pair)}}
 function processContact(a,b,pair){
  const ctx=collisionContext(a,b,pair),now=ctx.time;runStats.contacts++;save.totals.contacts++;lastActivity=now;
  for(const [self,other] of [[a,b],[b,a]]){const p=self.pocho,r=contactRec(self,other);r.count++;if(!r.firstAt)r.firstAt=now;r.lastAt=now;r.maxSpeed=Math.max(r.maxSpeed,ctx.relativeSpeed);p.contactCount++;p.lastContactAt=now;p.lastContactId=other.pocho.id;p.colorsSeen.add(other.pocho.color);p.expressionsSeen.add(other.pocho.expression);p.sizesSeen.add(other.pocho.sizeClass);if(other.pocho.decoration!=='なし')p.decorationsSeen.add(other.pocho.decoration);p.contactColors.push(other.pocho.color);if(p.contactColors.length>8)p.contactColors.shift();if(p.color===other.pocho.color)p.sameColorContacts++;else p.diffColorContacts++;p.lastEvent='contact';p.lastEventAt=now;p.aloneSince=now;}
@@ -454,9 +514,9 @@ function spawnPopFx(b){const p=document.createElement('div');p.className='score-
 function getNearby(x,y,r,exclude=[]){const ex=new Set(exclude);return [...bodies].filter(b=>b.pocho&&!ex.has(b)&&Math.hypot(b.position.x-x,b.position.y-y)<=r)}
 function tick(){if(state!=='game'||paused)return;const now=performance.now();wallChecks();for(const b of bodies){if(!b.pocho?.launched)continue;const p=b.pocho,dt=Math.max(0,(now-p.lastUpdate)/1000);p.lastUpdate=now;p.distance+=speed(b)*dt*60;p.maxSpeed=Math.max(p.maxSpeed,speed(b));if(speed(b)>=T.HIGH)p.highSpeedSeen=true;Body.applyForce(b,b.position,{x:0,y:-b.mass*PHYS.UP_FORCE});const m=speed(b);if(m>PHYS.MAX_SPEED){const s=PHYS.MAX_SPEED/m;Body.setVelocity(b,{x:b.velocity.x*s,y:b.velocity.y*s})}if(Math.abs(b.angularVelocity)>PHYS.MAX_ANG)Body.setAngularVelocity(b,Math.sign(b.angularVelocity)*PHYS.MAX_ANG);if(m<T.STILL){if(!p.stillSince)p.stillSince=now;if(now-p.stillSince>5000)p.longStill=true}else p.stillSince=0;}
  for(const c of [...bonds]){if(!c.bodyA?.pocho||!c.bodyB?.pocho){bonds.delete(c);continue}const d=Math.hypot(c.bodyA.position.x-c.bodyB.position.x,c.bodyA.position.y-c.bodyB.position.y),rv=Math.hypot(c.bodyA.velocity.x-c.bodyB.velocity.x,c.bodyA.velocity.y-c.bodyB.velocity.y);if(now-c.pochoBond.createdAt>450&&(d>c.pochoBond.rest*1.82||rv>13.2))breakBond(c)}
- if(remaining===0&&!current){const active=[...bodies].some(b=>speed(b)>1.1);if(!active&&now-lastActivity>1200){if(!settleSince)settleSince=now;if(now-settleSince>1500)finishGame()}else settleSince=0;}
+ if(remaining===0&&!currentSet){const active=[...bodies].some(b=>speed(b)>1.1);if(!active&&now-lastActivity>1200){if(!settleSince)settleSince=now;if(now-settleSince>1500)finishGame()}else settleSince=0;}
 }
-function drawOverlay(){if(!render)return;const ctx=render.context;ctx.save();ctx.strokeStyle='#ffffffaa';ctx.lineWidth=2;ctx.strokeRect(1,1,W-2,H-2);for(const c of bonds){if(!c.bodyA?.pocho||!c.bodyB?.pocho)continue;ctx.lineWidth=7;ctx.lineCap='round';ctx.strokeStyle='#ffffff45';ctx.beginPath();ctx.moveTo(c.bodyA.position.x,c.bodyA.position.y);ctx.lineTo(c.bodyB.position.x,c.bodyB.position.y);ctx.stroke()}for(const b of bodies)if(b.pocho)drawPocho2D(ctx,b.position.x,b.position.y,b.pocho.radius,b.pocho,b.angle);if(dragging&&current){ctx.strokeStyle='#77727c66';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(anchor.x,anchor.y);ctx.lineTo(current.position.x,current.position.y);ctx.stroke();const dx=anchor.x-current.position.x,dy=anchor.y-current.position.y,l=Math.hypot(dx,dy);if(l>2){ctx.strokeStyle='#c79655aa';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(anchor.x,anchor.y);ctx.lineTo(anchor.x+dx/l*Math.min(80,l*.7),anchor.y+dy/l*Math.min(80,l*.7));ctx.stroke()}}ctx.restore()}
+function drawOverlay(){if(!render)return;const ctx=render.context;ctx.save();const zt=launchZoneTop();ctx.fillStyle='#f7f3ecb8';ctx.fillRect(0,zt,W,H-zt);ctx.strokeStyle='#9c8f7f80';ctx.setLineDash([7,7]);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,zt);ctx.lineTo(W,zt);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#766d63a8';ctx.font='600 12px system-ui';ctx.textAlign='left';ctx.fillText('射出ゾーン',12,zt+20);ctx.strokeStyle='#ffffffaa';ctx.lineWidth=2;ctx.strokeRect(1,1,W-2,H-2);for(const c of bonds){if(!c.bodyA?.pocho||!c.bodyB?.pocho)continue;ctx.lineWidth=7;ctx.lineCap='round';ctx.strokeStyle='#ffffff45';ctx.beginPath();ctx.moveTo(c.bodyA.position.x,c.bodyA.position.y);ctx.lineTo(c.bodyB.position.x,c.bodyB.position.y);ctx.stroke()}if(currentSet&&!currentSet.launched){for(const c of currentSet.links){ctx.lineWidth=5;ctx.lineCap='round';ctx.strokeStyle='#8e817151';ctx.beginPath();ctx.moveTo(c.bodyA.position.x,c.bodyA.position.y);ctx.lineTo(c.bodyB.position.x,c.bodyB.position.y);ctx.stroke()}}for(const b of bodies)if(b.pocho)drawPocho2D(ctx,b.position.x,b.position.y,b.pocho.radius,b.pocho,b.angle);if(dragging&&grabConstraint&&grabbed){ctx.strokeStyle='#846f59a0';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(grabConstraint.pointA.x,grabConstraint.pointA.y);ctx.lineTo(grabbed.position.x,grabbed.position.y);ctx.stroke();ctx.beginPath();ctx.arc(grabConstraint.pointA.x,grabConstraint.pointA.y,8,0,Math.PI*2);ctx.stroke()}ctx.restore()}
 function drawPocho2D(ctx,x,y,r,p,angle=0){ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.fillStyle=p.hex;ctx.strokeStyle='#ffffff90';ctx.lineWidth=Math.max(1.5,r*.065);ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle=ctx.strokeStyle='#4e4a53c9';ctx.lineWidth=Math.max(1.5,r*.06);ctx.lineCap='round';const ex=r*.28,ey=-r*.12,er=Math.max(1.5,r*.055);ctx.beginPath();ctx.arc(-ex,ey,er,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(ex,ey,er,0,Math.PI*2);ctx.fill();ctx.beginPath();if(p.expression==='ごきげん')ctx.arc(0,r*.02,r*.27,.15*Math.PI,.85*Math.PI);else if(p.expression==='不機嫌')ctx.arc(0,r*.34,r*.24,1.18*Math.PI,1.82*Math.PI);else{ctx.moveTo(-r*.18,r*.18);ctx.lineTo(r*.18,r*.18)}ctx.stroke();drawDecoration(ctx,r,p.decoration);ctx.restore()}
 function drawDecoration(ctx,r,d){ctx.strokeStyle='#55505acb';ctx.fillStyle='#fff8';ctx.lineWidth=Math.max(1.4,r*.055);if(d==='リボン'){ctx.fillStyle='#f8d0dc';ctx.beginPath();ctx.ellipse(-r*.2,-r*.8,r*.25,r*.14,-.5,0,Math.PI*2);ctx.ellipse(r*.2,-r*.8,r*.25,r*.14,.5,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(0,-r*.8,r*.10,0,Math.PI*2);ctx.fill()}else if(d==='メガネ'){ctx.beginPath();ctx.arc(-r*.27,-r*.1,r*.17,0,Math.PI*2);ctx.arc(r*.27,-r*.1,r*.17,0,Math.PI*2);ctx.moveTo(-r*.1,-r*.1);ctx.lineTo(r*.1,-r*.1);ctx.stroke()}else if(d==='王冠'){ctx.fillStyle='#f2d574';ctx.beginPath();ctx.moveTo(-r*.34,-r*.78);ctx.lineTo(-r*.26,-r*1.15);ctx.lineTo(-r*.05,-r*.91);ctx.lineTo(r*.12,-r*1.18);ctx.lineTo(r*.32,-r*.83);ctx.closePath();ctx.fill();ctx.stroke()}else if(d==='芽'){ctx.strokeStyle='#579463';ctx.beginPath();ctx.moveTo(0,-r*.78);ctx.quadraticCurveTo(0,-r*1.15,r*.16,-r*1.27);ctx.stroke();ctx.fillStyle='#8bc691';ctx.beginPath();ctx.ellipse(r*.18,-r*1.25,r*.18,r*.09,-.45,0,Math.PI*2);ctx.fill()}}
 
