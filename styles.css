@@ -23,3 +23,33 @@ body.fever-active .game-screen{box-shadow:inset 0 0 42px #ffe5a955}
 body.fever-active #game canvas{filter:saturate(1.12) brightness(1.035)}
 @keyframes feverFlash{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
 @keyframes feverWord{0%{transform:scale(.58) rotate(-4deg);opacity:0}35%{transform:scale(1.12) rotate(1deg);opacity:1}100%{transform:scale(.98);opacity:0}}
+
+/* v0.3.0 FEVER spectacle */
+.game-screen::before,.game-screen::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .22s;z-index:18}
+body.fever-active .game-screen::before{opacity:1;inset:2px;border:7px solid transparent;border-radius:3px;background:linear-gradient(transparent,transparent) padding-box,conic-gradient(from var(--rainbow-turn,0deg),#ff5678,#ffb84a,#fff15a,#66ec8a,#58d9ff,#8a78ff,#dc64ff,#ff5678) border-box;filter:drop-shadow(0 0 10px #fff8) drop-shadow(0 0 20px #9eefff66);animation:feverRainbowFrame 1.7s linear infinite}
+body.fever-active .game-screen::after{opacity:.75;inset:8px;border:2px solid #fff9;box-shadow:inset 0 0 28px #fff9,inset 0 0 60px #80eaff42,0 0 26px #ff7adb55;animation:feverFramePulse .7s ease-in-out infinite alternate}
+body.fever-active .game-hud{box-shadow:0 -8px 24px #50473718,0 -3px 18px #76e5ff55;background:linear-gradient(90deg,#fff9f0ee,#f8fff8ee,#f4f8ffee,#fff5ffee)}
+.fever-ui{z-index:19;width:min(78%,350px);filter:drop-shadow(0 4px 10px #4e466a55)}
+.fever-word{font-size:clamp(25px,8vw,39px);background:linear-gradient(90deg,#ff5678,#ffb84a,#fff15a,#66ec8a,#58d9ff,#8a78ff,#dc64ff,#ff5678);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:1.5px #fff;text-shadow:0 3px 0 #71657a88,0 0 14px #fff,0 0 28px #8be5ff;animation:feverTextRainbow 1.1s linear infinite}
+.fever-bar{height:12px;border:2px solid #fff;border-radius:99px;background:#34303c88;box-shadow:0 0 0 2px #ffffff33,0 0 14px #9befff88,0 1px 5px #0003 inset}
+.fever-bar-fill{background:linear-gradient(90deg,#ff5577,#ffb347,#fff45d,#63ef87,#53ddff,#8577ff,#e25eff,#ff5577);background-size:240% 100%;box-shadow:0 0 10px #fff9;animation:feverBarRainbow .85s linear infinite}
+.fever-flash{z-index:21;flex-direction:column;gap:5px;animation:feverFlash 1.45s ease-out forwards;background:radial-gradient(circle,#fff 0 7%,#fff7ca88 18%,#b8efff3f 38%,#fff0 68%)}
+.fever-flash span{font-size:clamp(52px,18vw,96px);background:linear-gradient(90deg,#ff496d,#ffbd43,#fff45e,#5ff18b,#4bdfff,#8174ff,#e05eff,#ff496d);background-size:230% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:2px #fff;text-shadow:0 5px 0 #705d79aa,0 0 12px #fff,0 0 34px #6cecff;animation:feverWord 1.18s cubic-bezier(.12,.84,.2,1) both,feverTextRainbow .9s linear infinite}
+.fever-flash em{font-style:normal;font-weight:1000;font-size:clamp(15px,5vw,24px);letter-spacing:.16em;color:#fff;text-shadow:0 2px 0 #6d6274,0 0 13px #fff;animation:feverSub .95s .18s ease-out both}
+.fever-party{position:absolute;z-index:20;inset:0;overflow:hidden;pointer-events:none}
+.fever-rays{position:absolute;left:50%;top:43%;width:150vmax;height:150vmax;transform:translate(-50%,-50%);background:repeating-conic-gradient(from 0deg,#fff8 0 3deg,#fff0 3deg 15deg);opacity:0;animation:feverRays 1.25s ease-out both}
+.fever-confetti{position:absolute;left:var(--x);top:-18px;width:9px;height:16px;border-radius:3px;background:hsl(var(--hue) 92% 62%);box-shadow:0 0 7px #fff8;animation:feverConfetti var(--dur) var(--delay) cubic-bezier(.14,.6,.3,1) both}
+.fever-spark{position:absolute;left:var(--sx);top:var(--sy);width:14px;height:14px;opacity:0;filter:drop-shadow(0 0 8px #fff);animation:feverSpark 1s var(--sd) ease-out both}
+.fever-spark::before,.fever-spark::after{content:"";position:absolute;left:50%;top:50%;background:#fff;border-radius:99px;transform:translate(-50%,-50%)}
+.fever-spark::before{width:3px;height:16px}.fever-spark::after{width:16px;height:3px}
+body.fever-active .score-pop{filter:drop-shadow(0 0 8px #fff) drop-shadow(0 0 14px #63dfff66)}
+body.fever-active .chain-pop{filter:drop-shadow(0 0 8px #fff) drop-shadow(0 0 15px #ff75d877);transform:translate(-50%,-50%) scale(1.06)}
+@property --rainbow-turn{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes feverRainbowFrame{to{--rainbow-turn:360deg}}
+@keyframes feverFramePulse{from{filter:brightness(.95)}to{filter:brightness(1.25)}}
+@keyframes feverTextRainbow{to{background-position:230% 0}}
+@keyframes feverBarRainbow{to{background-position:240% 0}}
+@keyframes feverSub{0%{opacity:0;transform:translateY(12px) scale(.8)}35%{opacity:1;transform:translateY(0) scale(1.08)}100%{opacity:0;transform:translateY(-8px) scale(1)}}
+@keyframes feverRays{0%{opacity:0;transform:translate(-50%,-50%) scale(.25) rotate(-8deg)}20%{opacity:.6}100%{opacity:0;transform:translate(-50%,-50%) scale(1.05) rotate(20deg)}}
+@keyframes feverConfetti{0%{opacity:0;transform:translate3d(0,-10px,0) rotate(0)}12%{opacity:1}100%{opacity:0;transform:translate3d(var(--dx),105vh,0) rotate(var(--rot))}}
+@keyframes feverSpark{0%{opacity:0;transform:scale(.2) rotate(0)}35%{opacity:1;transform:scale(1.2) rotate(45deg)}100%{opacity:0;transform:scale(.4) rotate(90deg)}}
