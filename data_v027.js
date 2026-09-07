@@ -3284,8 +3284,8 @@ window.POCHO_DATA = {
       "id": "emotion-4",
       "name": "とばっちり",
       "effect": "-1",
-      "condition": "第三者に押されてから0.5秒以内 ＋ 押された衝突の強さ8以上 ＋ その衝突でSTICKもPOPもしない ＋ 相対速度12以上 ＋ 今回の相手とは初接触 ＋ 今回の相手は異色 ＋ 押した第三者も今回の相手と異色 ＋ 直前0.5秒以内に壁接触していない",
-      "conditionCount": 8,
+      "condition": "第三者に押されて衝突 ＋ その衝突でSTICKもPOPもしない ＋ 相対速度8以上 ＋ 直前2秒以内に別の相手とも接触済み ＋ 今回の相手は異色",
+      "conditionCount": 5,
       "event": "contact",
       "active": true
     },
@@ -3302,7 +3302,7 @@ window.POCHO_DATA = {
       "id": "emotion-6",
       "name": "目の前で",
       "effect": "-1",
-      "condition": "70px以内で別ぽちょがPOP ＋ そのぽちょと過去に2秒以上接着した経験あり ＋ その接着から離れて5秒以内 ＋ 自分はその爆発には接続していない ＋ 自分は誘爆していない",
+      "condition": "100px以内で別ぽちょがPOP ＋ そのぽちょと過去に接着経験あり ＋ 自分はその爆発には接続していない ＋ 直前5秒以内にもその相手と接触済み ＋ 自分は誘爆していない",
       "conditionCount": 5,
       "event": "pop",
       "active": true
@@ -3320,7 +3320,7 @@ window.POCHO_DATA = {
       "id": "emotion-8",
       "name": "なんか楽しい",
       "effect": "SET_HAPPY",
-      "condition": "現在7体以上グループに所属 ＋ グループ内に5色以上 ＋ 5秒以上そのグループに所属 ＋ その5秒間誰もPOPしていない ＋ 自分の接着経験3回以上 ＋ 現在グループ内で直接隣接2体以上",
+      "condition": "現在5体以上グループに所属 ＋ グループ内に4色以上 ＋ 3秒以上そのグループに所属 ＋ その間誰もPOPしていない ＋ 自分の接着経験3回以上 ＋ 現在グループ内で直接隣接2体以上",
       "conditionCount": 6,
       "event": "periodic",
       "active": true
