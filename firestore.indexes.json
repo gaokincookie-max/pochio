@@ -1,0 +1,23 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "leaderboardEntries",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "boardId", "order": "ASCENDING"},
+        {"fieldPath": "value", "order": "DESCENDING"},
+        {"fieldPath": "achievedAt", "order": "ASCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "leaderboardEntries",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "boardId", "order": "ASCENDING"},
+        {"fieldPath": "value", "order": "ASCENDING"},
+        {"fieldPath": "achievedAt", "order": "ASCENDING"}
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

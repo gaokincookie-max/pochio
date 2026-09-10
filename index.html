@@ -17,8 +17,10 @@
         <button class="big" data-action="open-mode">スタート</button>
         <button class="big" data-action="open-book">図鑑</button>
         <button class="big" data-action="open-stats">実績</button>
+        <button class="big" id="menu-ranking">ランキング</button>
+        <button class="big secondary" id="menu-account">ログイン</button>
       </div>
-      <div class="version">prototype v0.3.0b 3SET</div>
+      <div class="version">prototype v0.3.1 3SET</div>
     </div>
   </section>
 
@@ -44,6 +46,51 @@
     <div class="panel-page"><h2>実績</h2><div id="stats-content"></div></div>
   </section>
 
+  <section id="screen-ranking" class="screen soft-bg">
+    <button class="back" data-action="menu">‹</button>
+    <div class="panel-page ranking-page">
+      <h2>ランキング</h2>
+      <div class="major-tabs"><button class="active" data-rank-major="normal">通常</button><button data-rank-major="weekly">ぽちょランキング</button></div>
+      <div id="rank-normal-controls">
+        <div class="mini-tabs" id="rank-mode-tabs"><button class="active" data-rank-mode="short">SHORT</button><button data-rank-mode="middle">MIDDLE</button><button data-rank-mode="long">LONG</button></div>
+        <div class="mini-tabs" id="rank-period-tabs"><button class="active" data-rank-period="all">歴代</button><button data-rank-period="month">月間</button><button data-rank-period="day">日間</button></div>
+      </div>
+      <div id="weekly-head" class="weekly-head hidden"></div>
+      <div id="ranking-status" class="rank-status">ランキングを読み込み中…</div>
+      <div id="ranking-list" class="ranking-list"></div>
+      <div id="my-rank-card" class="my-rank-card"></div>
+    </div>
+  </section>
+
+  <section id="screen-login" class="screen soft-bg">
+    <button class="back" data-action="menu">‹</button>
+    <div class="panel-page login-page">
+      <h2>ランキングに参加</h2>
+      <p class="lead">ログインすると記録をランキングに登録できます。ゲームはログインしなくても遊べます。</p>
+      <div id="firebase-warning" class="notice hidden"></div>
+      <label class="terms-check"><input type="checkbox" id="terms-check"> <span><a href="terms.html" target="_blank">利用規約</a>と<a href="privacy.html" target="_blank">プライバシーポリシー</a>に同意します</span></label>
+      <button class="big" id="login-guest">ゲストとして参加</button>
+      <button class="big google-btn" id="login-google">Googleでログイン</button>
+      <p class="tiny-note">ゲストはこの端末を失うと復元できません。あとからGoogle連携できます。</p>
+    </div>
+  </section>
+
+  <section id="screen-account" class="screen soft-bg">
+    <button class="back" id="account-back">‹</button>
+    <div class="panel-page account-page"><div id="license-card"></div></div>
+  </section>
+
+  <section id="screen-icon" class="screen soft-bg">
+    <button class="back" id="icon-back">‹</button>
+    <div class="panel-page icon-page">
+      <h2>ぽちょアイコン</h2>
+      <canvas id="icon-preview" width="220" height="220"></canvas>
+      <div class="icon-tabs"><button class="active" data-icon-tab="color">色</button><button data-icon-tab="expression">表情</button><button data-icon-tab="sizeClass">大きさ</button><button data-icon-tab="decoration">装飾</button></div>
+      <div id="icon-options" class="icon-options"></div>
+      <button class="big" id="icon-save">決定</button>
+    </div>
+  </section>
+
   <section id="screen-game" class="screen game-screen">
     <div id="game"></div>
     <header class="game-hud">
@@ -58,13 +105,16 @@
   </section>
 
   <section id="screen-result" class="screen soft-bg">
-    <div class="result-wrap"><div class="result-label">RESULT</div><div id="result-score" class="result-score">0</div><div id="result-record" class="record"></div><div id="result-details" class="result-details"></div><div class="result-buttons"><button class="big" data-action="replay">もう一度</button><button class="big secondary" data-action="menu">メニューへ</button></div></div>
+    <div class="result-wrap"><div class="result-label">RESULT</div><div id="result-score" class="result-score">0</div><div id="result-record" class="record"></div><div id="result-details" class="result-details"></div><div id="result-login-note" class="result-login-note hidden">ログインすると、この記録をランキングに登録できます。 <button id="result-login-button">ログイン</button></div><div class="result-buttons"><button class="big" data-action="replay">もう一度</button><button class="big secondary" data-action="menu">メニューへ</button></div></div>
   </section>
 
   <div id="settings-modal" class="modal hidden"><div class="modal-card"><h3>設定</h3><button data-setting="continue">続行</button><button data-setting="retry">リトライ</button><button data-setting="retire" class="danger">リタイア</button></div></div>
   <div id="confirm-modal" class="modal hidden"><div class="modal-card confirm-card"><p id="confirm-text"></p><div class="confirm-actions"><button id="confirm-no">やめる</button><button id="confirm-yes" class="danger">実行する</button></div></div></div>
+  <div id="online-modal" class="modal hidden"><div class="modal-card online-card" id="online-modal-card"></div></div>
 </main></div>
 <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
-<script src="data_v030.js"></script>
-<script src="game_v030b.js"></script>
+<script src="data_v031.js"></script>
+<script src="game_v031.js"></script>
+<script src="firebase-config.js"></script>
+<script type="module" src="account_v031.js"></script>
 </body></html>

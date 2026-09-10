@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function validName(n) { return n is string && n.size() >= 2 && n.size() <= 12; }
+    match /users/{uid} {
+      allow read, create, update, delete: if signedIn() && request.auth.uid == uid;
+    }
+    match /profiles/{uid} {
+      allow read: if true;
+      allow create, update: if signedIn() && request.auth.uid == uid && validName(request.resource.data.playerName);
+      allow delete: if signedIn() && request.auth.uid == uid;
+    }
+    match /leaderboardEntries/{entryId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && entryId == request.resource.data.boardId + '__' + request.auth.uid
+        && validName(request.resource.data.playerName)
+        && request.resource.data.value is number
+        && request.resource.data.value >= 0;
+      allow update: if signedIn()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == request.auth.uid
+        && entryId == request.resource.data.boardId + '__' + request.auth.uid
+        && request.resource.data.boardId == resource.data.boardId
+        && validName(request.resource.data.playerName)
+        && request.resource.data.value is number
+        && request.resource.data.value >= resource.data.value;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+  }
+}
