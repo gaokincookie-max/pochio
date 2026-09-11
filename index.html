@@ -66,7 +66,7 @@
     <button class="back" data-action="menu">‹</button>
     <div class="panel-page login-page">
       <h2>ランキングに参加</h2>
-      <p class="lead">ログインすると記録をランキングに登録できます。ゲームはログインしなくても遊べます。</p>
+      <p class="lead">ランキングに参加するにはログインしてください。ログイン後に開始したプレイがランキング対象になります。ゲームはログインしなくても遊べます。</p>
       <div id="firebase-warning" class="notice hidden"></div>
       <label class="terms-check"><input type="checkbox" id="terms-check"> <span><a href="terms.html" target="_blank">利用規約</a>と<a href="privacy.html" target="_blank">プライバシーポリシー</a>に同意します</span></label>
       <button class="big" id="login-guest">ゲストとして参加</button>
@@ -105,7 +105,7 @@
   </section>
 
   <section id="screen-result" class="screen soft-bg">
-    <div class="result-wrap"><div class="result-label">RESULT</div><div id="result-score" class="result-score">0</div><div id="result-record" class="record"></div><div id="result-details" class="result-details"></div><div id="result-login-note" class="result-login-note hidden">ログインすると、この記録をランキングに登録できます。 <button id="result-login-button">ログイン</button></div><div class="result-buttons"><button class="big" data-action="replay">もう一度</button><button class="big secondary" data-action="menu">メニューへ</button></div></div>
+    <div class="result-wrap"><div class="result-label">RESULT</div><div id="result-score" class="result-score">0</div><div id="result-record" class="record"></div><div id="result-details" class="result-details"></div><div id="result-login-note" class="result-login-note hidden">ログインすると、次のプレイからランキングに参加できます。 <button id="result-login-button">ログイン</button></div><div class="result-buttons"><button class="big" data-action="replay">もう一度</button><button class="big secondary" data-action="menu">メニューへ</button></div></div>
   </section>
 
   <div id="settings-modal" class="modal hidden"><div class="modal-card"><h3>設定</h3><button data-setting="continue">続行</button><button data-setting="retry">リトライ</button><button data-setting="retire" class="danger">リタイア</button></div></div>
@@ -114,7 +114,8 @@
 </main></div>
 <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
 <script src="data_v031.js"></script>
-<script src="game_v031.js"></script>
+<script src="game_v032.js"></script>
 <script src="firebase-config.js"></script>
-<script type="module" src="account_v031.js"></script>
+<script src="app-check-config.js"></script>
+<script type="module" src="account_v032.js"></script>
 </body></html>
