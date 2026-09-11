@@ -1,15 +1,13 @@
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInAnonymously,signInWithPopup,linkWithPopup,signOut,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
-import {getFirestore,doc,getDoc,setDoc,collection,query,where,orderBy,limit,getDocs,getCountFromServer} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-import {getFunctions,httpsCallable} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-functions.js';
-import {initializeAppCheck,ReCaptchaEnterpriseProvider} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app-check.js';
+import {getFirestore,doc,getDoc,setDoc,runTransaction,collection,query,where,orderBy,limit,getDocs,getCountFromServer} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const appApi=window.POCHO_APP;
 const cfg=window.POCHO_FIREBASE_CONFIG||{};
 const configured=cfg.apiKey&&!String(cfg.apiKey).startsWith('YOUR_')&&cfg.projectId&&!String(cfg.projectId).startsWith('YOUR_');
-let auth=null,db=null,functions=null,currentUser=null,rankMajor='normal',rankMode='short',rankPeriod='all',editingIcon=null,viewingUid=null;
-let activeRun={id:null,mode:null,startPromise:null};
+let auth=null,db=null,currentUser=null,rankMajor='normal',rankMode='short',rankPeriod='all',editingIcon=null,viewingUid=null;
+let activeRun={eligible:false,uid:null,mode:null};
 const metricLabels={maxChain:'最大CHAIN',maxSingleScore:'最高単発スコア',maxFever:'最多FEVER',maxGroupSize:'最大グループ人数',maxRoles:'1ゲーム最多役成立',maxSticks:'1ゲーム最多STICK',maxPops:'1ゲーム最多POP'};
 
 function showScreen(id){$$('.screen').forEach(x=>x.classList.remove('active'));$('#screen-'+id)?.classList.add('active')}
@@ -28,10 +26,8 @@ function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;',
 function firebaseWarning(){const e=$('#firebase-warning');if(!configured){e.textContent='Firebase設定がまだありません。firebase-config.js にプロジェクト設定を入力するとオンライン機能が有効になります。';e.classList.remove('hidden')}else e.classList.add('hidden')}
 
 if(configured){
- const fapp=initializeApp(cfg);auth=getAuth(fapp);db=getFirestore(fapp);functions=getFunctions(fapp,'asia-northeast1');
- const appCheckKey=String(window.POCHO_RECAPTCHA_ENTERPRISE_SITE_KEY||'').trim();
- if(appCheckKey){try{initializeAppCheck(fapp,{provider:new ReCaptchaEnterpriseProvider(appCheckKey),isTokenAutoRefreshEnabled:true})}catch(e){console.warn('App Check init failed',e)}}
- onAuthStateChanged(auth,async u=>{currentUser=u;activeRun={id:null,mode:null,startPromise:null};await refreshAuthState(u)})
+ const fapp=initializeApp(cfg);auth=getAuth(fapp);db=getFirestore(fapp);
+ onAuthStateChanged(auth,async u=>{currentUser=u;await refreshAuthState(u)})
 } else firebaseWarning();
 
 async function refreshAuthState(u){
@@ -71,27 +67,39 @@ async function writePublicProfile(){if(!currentUser||!db)return;const s=save(),f
 async function resolveCloudConflict(u,cloudSave){const local=save(),cloud=cloudSave;const hasLocal=Object.values(local.plays||{}).some(Boolean)||Object.values(local.best||{}).some(Boolean)||Object.keys(local.roles||{}).length>0;if(!hasLocal){cloud.profile=cloud.profile||{};cloud.profile.playerId=u.uid;cloud.profile.accountType=u.isAnonymous?'guest':'google';replaceSave(cloud);await syncAll();updateMenuAccount();return}await new Promise(resolve=>{const lp=Object.values(local.plays||{}).reduce((a,b)=>a+Number(b||0),0),cp=Object.values(cloud.plays||{}).reduce((a,b)=>a+Number(b||0),0),lf=Object.values(local.roles||{}).filter(x=>x.discovered).length,cf=Object.values(cloud.roles||{}).filter(x=>x.discovered).length;const c=modal(`<h3>データを選択</h3><p class="modal-copy">このGoogleアカウントにはすでにデータがあります。使用する方を選んでください。</p><div class="save-compare"><button id="use-local"><b>この端末</b><span>プレイ ${lp}回 / 図鑑 ${lf}</span><span>最高 ${Math.max(...Object.values(local.best||{}),0).toLocaleString()}</span></button><button id="use-cloud"><b>Google側</b><span>プレイ ${cp}回 / 図鑑 ${cf}</span><span>最高 ${Math.max(...Object.values(cloud.best||{}),0).toLocaleString()}</span></button></div>`);$('#use-local').onclick=async()=>{local.profile.playerId=u.uid;local.profile.accountType=u.isAnonymous?'guest':'google';local.profile.registeredAt=local.profile.registeredAt||new Date().toISOString();if(!local.profile.playerName)local.profile.playerName=await askName()||'ぽちょ';replaceSave(local);closeModal();await syncAll();resolve()};$('#use-cloud').onclick=async()=>{cloud.profile=cloud.profile||{};cloud.profile.playerId=u.uid;cloud.profile.accountType=u.isAnonymous?'guest':'google';replaceSave(cloud);closeModal();await syncAll();resolve()}})}
 
 async function syncAll(){if(!currentUser||!db)return;await writeCloudSave()}
-function callable(name){if(!functions)throw new Error('functions-not-ready');return httpsCallable(functions,name)}
-async function beginVerifiedRun(detail){
- activeRun={id:null,mode:detail?.mode||null,startPromise:null};
- if(!currentUser||!functions)return;
- const mode=detail?.mode;
- const p=callable('startRun')({mode,gameVersion:'0.3.2'}).then(r=>{activeRun.id=r.data?.runId||null;return activeRun.id}).catch(e=>{console.warn('startRun failed',e);return null});
- activeRun.startPromise=p;
+
+async function submitBoard(boardId,mode,metric,value,at){
+ if(!currentUser||!db||!Number.isFinite(Number(value))||Number(value)<=0)return;
+ const ref=doc(db,'leaderboardEntries',`${boardId}__${currentUser.uid}`),s=save(),achievedAt=at||new Date().toISOString(),now=new Date();
+ const expiresAt=boardId.startsWith('score_day_')?new Date(now.getTime()+8*86400000):boardId.startsWith('score_month_')?new Date(now.getTime()+100*86400000):boardId.startsWith('weekly_')?new Date(now.getTime()+60*86400000):null;
+ await runTransaction(db,async tx=>{
+  const old=await tx.get(ref),common={playerName:s.profile.playerName||'ぽちょ',icon:s.profile.icon,updatedAt:new Date().toISOString()};
+  if(old.exists()&&Number(old.data().value||0)>=Number(value)){tx.update(ref,common);return}
+  tx.set(ref,{boardId,uid:currentUser.uid,...common,mode,metric,value:Number(value),achievedAt,expiresAt})
+ })
 }
-async function finishVerifiedRun(detail){
- if(!currentUser||!functions||!detail)return;
- let runId=activeRun.id;
- if(!runId&&activeRun.startPromise)runId=await activeRun.startPromise;
- if(!runId||activeRun.mode!==detail.mode){console.warn('ranking run was not verified');return}
- const s=save();
- const payload={runId,mode:detail.mode,score:Number(detail.score||0),gameVersion:'0.3.2',run:{...detail.run},playerName:s.profile?.playerName||'ぽちょ',icon:s.profile?.icon||{}};
- try{await callable('finishRun')(payload);await writeCloudSave();if($('#screen-ranking')?.classList.contains('active'))await renderRanking()}
- catch(e){console.warn('finishRun failed',e);alertBox('ランキング記録の検証に失敗しました。ゲームのローカル記録は保存されています。'+friendly(e))}
- finally{activeRun={id:null,mode:null,startPromise:null}}
+function weeklyMetricValue(metric,run){
+ const map={maxChain:'maxChain',maxSingleScore:'maxSingle',maxFever:'fevers',maxGroupSize:'maxGroupSize',maxRoles:'rolesTriggered',maxSticks:'sticks',maxPops:'pops'};
+ return Number(run?.[map[metric]]||0)
 }
-window.addEventListener('pocho:run-started',e=>{beginVerifiedRun(e.detail)});
-window.addEventListener('pocho:run-finished',async e=>{if(currentUser){try{await finishVerifiedRun(e.detail)}catch(err){console.warn('pocho secure sync failed',err)}}});
+async function submitFinishedRun(detail){
+ if(!detail||!activeRun.eligible||!currentUser||currentUser.uid!==activeRun.uid||detail.mode!==activeRun.mode)return;
+ const p=jst(),at=new Date().toISOString(),score=Number(detail.score||0),mode=detail.mode;
+ await submitBoard(`score_all_all_${mode}`,mode,'score',score,at);
+ await submitBoard(`score_month_${p.month}_${mode}`,mode,'score',score,at);
+ await submitBoard(`score_day_${p.date}_${mode}`,mode,'score',score,at);
+ const w=weekly();
+ if(w.mode===mode){const value=weeklyMetricValue(w.metric,detail.run);await submitBoard(`weekly_${w.weekId}_${w.mode}_${w.metric}`,w.mode,w.metric,value,at)}
+}
+window.addEventListener('pocho:run-started',e=>{activeRun={eligible:!!currentUser,uid:currentUser?.uid||null,mode:e.detail?.mode||null}});
+window.addEventListener('pocho:run-finished',async e=>{
+ const run=activeRun;activeRun={eligible:false,uid:null,mode:null};
+ if(currentUser){
+  try{activeRun=run;await submitFinishedRun(e.detail);await writeCloudSave();if($('#screen-ranking')?.classList.contains('active'))await renderRanking()}
+  catch(err){console.warn('pocho ranking sync failed',err);alertBox('ランキング記録の送信に失敗しました。ゲームのローカル記録は保存されています。'+friendly(err))}
+  finally{activeRun={eligible:false,uid:null,mode:null}}
+ }
+});
 async function renderLicense(uid,isSelf=false){const host=$('#license-card');host.innerHTML='<div class="rank-status">読み込み中…</div>';let p=null;if(uid===currentUser?.uid){const s=save(),found=Object.values(s.roles||{}).filter(x=>x.discovered).length,total=(window.POCHO_DATA?.roles||[]).filter(r=>r.active&&r.rarity<=5).length;p={playerName:s.profile.playerName,playerId:playerCode(uid),registeredAt:s.profile.registeredAt,icon:s.profile.icon,best:s.best,playCount:Object.values(s.plays||{}).reduce((a,b)=>a+Number(b||0),0),book:{found,total}}}else if(db){const d=await getDoc(doc(db,'profiles',uid));if(d.exists())p=d.data()}if(!p){host.innerHTML='<div class="notice">このプレイヤーの身分証を取得できませんでした。</div>';return}host.innerHTML=`<div class="license"><div class="license-title">ぽちょ身分証 <small>POCHO PLAYER LICENSE</small></div><button class="license-icon" id="license-icon" ${isSelf?'':'disabled'}><canvas></canvas>${isSelf?'<span>タップで変更</span>':''}</button><div class="license-name">${esc(p.playerName||'ぽちょ')}</div><div class="license-id">${esc(p.playerId||playerCode(uid))}</div><div class="license-grid"><span>登録日<b>${formatDate(p.registeredAt)}</b></span><span>総プレイ回数<b>${Number(p.playCount||0).toLocaleString()}</b></span><span>SHORT最高<b>${Number(p.best?.short||0).toLocaleString()}</b></span><span>MIDDLE最高<b>${Number(p.best?.middle||0).toLocaleString()}</b></span><span>LONG最高<b>${Number(p.best?.long||0).toLocaleString()}</b></span><span>図鑑<b>${Number(p.book?.found||0)} / ${Number(p.book?.total||0)}</b></span></div></div>${isSelf?`<div class="account-actions"><button id="rename-account">名前を変える</button>${currentUser?.isAnonymous?'<button id="link-google">Googleと連携</button>':''}<button id="logout-account" class="danger">ログアウト</button></div>`:''}`;drawIcon(host.querySelector('canvas'),p.icon,112);if(isSelf){$('#license-icon').onclick=()=>openIconEditor();$('#rename-account').onclick=async()=>{const n=await askName(p.playerName||'');if(n){const s=save();s.profile.playerName=n;replaceSave(s);await syncAll();renderLicense(uid,true)}};$('#logout-account').onclick=()=>doLogout();$('#link-google')?.addEventListener('click',linkGoogle)}}
 function formatDate(v){if(!v)return'—';const d=new Date(v);return Number.isNaN(d.getTime())?'—':new Intl.DateTimeFormat('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'}).format(d)}
 async function doLogout(){if(!currentUser)return;const guest=currentUser.isAnonymous;const c=modal(`<h3>ログアウト</h3><p class="modal-copy">${guest?'ゲストアカウントはログアウトすると同じアカウントへ戻れません。端末のゲームデータは残ります。':'この端末のゲームデータは残ります。'}</p><div class="modal-actions"><button id="logout-no">やめる</button><button id="logout-yes" class="danger">ログアウト</button></div>`);$('#logout-no').onclick=closeModal;$('#logout-yes').onclick=async()=>{await signOut(auth);closeModal();showScreen('menu')}}
